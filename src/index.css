@@ -1,0 +1,7 @@
+@import '@xyflow/react/dist/style.css';
+@import "tailwindcss";
+html,
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
