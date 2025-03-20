@@ -12,9 +12,10 @@ export default function CodeNode({ id, data, isConnectable, selected }) {
   const [language, setLanguage] = useState(data.language || "javascript");
   const [openDropdown, setOpenDropdown] = useState(false);
   const handleCodeChange = (e) => {
-    setCode(e.target.value);
-    updateNode(id, { data: { ...data, code: e.target.value } })
-    wsProxy.updateNode(id, { data: { ...data, code: e.target.value } })
+    const newCode = e.target.value;
+    setCode(newCode);
+    updateNode(id, { data: { ...data, code: newCode } })
+    wsProxy.updateNode(id, { data: { ...data, code: newCode } })
 
   };
 

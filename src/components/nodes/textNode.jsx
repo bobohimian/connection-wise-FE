@@ -8,12 +8,13 @@ export default function TextNode({ id, data, isConnectable, selected}) {
   const { wsProxy } = usewsProxy();
   const handleTextChange = useCallback(
     (e) => {
-      setText(e.target.value);
+      const nextText = e.target.value;
+      setText(prev=>nextText);
       updateNodeData({
         id: id,
-        data: { text: text },
+        data: { text: nextText },
       })
-    wsProxy.updateNode(id, { data: { ...data, text: text } })
+    wsProxy.updateNode(id, { data: { ...data, text: nextText } })
 
     }, []);
 

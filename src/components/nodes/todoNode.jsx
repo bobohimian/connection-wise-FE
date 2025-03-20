@@ -18,8 +18,9 @@ export default function TodoNode({ id, data, isConnectable, selected }) {
     const updatedItems = items.map((item) =>
       item.id === itemId ? { ...item, completed: !item.completed } : item
     );
-    updateNode(id, { data: { ...data, items: updatedItems } })
-    wsProxy.updateNode(id, { data: { ...data, items: updatedItems } })
+    const updateData = { data: { ...data, items: updatedItems } }
+    updateNode(id, updateData)
+    wsProxy.updateNode(id, updateData)
   };
 
   const deleteItem = (itemId) => {
