@@ -2,19 +2,20 @@ import { useState } from "react";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 import { Code, Copy, ChevronDown } from "lucide-react";
 import { useToast } from "@/components/provider/toast";
+import { usewsProxy } from "@/components/provider/webSocketProvider";
 export default function CodeNode({ id, data, isConnectable, selected }) {
   const bgColor = data.background ? data.background : {};
-  const { updateNodeData } = useReactFlow();
+  const { wsProxy } = usewsProxy();
+  const { updateNode } = useReactFlow();
   const { toast } = useToast();
-  const [code, setCode] = useState(data.code || "// Your code here");
+  const [code, setCode] = useState(data.code);
   const [language, setLanguage] = useState(data.language || "javascript");
   const [openDropdown, setOpenDropdown] = useState(false);
   const handleCodeChange = (e) => {
     setCode(e.target.value);
-    updateNodeData({
-      id: id,
-      data: { code: code }
-    })
+    updateNode(id, { data: { ...data, code: e.target.value } })
+    wsProxy.updateNode(id, { data: { ...data, code: e.target.value } })
+
   };
 
   const copyToClipboard = () => {
@@ -26,7 +27,7 @@ export default function CodeNode({ id, data, isConnectable, selected }) {
   };
 
   return (
-    <div style={{ backgroundColor: bgColor?bgColor : "white" }}
+    <div style={{ backgroundColor: bgColor ? bgColor : "white" }}
       className={`p-3 rounded-md border bg-white dark:bg-black ${selected ? "border-primary ring-1" : "border-border"} shadow-sm w-80`}>
       <Handle
         type="target"
@@ -69,6 +70,7 @@ export default function CodeNode({ id, data, isConnectable, selected }) {
         onChange={handleCodeChange}
         className="w-full h-full min-h-30 p-2 text-xs font-mono border rounded focus:outline-none nodrag resize-none"
         rows={5}
+        placeholder="// Your code here"
       />
 
       <Handle

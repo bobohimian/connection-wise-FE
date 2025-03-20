@@ -4,8 +4,11 @@ import { useToast } from "@/components/provider/toast";
 import Dropdown from "./ui/dropdown";
 import IconButton from "./ui/iconButton";
 import ThemeToggle from "./ui/themeToggole";
+import { useReactFlow } from "@xyflow/react";
 export default function Navbar() {
   const { toast } = useToast();
+  const { getZoom,zoomIn,zoomOut } = useReactFlow();
+  const zoomLever=getZoom()
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [documentName, setDocumentName] = useState("Untitled Note");
   const [isEditing, setIsEditing] = useState(false);
@@ -218,7 +221,7 @@ export default function Navbar() {
             onClick={() => toast({ title: "Undo", description: "Action undone" })} />
           <IconButton icon={<Redo2 className="h-4 w-4" />} srOnly={"Undo"}
             onClick={() => toast({ title: "Redo", description: "Action redone" })} />
-          <div className="text-xs text-muted-foreground">Zoom:100%</div>
+          <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever*100).toFixed(0)}%`}</div>
         </div>
         <IconButton icon={isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           srOnly={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"} onClick={() => toggleFullscreen()} />

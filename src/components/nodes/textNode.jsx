@@ -1,10 +1,11 @@
 import { useState, useCallback } from "react";
+import { usewsProxy } from "@/components/provider/webSocketProvider";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 export default function TextNode({ id, data, isConnectable, selected}) {
   const bgColor = data.background ? data.background : {};
   const { updateNodeData } = useReactFlow();
   const [text, setText] = useState(data.text || "Text node");
-
+  const { wsProxy } = usewsProxy();
   const handleTextChange = useCallback(
     (e) => {
       setText(e.target.value);
@@ -12,6 +13,8 @@ export default function TextNode({ id, data, isConnectable, selected}) {
         id: id,
         data: { text: text },
       })
+    wsProxy.updateNode(id, { data: { ...data, text: text } })
+
     }, []);
 
   return (

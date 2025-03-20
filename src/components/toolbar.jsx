@@ -15,10 +15,10 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/provider/toast";
 import { useReactFlow, useStoreApi } from "@xyflow/react";
-import { useWebSocket } from "./provider/websocketProvider";
+import { usewsProxy } from "@/components/provider/webSocketProvider";
 
 export default function Toolbar({ selectedNode, selectedEdge }) {
-  const [ws] = useWebSocket()
+  const { wsProxy } = usewsProxy();
   const { toast } = useToast();
   const { updateEdge, updateNodeData } = useReactFlow();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -41,13 +41,13 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
     if (selectedEdge) {
       updateEdge(selectedEdge,
         (edge) => ({ ...edge, style: { stroke: color } }))
-        const updateData={ style: { stroke: color } }
-      ws.updateEdge(selectedEdge, updateData)
+      const updateData = { style: { stroke: color } }
+      wsProxy.updateEdge(selectedEdge, updateData)
     }
     else if (selectedNode) {
       updateNodeData(selectedNode, { background: color })
-      const updateData={ data: { background: color } }
-      ws.updateNode(selectedNode, updateData)
+      const updateData = { data: { background: color } }
+      wsProxy.updateNode(selectedNode, updateData)
     }
 
   }

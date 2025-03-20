@@ -5,12 +5,12 @@ import { Provider } from 'react-redux'
 import store from './store'
 import './index.css'
 import { ToastProvider } from "@/components/provider/toast";
-import { WebSocketProvider } from "@/components/provider/WebSocketProvider";
+import { WebSocketProvider } from "@/components/provider/webSocketProvider";
 import { ReactFlowProvider } from '@xyflow/react'
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
     <ReactFlowProvider>
-      <WebSocketProvider wsService={1}>
+      <WebSocketProvider >
         <Provider store={store}>
           <ToastProvider>
             <App />

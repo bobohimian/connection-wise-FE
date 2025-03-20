@@ -17,6 +17,7 @@ import { edgeTypes, defaultEdgeOption } from "@/components/edges";
 
 import apiService from "../api";
 import axios from "axios";
+import { usewsProxy } from "./provider/websocketProvider";
 // Define custom node types
 
 // Define custom edge types
@@ -27,6 +28,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = (connection) => setEdges((edges) => addEdge(connection, edges))
+  const {wsProxy}=usewsProxy()
   const { toast } = useToast();
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -87,6 +89,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
+        onNodeDragStop={(e,node)=>wsProxy.updateNode(node.id,{position:node.position})}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         defaultEdgeOptions={defaultEdgeOption}
@@ -102,6 +105,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         paneClickDistance={5}
         nodeClickDistance={10}
         nodeOrigin={[0.5, 0.5]}
+        onViewportChange={({x,y,zoom})=>{}}
         fitView
       // snapToGrid
       // snapGrid={[15, 15]}

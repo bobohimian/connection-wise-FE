@@ -16,7 +16,6 @@ export default function ThemeToggle() {
     }, [isDarkMode]);
 
     const toggleTheme = () => {
-        console.log("isDarkMode", isDarkMode)
         const nextTheme = isDarkMode ? "light" : "dark";
         dispatch(setTheme(nextTheme));
     };
