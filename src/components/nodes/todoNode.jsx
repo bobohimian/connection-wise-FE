@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 import { Check, Plus, Trash2 } from "lucide-react";
-import { usewsProxy } from "@/components/provider/webSocketProvider";
-export default function TodoNode({ id, data, isConnectable, selected }) {
+import { usewsProxy } from "../../components/provider/WebSocketProvider";
+export default function ç({ id, data, isConnectable, selected }) {
   const bgColor = data.background ? data.background : {};
   const { wsProxy } = usewsProxy()
   const { updateNode } = useReactFlow();
@@ -20,13 +20,13 @@ export default function TodoNode({ id, data, isConnectable, selected }) {
     );
     const updateData = { data: { ...data, items: updatedItems } }
     updateNode(id, updateData)
-    wsProxy.updateNode(id, updateData)
+    wsProxy.updateNode(1,id,["data","items"],updatedItems)
   };
 
   const deleteItem = (itemId) => {
     const updatedItems = items.filter((item) => item.id !== itemId);
     updateNode(id, { data: { ...data, items: updatedItems } })
-    wsProxy.updateNode(id, { data: { ...data, items: updatedItems } })
+    wsProxy.updateNode(1,id,["data","items"],updatedItems)
 
   };
 
@@ -39,7 +39,7 @@ export default function TodoNode({ id, data, isConnectable, selected }) {
       };
       const updatedItems = [...items, newItem];
       updateNode(id, { data: { ...data, items: updatedItems } })
-      wsProxy.updateNode(id, { data: { ...data, items: updatedItems } })
+      wsProxy.updateNode(1,id,["data","items"],updatedItems)
       setNewItemText("");
     }
     setIsAddingItem(false);

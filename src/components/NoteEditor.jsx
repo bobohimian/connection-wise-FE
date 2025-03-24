@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import Navbar from "@/components/navbar";
-import Toolbar from "@/components/toolbar";
-import Canvas from "@/components/canvas";
+import Navbar from "../components/Navbar";
+import Toolbar from "../components/Toolbar";
+import Canvas from "../components/Canvas";
 
 export default function NoteEditor() {
   const [selectedNode, setSelectedNode] = useState(null);

@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 
 
 
-export default React.memo(() => {
-    
+const ViewHelp = () => {
+
     const nodes = useSelector(selectNodes);
     const { zoomIn, zoomOut, setCenter } = useReactFlow();
 
@@ -35,5 +35,6 @@ export default React.memo(() => {
                 </button>
             </div>
         </Panel>
-    );
-});
+    )
+};
+export default ViewHelp;

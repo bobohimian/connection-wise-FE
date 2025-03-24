@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react"
 import { Moon, Sun } from 'lucide-react'
 import { useDispatch, useSelector } from "react-redux"
-import { setTheme } from "@/store/slices/setting";
+import { setTheme } from "../../store/slices/setting";
+import { selectTheme } from "../../store/slices/setting";
 
 export default function ThemeToggle() {
     const dispatch = useDispatch();
-    const theme = useSelector((state) => state.setting.theme)
+    const theme = useSelector(selectTheme)
     const isDarkMode = (theme == "dark");
     useEffect(() => {
         if (isDarkMode) {

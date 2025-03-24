@@ -4,19 +4,21 @@ import App from './App.jsx'
 import { Provider } from 'react-redux'
 import store from './store'
 import './index.css'
-import { ToastProvider } from "@/components/provider/toast";
-import { WebSocketProvider } from "@/components/provider/webSocketProvider";
+import { ToastProvider } from "./components/provider/toast";
+import { WebSocketProvider } from "./components/provider/webSocketProvider";
 import { ReactFlowProvider } from '@xyflow/react'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   // <React.StrictMode>
+  <Provider store={store}>
     <ReactFlowProvider>
       <WebSocketProvider >
-        <Provider store={store}>
-          <ToastProvider>
+        <ToastProvider>
             <App />
-          </ToastProvider>
-        </Provider>
+        </ToastProvider>
       </WebSocketProvider>
     </ReactFlowProvider>
+  </Provider >
+
   // </React.StrictMode>
 )

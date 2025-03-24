@@ -13,9 +13,9 @@ import {
   Workflow,
   Shapes,
 } from "lucide-react";
-import { useToast } from "@/components/provider/toast";
+import { useToast } from "../components/provider/toast";
 import { useReactFlow, useStoreApi } from "@xyflow/react";
-import { usewsProxy } from "@/components/provider/webSocketProvider";
+import { usewsProxy } from "../components/provider/WebSocketProvider";
 
 export default function Toolbar({ selectedNode, selectedEdge }) {
   const { wsProxy } = usewsProxy();
@@ -41,13 +41,12 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
     if (selectedEdge) {
       updateEdge(selectedEdge,
         (edge) => ({ ...edge, style: { stroke: color } }))
-      const updateData = { style: { stroke: color } }
-      wsProxy.updateEdge(selectedEdge, updateData)
+      wsProxy.updateEdge(1, selectedEdge,['style','stroke'],color)
+
     }
     else if (selectedNode) {
       updateNodeData(selectedNode, { background: color })
-      const updateData = { data: { background: color } }
-      wsProxy.updateNode(selectedNode, updateData)
+      wsProxy.updateNode(1, selectedNode,['data','background'],color)
     }
 
   }

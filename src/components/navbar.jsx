@@ -1,17 +1,25 @@
 import { useState } from "react";
 import { Save, Share2, Settings, User, Undo2, Redo2, Maximize2, Minimize2, FileText, ChevronDown } from "lucide-react";
-import { useToast } from "@/components/provider/toast";
-import Dropdown from "./ui/dropdown";
-import IconButton from "./ui/iconButton";
-import ThemeToggle from "./ui/themeToggole";
+import { useToast } from "../components/provider/toast";
+import Dropdown from "./ui/Dropdown";
+import IconButton from "./ui/IconButton";
+import ThemeToggle from "./ui/ThemeToggle";
 import { useReactFlow } from "@xyflow/react";
+import { clearUserInfo, setAuthenticated } from "../store/slices/user";
+import { useDispatch } from "react-redux";
+import { clearActiveDropdownId } from "../store/slices/ui";
 export default function Navbar() {
-  const { toast } = useToast();
-  const { getZoom,zoomIn,zoomOut } = useReactFlow();
-  const zoomLever=getZoom()
+
+  const dispatch = useDispatch()
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [documentName, setDocumentName] = useState("Untitled Note");
   const [isEditing, setIsEditing] = useState(false);
+
+  const { toast } = useToast();
+  const { getZoom, zoomIn, zoomOut } = useReactFlow();
+  const zoomLever = getZoom()
+
   const handleSave = () => {
     toast({
       title: "Note saved",
@@ -129,6 +137,11 @@ export default function Navbar() {
       {
         type: "button",
         label: "Log out",
+        onClick: () => {
+          dispatch(clearActiveDropdownId())
+          dispatch(clearUserInfo())
+          dispatch(setAuthenticated(false))
+        }
       },
     ]
   }
@@ -221,7 +234,7 @@ export default function Navbar() {
             onClick={() => toast({ title: "Undo", description: "Action undone" })} />
           <IconButton icon={<Redo2 className="h-4 w-4" />} srOnly={"Undo"}
             onClick={() => toast({ title: "Redo", description: "Action redone" })} />
-          <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever*100).toFixed(0)}%`}</div>
+          <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever * 100).toFixed(0)}%`}</div>
         </div>
         <IconButton icon={isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           srOnly={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"} onClick={() => toggleFullscreen()} />

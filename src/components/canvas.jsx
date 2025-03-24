@@ -8,16 +8,16 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  applyEdgeChanges
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import { useToast } from "./provider/toast";
-import { nodeTypes, createNode } from "@/components/nodes";
-import { edgeTypes, defaultEdgeOption } from "@/components/edges";
+import { nodeTypes, createNode } from "../components/nodes";
+import { edgeTypes, defaultEdgeOption } from "../components/edges";
 
-import apiService from "../api";
-import axios from "axios";
-import { usewsProxy } from "./provider/websocketProvider";
+import { usewsProxy } from "./provider/WebSocketProvider";
+import { createEdge } from "./edges";
 // Define custom node types
 
 // Define custom edge types
@@ -27,8 +27,12 @@ import { usewsProxy } from "./provider/websocketProvider";
 export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const onConnect = (connection) => setEdges((edges) => addEdge(connection, edges))
-  const {wsProxy}=usewsProxy()
+  const onConnect = (connection) => {
+    const newEdge = createEdge(connection)
+    setEdges((edges) => addEdge(newEdge, edges))
+    wsProxy.addEdge(1, newEdge)
+  }
+  const { wsProxy } = usewsProxy()
   const { toast } = useToast();
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -73,7 +77,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
       });
       const newNode = createNode(type, position);
       setNodes((nodes) => nodes.concat(newNode))
-
+      wsProxy.addNode(1, newNode)
       toast({
         title: "Node added",
         description: `Added a new ${type} node to the canvasch.`,
@@ -89,8 +93,13 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
-        onNodeDragStop={(e,node)=>wsProxy.updateNode(node.id,{position:node.position})}
+        onNodeDragStop={(e, node) => wsProxy.updateNode(1, node.id, ["position"], node.position)}
         onEdgesChange={onEdgesChange}
+        onNodesDelete={deletedNodes => deletedNodes.map(node => wsProxy.deleteNode(1, node.id))}
+        onEdgesDelete={deletedEdges => {
+          console.log(deletedEdges);
+          deletedEdges.map(edge => wsProxy.deleteEdge(1, edge.id))
+        }}
         onConnect={onConnect}
         defaultEdgeOptions={defaultEdgeOption}
         onNodeClick={onNodeClick}
@@ -105,7 +114,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         paneClickDistance={5}
         nodeClickDistance={10}
         nodeOrigin={[0.5, 0.5]}
-        onViewportChange={({x,y,zoom})=>{}}
+        onViewportChange={({ x, y, zoom }) => { }}
         fitView
       // snapToGrid
       // snapGrid={[15, 15]}

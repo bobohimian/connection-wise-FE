@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  isLoggedIn: false,
+  isAuthenticated: false,
   userInfo: {
     username: '',
     email: '',
@@ -13,8 +13,8 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserStatus: (state, action) => {
-      state.isLoggedIn = action.payload;
+    setAuthenticated: (state, action) => {
+      state.isAuthenticated = action.payload;
     },
     setUserInfo: (state, action) => {
       state.userInfo = {
@@ -23,11 +23,12 @@ const userSlice = createSlice({
       };
     },
     clearUserInfo: (state) => {
-      state.isLoggedIn = false;
+      state.isAuthenticated = false;
       state.userInfo = initialState.userInfo;
     }
   }
 });
-
-export const { setUserStatus, setUserInfo, clearUserInfo } = userSlice.actions;
+export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
+export const selectUser = (state) => state.user;  
+export const { setAuthenticated, setUserInfo, clearUserInfo } = userSlice.actions;
 export default userSlice.reducer;

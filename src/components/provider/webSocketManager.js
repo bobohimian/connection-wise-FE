@@ -1,4 +1,4 @@
-import WebSocketProxy from './webSocketProxy.js';
+import WebSocketProxy from './WebSocketProxy.js';
 class WebSocketManager {
     constructor() {
         this.connections = {};

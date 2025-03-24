@@ -8,7 +8,8 @@ class WebSocketProxy {
         };
 
         this.socket.onmessage = (e) => {
-            const { type, data } = JSON.parse(e.data);
+            const responseData = JSON.parse(e.data);
+            const { type, data } = responseData;
             this.messageHandlers[type] && this.messageHandlers[type](data);
         };
 
@@ -17,12 +18,10 @@ class WebSocketProxy {
             if (!e.wasClean)
                 setTimeout(() => {
                     console.log('Attempting to reconnect...');
-                    connectWebSocket();
                 }, 5000);
         };
         this.socket.onerror = (error) => {
             console.error('WebSocket error:', error);
-            reconnectCountRef.current++;
         };
     }
     registerMessageHandler(type, handler) {
@@ -36,17 +35,46 @@ class WebSocketProxy {
     sendMessage(message) {
         this.socket.send(JSON.stringify(message));
     }
-    updateEdge(id, updateData) {
+    addEdge(canvasId,edgeData) {
         const message = {
-            type: "update-edge",
-            data: { id, updateData }
+            type: "add-edge",
+            opertation: {canvasId,value:`${JSON.stringify(edgeData)}`}
         }
         this.sendMessage(message);
     }
-    updateNode(id, updateData) {
+    deleteEdge(canvasId,edgeId) {
+        const message = {
+            type: "delete-edge",
+            opertation: {canvasId,jsonObjId:edgeId}
+        }
+        this.sendMessage(message);
+    }
+    updateEdge(canvasId,edgeId,path, updateData) {
+        const message = {
+            type: "update-edge",
+            opertation: {canvasId,jsonObjId:edgeId, path, value:`${JSON.stringify(updateData)}` }
+        }
+        this.sendMessage(message);
+    }
+    addNode(canvasId,nodeData) {
+        console.log(nodeData)
+        const message = {
+            type: "add-node",
+            opertation: {canvasId,value:`${JSON.stringify(nodeData)}`}
+        }
+        this.sendMessage(message);
+    }
+    deleteNode(canvasId,nodeId) {
+        const message = {
+            type: "delete-node",
+            opertation: {canvasId,jsonObjId:nodeId}
+        }
+        this.sendMessage(message);
+    }
+    updateNode(canvasId,nodeId,path, updateData) {
         const message = {
             type: "update-node",
-            data: { id, updateData }
+            opertation: {canvasId,jsonObjId:nodeId, path, value:`${JSON.stringify(updateData)}` }
         }
         this.sendMessage(message);
     }

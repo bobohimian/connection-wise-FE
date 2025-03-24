@@ -1,4 +1,4 @@
-import { BaseEdge, getBezierPath, useStoreApi } from "@xyflow/react";
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, useStoreApi } from "@xyflow/react";
 export default function CurvedEdge({
   id,
   sourceX,
@@ -7,11 +7,12 @@ export default function CurvedEdge({
   targetY,
   sourcePosition,
   targetPosition,
+  data,
   style = {},
   markerEnd,
   selected
 }) {
-  const [edgePath] = getBezierPath({
+  const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -19,7 +20,7 @@ export default function CurvedEdge({
     targetY,
     targetPosition,
   });
-  return (
+  return (<>
     <BaseEdge
       id={id}
       style={{
@@ -29,5 +30,17 @@ export default function CurvedEdge({
       }}
       path={edgePath}
     />
+    <EdgeLabelRenderer>
+      <p
+        style={{
+          transform: `translate(${labelX}px, ${labelY}px)`,
+          fontSize: "12px",
+          fontWeight: "bold",
+          color: style?.stroke?style.stroke:"#4caf50",
+        }}
+        className={`absolute -translate-1/2 pointer-events-auto nodrag nopan`}
+      >{data?.relationship}</p>
+    </EdgeLabelRenderer>
+  </>
   );
 }

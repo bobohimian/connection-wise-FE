@@ -1,14 +1,26 @@
 import { useEffect } from "react"
-import NoteEditor from "./components/note-editor"
+import { BrowserRouter, Navigate, Route, Router, Routes } from "react-router-dom"
+import NoteEditor from "./components/NoteEditor"
+import PrivateRoute from "./components/common/PrivateRoute"
+import Login from "./components/common/Login"
 
 export default function App() {
-  useEffect(() => {
-
-  })
+  
   return (
-    <main className="min-h-screen">
-      <NoteEditor />
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={
+          <Navigate to="/canvas" replace />
+        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/canvas" element={
+          <PrivateRoute>
+            <NoteEditor />
+          </PrivateRoute>
+        } />
+      </Routes>
+
+    </BrowserRouter>
   )
 }
 

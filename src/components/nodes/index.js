@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
-import TextNode from './textNode.jsx';
-import TodoNode from './todoNode.jsx';
-import CodeNode from './codeNode.jsx';
+import TextNode from './TextNode.jsx';
+import TodoNode from './TodoNode.jsx';
+import CodeNode from './CodeNode.jsx';
 export const nodeTypes = {
     textNode: TextNode,
     todoNode: TodoNode,
