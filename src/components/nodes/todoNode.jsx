@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React,{ useCallback, useEffect, useRef, useState } from "react";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { usewsProxy } from "../../components/provider/WebSocketProvider";

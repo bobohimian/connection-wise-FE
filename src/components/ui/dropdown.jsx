@@ -1,6 +1,6 @@
+import React,{ useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { clearActiveDropdownId, selectActiveDropdownId, toggleActiveDropdownId } from "../../store/slices/ui";
-import { useEffect, useRef } from "react";
 const Dropdown = ({ id, label, alignTo = "left", children }) => {
     const dispatch = useDispatch();
     const activeDropdown = useSelector(selectActiveDropdownId);

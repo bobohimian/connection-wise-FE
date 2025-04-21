@@ -1,3 +1,4 @@
+import React from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useStoreApi } from "@xyflow/react";
 export default function CurvedEdge({
   id,

@@ -1,3 +1,4 @@
+import React from 'react';
 import { BaseEdge, getStraightPath, useStoreApi } from "@xyflow/react";
 
 export default function StraightEdge({

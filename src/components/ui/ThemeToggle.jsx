@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React,{ useEffect } from "react";
 import { Moon, Sun } from 'lucide-react'
 import { useDispatch, useSelector } from "react-redux"
 import { setTheme } from "../../store/slices/setting";

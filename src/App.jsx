@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import React,{ useEffect } from "react"
 import { BrowserRouter, Navigate, Route, Router, Routes } from "react-router-dom"
-import NoteEditor from "./components/NoteEditor"
+import NoteEditor from "./components/NoteEditor.jsx"
 import PrivateRoute from "./components/common/PrivateRoute"
 import Login from "./components/common/Login"
 

@@ -1,3 +1,4 @@
+import React from 'react';
 const IconButton = ({ icon, onClick, srOnly }) => {
     return (
         <button

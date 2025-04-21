@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React,{ useState, useCallback } from "react";
 import { usewsProxy } from "../../components/provider/WebSocketProvider";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 export default function TextNode({ id, data, isConnectable, selected}) {

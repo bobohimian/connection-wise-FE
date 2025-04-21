@@ -1,12 +1,10 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import React,{ useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-import { setUserInfo } from "../../store/slices/user"
-import { setAuthenticated } from "../../store/slices/user"
-import apiService from "@/api"
+import { setUserInfo } from "../../store/slices/user.js"
+import { setAuthenticated } from "../../store/slices/user.js"
+import apiService from "@/api/index.js"
 export default function Login({ children }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()

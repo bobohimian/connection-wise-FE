@@ -1,3 +1,4 @@
+import React from 'react';
 import CurveEdge from './CurvedEdge'
 import StraightEdge from './StraightEdge'
 import PolylineEdge from './PolylineEdge'
