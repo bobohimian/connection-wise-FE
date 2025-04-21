@@ -5,7 +5,7 @@ import PrivateRoute from "./components/common/PrivateRoute"
 import Login from "./components/common/Login"
 
 export default function App() {
-  
+
   return (
     <BrowserRouter>
       <Routes>
@@ -18,8 +18,8 @@ export default function App() {
             <NoteEditor />
           </PrivateRoute>
         } />
+        <Route path="*" element={<Navigate to="/login"  replace/>}></Route>
       </Routes>
-
     </BrowserRouter>
   )
 }

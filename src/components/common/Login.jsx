@@ -1,50 +1,67 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
-import { setUserInfo } from "../../store/slices/user"
-import { setAuthenticated } from "../../store/slices/user"
 import { useNavigate } from "react-router-dom"
 
-
+import { setUserInfo } from "../../store/slices/user"
+import { setAuthenticated } from "../../store/slices/user"
+import apiService from "@/api"
 export default function Login({ children }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(null)
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [error, setError] = useState(null) // 添加错误状态
 
     const login = async (provider) => {
-        console.log("使用 " + provider + " 登录")
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const userInfo = {
+        console.log("render11")
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        let userInfo = {};
+        switch (provider) {
+            case "password":
+                const user = await apiService.login(username, password)
+                console.log(user)
+                userInfo = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    avatar: user.avatar,
+                }
+                break;
+            default:
+                userInfo = {
+                    id:12312,
                     username: 'chenhong',
                     email: 'bobohemian171@gmail.com',
                     avatar: '',
-                    token: 'djheuiqfrj21378rh31br43178243y178'
                 }
-                dispatch(setAuthenticated(true))
-                dispatch(setUserInfo(userInfo))
-                resolve()
-            }, 1000)
-        })
+                break;
+        }
+        dispatch(setUserInfo(userInfo))
+        dispatch(setAuthenticated(true))
+        return
     }
 
     const handleLogin = async (provider) => {
         setLoading(provider)
+        setError(null)
+        console.log("使用 " + provider + " 登录")
         try {
             await login(provider)
             navigate("/canvas")
         } catch (error) {
-            console.error("登录失败:", error)
+            console.error(error)
+            setError(provider === "password"
+                ? "用户名或密码错误，请重试"
+                : `使用${provider === "google" ? "Google" : "GitHub"}登录失败，请稍后再试`)
         } finally {
             setLoading(null)
         }
     }
 
-    const handleLogout = async () => {
-
-    }
 
 
     return (
@@ -54,7 +71,56 @@ export default function Login({ children }) {
                     <h2 className="text-3xl font-bold mb-2">欢迎回来</h2>
                     <p className="opacity-80">请登录以继续访问您的账户</p>
                 </div>
+                <div className="px-8 flex flex-col space-y-4 mt-4">
+                    {error && (
+                        <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md animate-fadeIn">
+                            <div className="flex items-center">
+                                <div className="flex-shrink-0">
+                                    <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <p className="text-sm text-red-700">{error}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <div>
+                        <label htmlFor="username" className="mb-2 text-sm font-medium text-gray-700">
+                            用户名
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            placeholder="请输入用户名"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className={`w-full py-3 px-4 border ${error && !username ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                        />
+                    </div>
 
+                    <div>
+                        <label htmlFor="password" className="mb-2 text-sm font-medium text-gray-700">
+                            密码
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="请输入密码"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={`w-full py-3 px-4 border ${error && !password ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                        />
+                    </div>
+                    <button
+                        onClick={() => handleLogin("password")}
+                        className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-indigo-500 rounded-lg text-white font-medium transition-colors hover:bg-indigo-700 ${loading === "password" ? "opacity-70 cursor-not-allowed" : ""}`}
+                    >
+                        {loading === "password" ? (
+                            <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
+                        ) : (<span>登录</span>)}</button>
+                </div>
                 <div className="p-8">
                     <div className="space-y-4">
                         <button

@@ -6,7 +6,15 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    hmr: true,
+    hmr:true,
+    port: 5173, 
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        // changeOrigin: true,
+        // rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   resolve: {
     alias: {

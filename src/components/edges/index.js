@@ -1,17 +1,22 @@
 import CurveEdge from './CurvedEdge'
 import StraightEdge from './StraightEdge'
-import PolylineEdge from './PolylineEdge' 
+import PolylineEdge from './PolylineEdge'
 import { v4 as uuidv4 } from 'uuid';
-export const edgeTypes = {
+const edgeTypes = {
     curvedEdge: CurveEdge,
     straightEdge: StraightEdge,
     polylineEdge: PolylineEdge
 }
-export const defaultEdgeOption={
+const defaultEdgeOption = {
     type: 'curvedEdge',
-    animated:true
+    animated: true
 }
-export const createEdge = (connection) => {
-    connection.id=uuidv4()
+const createEdge = (connection) => {
+    connection.id = uuidv4()
     return connection
+}
+export {
+    edgeTypes,
+    defaultEdgeOption,
+    createEdge
 }

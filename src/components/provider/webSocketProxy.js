@@ -35,24 +35,31 @@ class WebSocketProxy {
     sendMessage(message) {
         this.socket.send(JSON.stringify(message));
     }
+    getCanvas(canvasId) {
+        const message = {
+            type: "get-canvas",
+            operation: {canvasId}
+        }
+        this.sendMessage(message);
+    }
     addEdge(canvasId,edgeData) {
         const message = {
             type: "add-edge",
-            opertation: {canvasId,value:`${JSON.stringify(edgeData)}`}
+            operation: {canvasId,value:`${JSON.stringify(edgeData)}`}
         }
         this.sendMessage(message);
     }
     deleteEdge(canvasId,edgeId) {
         const message = {
             type: "delete-edge",
-            opertation: {canvasId,jsonObjId:edgeId}
+            operation: {canvasId,jsonObjId:edgeId}
         }
         this.sendMessage(message);
     }
     updateEdge(canvasId,edgeId,path, updateData) {
         const message = {
             type: "update-edge",
-            opertation: {canvasId,jsonObjId:edgeId, path, value:`${JSON.stringify(updateData)}` }
+            operation: {canvasId,jsonObjId:edgeId, path, value:`${JSON.stringify(updateData)}` }
         }
         this.sendMessage(message);
     }
@@ -60,23 +67,24 @@ class WebSocketProxy {
         console.log(nodeData)
         const message = {
             type: "add-node",
-            opertation: {canvasId,value:`${JSON.stringify(nodeData)}`}
+            operation: {canvasId,value:`${JSON.stringify(nodeData)}`}
         }
         this.sendMessage(message);
     }
     deleteNode(canvasId,nodeId) {
         const message = {
             type: "delete-node",
-            opertation: {canvasId,jsonObjId:nodeId}
+            operation: {canvasId,jsonObjId:nodeId}
         }
         this.sendMessage(message);
     }
     updateNode(canvasId,nodeId,path, updateData) {
         const message = {
             type: "update-node",
-            opertation: {canvasId,jsonObjId:nodeId, path, value:`${JSON.stringify(updateData)}` }
+            operation: {canvasId,jsonObjId:nodeId, path, value:`${JSON.stringify(updateData)}` }
         }
         this.sendMessage(message);
     }
+    
 }
 export default WebSocketProxy;

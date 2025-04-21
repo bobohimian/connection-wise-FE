@@ -2,8 +2,12 @@ import React, { useEffect } from 'react';
 import { useReactFlow } from '@xyflow/react';
 import webSocketManager from './WebSocketManager';
 import dagre from '@dagrejs/dagre';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../store/slices/user';
 export const usewsProxy = (url) => {
-    url = url ? url : 'ws://localhost:8080/api/ws'
+    const user = useSelector(selectUser)
+    const canvasId= user.canvasId
+    url = url ? url : `ws://localhost:8080/api/ws/canvas/${canvasId}`
     const wsProxy = webSocketManager.getwsProxy(url)
     return { wsProxy }
 }
@@ -47,12 +51,13 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     return { nodes: newNodes, edges };
 };
 
-export const WebSocketProvider = ({ children }) => {
+const WebSocketProvider = ({ children }) => {
     const { setNodes, setEdges } = useReactFlow();
     const { wsProxy } = usewsProxy();
     const messageHandlers = {
         init: (data) => {
             const { nodes, edges } = data;
+            console.log("Receive init.");
             setNodes([...nodes]);
             setEdges([...edges]);
             // const { nodes: layoutedNodes, edges: layoutedEdges } =
@@ -60,6 +65,12 @@ export const WebSocketProvider = ({ children }) => {
 
             // setNodes([...layoutedNodes]);
             // setEdges([...layoutedEdges]);
+        },
+        canvas:(data) => {
+            const { nodes, edges } = data;
+            setNodes([...nodes]);
+            setEdges([...edges]);
+            console.log("Receive canvas.");
         },
         pong: () => {
             console.log("Receive pong.");
@@ -73,3 +84,4 @@ export const WebSocketProvider = ({ children }) => {
 
     return (children);
 };
+export default WebSocketProvider;

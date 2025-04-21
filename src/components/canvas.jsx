@@ -37,7 +37,9 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-
+  useEffect(() => {
+    
+  })
   const onNodeClick = useCallback(
     (_, node) => {
       setSelectedEdge(null);

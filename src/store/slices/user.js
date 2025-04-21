@@ -1,13 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import apiService from "../../api";
 const initialState = {
   isAuthenticated: false,
+  loading: false,
   userInfo: {
+    id:null,
     username: '',
     email: '',
     avatar: '',
-    token: ''
-  }
+  },
+  canvasId:1
 };
+
 
 const userSlice = createSlice({
   name: 'user',

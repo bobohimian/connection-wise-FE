@@ -8,6 +8,7 @@ import { useReactFlow } from "@xyflow/react";
 import { clearUserInfo, setAuthenticated } from "../store/slices/user";
 import { useDispatch } from "react-redux";
 import { clearActiveDropdownId } from "../store/slices/ui";
+import apiService from "../api";
 export default function Navbar() {
 
   const dispatch = useDispatch()
@@ -140,6 +141,7 @@ export default function Navbar() {
         onClick: () => {
           dispatch(clearActiveDropdownId())
           dispatch(clearUserInfo())
+          apiService.logout();
           dispatch(setAuthenticated(false))
         }
       },
