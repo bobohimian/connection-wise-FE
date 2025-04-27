@@ -1,5 +1,29 @@
 @import '@xyflow/react/dist/style.css';
 @import "tailwindcss";
+/* 值为渐变，不起作用 */
+@theme {
+  --color-mint-550: bg-linear-to-r from-cyan-700 via-blue-500 to-indigo-600;
+}
+.bg-theme-breeze {
+  background: linear-gradient( right, #38bdf8, #0891b2, #0ea5e9);
+}
+
+.bg-theme-sunset {
+  background: linear-gradient(to right, #f87171, #fbbf24, #fcd34d);
+}
+
+.bg-theme-dusk {
+  background: linear-gradient(to bottom, #15803d, #064e3b, #022c22);
+}
+
+.bg-theme-dream {
+  background: linear-gradient(45deg, #581c87, #831843, #be123c);
+}
+
+.bg-theme-haze {
+  background: linear-gradient(to right, #b45309, #ea580c, #f59e0b);
+}
+
 html,
 body {
   margin: 0;

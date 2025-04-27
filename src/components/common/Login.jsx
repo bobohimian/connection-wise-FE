@@ -15,7 +15,7 @@ export default function Login({ children }) {
 
     const login = async (provider) => {
         console.log("render11")
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
 
         let userInfo = {};
         switch (provider) {

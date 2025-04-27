@@ -2,8 +2,8 @@ import React,{ useCallback, useEffect, useRef, useState } from "react";
 import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { usewsProxy } from "../../components/provider/WebSocketProvider";
-export default function ç({ id, data, isConnectable, selected }) {
-  const bgColor = data.background ? data.background : {};
+export default function  ({ id, data, isConnectable, selected }) {
+
   const { wsProxy } = usewsProxy()
   const { updateNode } = useReactFlow();
   const items = data.items;
@@ -46,8 +46,8 @@ export default function ç({ id, data, isConnectable, selected }) {
   };
 
   return (
-    <div style={{ backgroundColor: bgColor ? bgColor : "white" }}
-      className={`p-2 rounded-md bg-white ${selected ? "border-primary ring-1" : ""} shadow-sm w-50`}
+    <div
+      className={`p-2 rounded-md  ${selected ? "border-primary ring-1" : ""} shadow-sm w-50`}
     >
       <Handle
         type="target"

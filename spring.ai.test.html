@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实时文本渲染</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 100px;
+            margin-left: 100px;
+            position: relative;
+            /* 提供定位基准 */
+            width: 500px;
+            height: 500px;
+            display: flex;
+            background: lightgray;
+        }
+
+        .child {
+            position: absolute;
+            width: 100px;
+            height: 190px;
+            background: red;
+        }
+        .brother {
+
+            width: 100px;
+            height: 190px;
+            background: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <div class="brother"></div>
+            <div class="child"></div>
+    </div>
+
+</body>
+
+</html>

@@ -4,7 +4,6 @@ import { Code, Copy, ChevronDown } from "lucide-react";
 import { useToast } from "../../components/provider/toast";
 import { usewsProxy } from "../../components/provider/WebSocketProvider";
 export default function CodeNode({ id, data, isConnectable, selected }) {
-  const bgColor = data.background ? data.background : {};
   const { wsProxy } = usewsProxy();
   const { updateNode } = useReactFlow();
   const { toast } = useToast();
@@ -18,7 +17,6 @@ export default function CodeNode({ id, data, isConnectable, selected }) {
     wsProxy.updateNode(1,id,["data","code"],newCode)
     
   };
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);
     toast({
@@ -28,8 +26,8 @@ export default function CodeNode({ id, data, isConnectable, selected }) {
   };
 
   return (
-    <div style={{ backgroundColor: bgColor ? bgColor : "white" }}
-      className={`p-3 rounded-md border bg-white dark:bg-black ${selected ? "border-primary ring-1" : "border-border"} shadow-sm w-80`}>
+    <div
+      className={`p-3 rounded-md border  dark:bg-black ${selected ? "border-primary ring-1" : "border-border"} shadow-sm w-80`}>
       <Handle
         type="target"
         position={Position.Top}

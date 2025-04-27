@@ -2,10 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import TextNode from './TextNode.jsx';
 import TodoNode from './TodoNode.jsx';
 import CodeNode from './CodeNode.jsx';
+import { withToolTip } from '../hoc/withToolTip.jsx';
 const nodeTypes = {
-    textNode: TextNode,
-    todoNode: TodoNode,
-    codeNode: CodeNode,
+    textNode: withToolTip(TextNode),
+    todoNode: withToolTip(TodoNode),
+    codeNode: withToolTip(CodeNode),
 };
 const initialNodeData = {
     textNode: {
@@ -22,14 +23,15 @@ const initialNodeData = {
         code: "// Your code here\n",
     },
 };
-const createNode = (type, position) => {
+const createNode = ({ id, type, position, data }) => {
     const node = {
-        id: uuidv4(),
+        id: id ? id : uuidv4(),
         type,
         position,
-        data: initialNodeData[type],
+        data: data ? data : initialNodeData[type],
         origin: [0.5, 0.5]
     };
+    node.data.theme="bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500"
     return node;
 }
 export {

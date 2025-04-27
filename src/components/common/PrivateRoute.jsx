@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }) => {
     console.log("privateRoute")
     const checkSession = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        // await new Promise((resolve) => setTimeout(resolve, 2000));
         const user = await apiService.checkSession();
         const userInfo = {
           id: user.id,

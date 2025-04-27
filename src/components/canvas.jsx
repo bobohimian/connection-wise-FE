@@ -1,4 +1,4 @@
-import React,{ useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -8,7 +8,7 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
-  applyEdgeChanges
+  applyEdgeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -28,8 +28,9 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = (connection) => {
+    console.log("onConnect", connection);
     const newEdge = createEdge(connection)
-    setEdges((edges) => addEdge(newEdge, edges))
+    setEdges((edges) => edges.concat(newEdge))
     wsProxy.addEdge(1, newEdge)
   }
   const { wsProxy } = usewsProxy()
@@ -38,7 +39,7 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   useEffect(() => {
-    
+
   })
   const onNodeClick = useCallback(
     (_, node) => {
@@ -70,14 +71,15 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-      if (!reactFlowInstance) return;
+      if (!reactFlowInstance)
+        return;
       const type = event.dataTransfer.getData("application/reactflow");
       if (typeof type === "undefined" || !type) return;
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = createNode(type, position);
+      const newNode = createNode({type, position});
       setNodes((nodes) => nodes.concat(newNode))
       wsProxy.addNode(1, newNode)
       toast({
@@ -87,7 +89,6 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
     },
     [reactFlowInstance, toast]
   );
-
 
   return (
     <div ref={reactFlowWrapper} className="flex-1 h-full">

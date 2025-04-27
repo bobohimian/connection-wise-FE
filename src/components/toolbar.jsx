@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import {
   Heading1,
   Text,
@@ -27,7 +27,19 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
     event.dataTransfer.setData("application/reactflow", nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
-
+  const themes = [
+    "bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500",
+    "bg-linear-to-r from-cyan-700 via-blue-500 to-indigo-600",
+    "bg-linear-to-r from-green-500 via-emerald-500 to-teal-500",
+    "bg-[linear-gradient(60deg,_rgb(247,_149,_51),_rgb(243,_112,_85),_rgb(239,_78,_123),_rgb(161,_102,_171),_rgb(80,_115,_184),_rgb(16,_152,_173),_rgb(7,_179,_155),_rgb(111,_186,_130))]  ",
+  ]
+  // 显示写出反转的主题色，用于tooltip的association使用函数反转颜色
+  const reverseThemes = [
+    "bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500",
+    "bg-linear-to-r from-indigo-600 via-blue-500 to-cyan-700",
+    "bg-linear-to-r from-teal-500 via-emerald-500 to-green-500",
+    "bg-[linear-gradient(60deg,_rgb(111,_186,_130),_rgb(7,_179,_155),_rgb(16,_152,_173),_rgb(80,_115,_184),_rgb(161,_102,_171),_rgb(239,_78,_123),_rgb(243,_112,_85),_rgb(247,_149,_51))]"
+  ]
   const handleToolClick = (tool) => {
     toast({
       title: `${tool} selected`,
@@ -35,18 +47,18 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
     });
   };
 
-  const handleClickColor = (color) => {
+  const handleClickColor = (theme) => {
     if (selectedNode && selectedEdge)
       throw new Error("Only one node or one Edge can be selected at a time");
     if (selectedEdge) {
       updateEdge(selectedEdge,
-        (edge) => ({ ...edge, style: { stroke: color } }))
-      wsProxy.updateEdge(1, selectedEdge,['style','stroke'],color)
+        (edge) => ({ ...edge, style: { stroke: theme } }))
+      wsProxy.updateEdge(1, selectedEdge, ['style', 'stroke'], theme)
 
     }
     else if (selectedNode) {
-      updateNodeData(selectedNode, { background: color })
-      wsProxy.updateNode(1, selectedNode,['data','background'],color)
+      updateNodeData(selectedNode, { theme: theme })
+      wsProxy.updateNode(1, selectedNode, ['data', 'theme'], theme)
     }
 
   }
@@ -174,13 +186,12 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
                 <div>
                   <h3 className="mb-2 text-xs font-medium">Colors</h3>
                   <div className="flex  gap-2">
-                    {["#F56565", "#4299E1", "#48BB78", "#F6E05E", "#A855F7", "#ED64A6"].map(
-                      (color) => (
+                    {themes.map(
+                      (theme, index) => (
                         <button
-                          key={color}
-                          className={`h-6 w-6 rounded-full hover:ring-2 hover:ring-offset-2`}
-                          style={{ backgroundColor: color }}
-                          onClick={() => handleClickColor(color)}
+                          key={'theme' + index}
+                          className={`h-6 w-6 ${theme} rounded-full hover:ring-2 hover:ring-offset-2`}
+                          onClick={() => handleClickColor(theme)}
                         />
                       )
                     )}
