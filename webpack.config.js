@@ -67,7 +67,8 @@ module.exports = (env) => {
         // 插件配置
         plugins: [
             new webpack.DefinePlugin({
-                'process.env.API_BASE_URL': JSON.stringify(isDevelopment?'http://localhost:3000':'http://connect-wisebe.zeabur.internal:8080')
+                'process.env.API_BASE_URL': JSON.stringify(isDevelopment?'http://localhost:3000/api':'http://connect-wisebe.zeabur.internal:8080/api'),
+                'process.env.WS_BASE_URL': JSON.stringify(isDevelopment?'ws://localhost:8080/api/ws/canvas':'ws://connect-wisebe.zeabur.internal:8080/api/ws/canvas'),
             }),
             new HtmlWebpackPlugin({
                 template: './index.html', // 指定 HTML 模板文件
