@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux";
 import { usewsProxy } from "./usewsProxy";
 import { useReactFlow } from "@xyflow/react";
+import { selectUser } from "../store/slices/user";
 export function useEnhancedReaceFlow() {
+    const canvasId = useSelector(selectUser).canvasId;
     const {
         setNodes: setNodesRF,
         updateNode: updateNodeRF,
@@ -10,19 +13,15 @@ export function useEnhancedReaceFlow() {
         screenToFlowPosition:screenToFlowPositionRF,
     } = useReactFlow();
     const { wsProxy } = usewsProxy();
-    const canvasId = 1;
 
     const addNode = (node) => {
-        console.log("addNode", node);
         setNodesRF((nodes) => nodes.concat(node));
         wsProxy.addNode(canvasId, node);
     }
     const deleteNode = (nodeId) => {
-        console.log("deleteNode", nodeId);
         wsProxy.deleteNode(canvasId, nodeId);
     }
     const updateNode = (nodeId, path, newValue) => {
-        console.log("updateNode", nodeId, path, newValue);
         // 对函数式更新需要特殊处理
         // if(typeof edge ==="function")
 
@@ -56,12 +55,10 @@ export function useEnhancedReaceFlow() {
 
 
     const addEdge = (edge) => {
-        console.log("addEdge", edge);
         setEdgesRF((edges) => edges.concat(edge));
         wsProxy.addEdge(canvasId, edge);
     }
     const deleteEdge = (edgeId) => {
-        console.log("deleteEdge", edgeId);
         wsProxy.deleteEdge(canvasId, edgeId);
     }
     const updateEdge = (edgeId, path, newValue) => {

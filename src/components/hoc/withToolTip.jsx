@@ -23,6 +23,7 @@ const withToolTip = (Component) => {
         // 确保generationContentRef是最新的
         const generationContentRef = useRef(dataText ? dataText : "");
         const associationContentRef = useRef("");
+        const associationGenerationRef = useRef("");
         useEffect(() => {
             const handleClickOutside = (event) => {
                 if (!showToolTip)
@@ -122,7 +123,6 @@ const withToolTip = (Component) => {
                 eventSource.close();
             };
         }
-        const [associationResult, setAssociationResult] = useState("")
         const hanldeGenerateAssociation = (associationIndex) => {
             const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText) + '&direction=' + encodeURIComponent(associations[associationIndex]);
             const parent = document.querySelector(`[data-id="${nodeId}"]`);
@@ -146,9 +146,8 @@ const withToolTip = (Component) => {
             addEdge(newEdge)
             const eventSource = new EventSource(SSESource);
             eventSource.addEventListener('push', (event) => {
-                setAssociationResult(prev => prev + event.data);
-                // updateNodeData(newNodeId, { text: prevText + event.data });
-                updateNodeData(newNodeId, (prevNode) => { return { text: prevNode.data.text + event.data } });
+                associationGenerationRef.current += event.data;
+                updateNode(newNodeId,["data","text"],associationGenerationRef.current);
             });
             eventSource.addEventListener('close', () => {
                 eventSource.close();
