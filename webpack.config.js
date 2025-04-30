@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -65,6 +66,9 @@ module.exports = (env) => {
 
         // 插件配置
         plugins: [
+            new webpack.DefinePlugin({
+                'process.env.API_BASE_URL': JSON.stringify(isDevelopment?'http://localhost:3000':'http://connect-wisebe.zeabur.internal:8080')
+            }),
             new HtmlWebpackPlugin({
                 template: './index.html', // 指定 HTML 模板文件
                 filename: 'index.html'
@@ -138,7 +142,7 @@ module.exports = (env) => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             },
-            extensions: ['.js', '.jsx']
+            extensions: ['.js', '.jsx','/index.js']
         },
         mode: isDevelopment ? 'development' : 'production',
         devtool: isDevelopment ? 'cheap-module-source-map' : 'hidden-source-map'

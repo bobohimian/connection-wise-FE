@@ -1,17 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { usewsProxy } from "../../components/provider/WebSocketProvider";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
+import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
 const TextNode = ({ id, data, isConnectable, selected }) => {
-  const { wsProxy } = usewsProxy();
-  const { updateNodeData } = useReactFlow();
+  const text = data.text || "";
+  const { updateNode } = useEnhancedReaceFlow();
   const handleTextChange = useCallback(
     (e) => {
       const nextText = e.target.value;
-      updateNodeData(
-        id,
-        { text: nextText },
-      )
-      wsProxy.updateNode(1, id, ["data", "text"], nextText)
+      updateNode(id, ["data", "text"], nextText)
     }, []);
 
   return (
@@ -27,7 +23,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
           className=""
         />
         <textarea
-          value={data.text ? data.text : ""}
+          value={text}
           onChange={handleTextChange}
           autoFocus
           className="w-full h-full p-1 text-sm rounded  overflow-y-auto resize-none focus:outline-none  nodrag "

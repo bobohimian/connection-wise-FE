@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 import { setUserInfo } from "../../store/slices/user.js"
 import { setAuthenticated } from "../../store/slices/user.js"
-import apiService from "@/api/index.js"
+import apiService from "../../api/index.js"
 export default function Login({ children }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()

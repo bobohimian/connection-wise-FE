@@ -1,25 +1,25 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { Save, Share2, Settings, User, Undo2, Redo2, Maximize2, Minimize2, FileText, ChevronDown } from "lucide-react";
-import { useToast } from "../components/provider/toast";
-import Dropdown from "./ui/Dropdown";
-import IconButton from "./ui/IconButton";
-import ThemeToggle from "./ui/ThemeToggle";
-import { useReactFlow } from "@xyflow/react";
-import { clearUserInfo, setAuthenticated } from "../store/slices/user";
+import { useToast } from "../common/toast";
+import Dropdown from "../common/Dropdown";
+import IconButton from "../common/IconButton";
+import ThemeToggle from "../common/ThemeToggle";
+import { clearUserInfo, setAuthenticated } from "../../store/slices/user";
 import { useDispatch } from "react-redux";
-import { clearActiveDropdownId } from "../store/slices/ui";
-import apiService from "../api";
+import { clearActiveDropdownId } from "../../store/slices/ui";
+import apiService from "../../api";
+import { useNavigate } from "react-router-dom";
 export default function Navbar() {
 
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [documentName, setDocumentName] = useState("Untitled Note");
   const [isEditing, setIsEditing] = useState(false);
 
   const { toast } = useToast();
-  const { getZoom, zoomIn, zoomOut } = useReactFlow();
-  const zoomLever = getZoom()
+
+  const zoomLever =  1 // getZoom is a function from @xyflow/react
 
   const handleSave = () => {
     toast({
@@ -134,6 +134,13 @@ export default function Navbar() {
       {
         type: "button",
         label: "Settings",
+      },
+      {
+        type: "button",
+        label: "My Canvas",
+        onClick: () => {
+          navigate("/canvas/")
+        }
       },
       {
         type: "button",

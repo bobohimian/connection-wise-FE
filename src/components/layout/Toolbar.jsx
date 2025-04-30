@@ -13,14 +13,12 @@ import {
   Workflow,
   Shapes,
 } from "lucide-react";
-import { useToast } from "../components/provider/toast";
-import { useReactFlow, useStoreApi } from "@xyflow/react";
-import { usewsProxy } from "../components/provider/WebSocketProvider";
+import { useToast } from "../common/toast";
+import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
 
 export default function Toolbar({ selectedNode, selectedEdge }) {
-  const { wsProxy } = usewsProxy();
   const { toast } = useToast();
-  const { updateEdge, updateNodeData } = useReactFlow();
+  const { updateEdge, updateNode } = useEnhancedReaceFlow();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("nodes");
   const handleDragStart = (event, nodeType) => {
@@ -51,14 +49,10 @@ export default function Toolbar({ selectedNode, selectedEdge }) {
     if (selectedNode && selectedEdge)
       throw new Error("Only one node or one Edge can be selected at a time");
     if (selectedEdge) {
-      updateEdge(selectedEdge,
-        (edge) => ({ ...edge, style: { stroke: theme } }))
-      wsProxy.updateEdge(1, selectedEdge, ['style', 'stroke'], theme)
-
+      updateEdge(selectedEdge, ['style', 'stroke'], theme)
     }
     else if (selectedNode) {
-      updateNodeData(selectedNode, { theme: theme })
-      wsProxy.updateNode(1, selectedNode, ['data', 'theme'], theme)
+      updateNode(selectedNode, ['data', 'theme'], theme)
     }
 
   }

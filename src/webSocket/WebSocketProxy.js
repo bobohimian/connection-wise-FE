@@ -1,4 +1,4 @@
-class WebSocketProxy {
+export class WebSocketProxy {
     constructor(url) {
         this.url = url;
         this.messageHandlers = {};
@@ -64,7 +64,6 @@ class WebSocketProxy {
         this.sendMessage(message);
     }
     addNode(canvasId,nodeData) {
-        console.log(nodeData)
         const message = {
             type: "add-node",
             operation: {canvasId,value:`${JSON.stringify(nodeData)}`}
@@ -87,4 +86,3 @@ class WebSocketProxy {
     }
     
 }
-export default WebSocketProxy;

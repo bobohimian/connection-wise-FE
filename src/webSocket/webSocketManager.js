@@ -1,4 +1,4 @@
-import WebSocketProxy from './WebSocketProxy.js';
+import { WebSocketProxy } from './WebSocketProxy.js';
 class WebSocketManager {
     constructor() {
         this.connections = {};
@@ -10,5 +10,5 @@ class WebSocketManager {
         return this.connections[url];
     }
 }
-const webSocketManager = new WebSocketManager();
-export default webSocketManager
+export const webSocketManager = new WebSocketManager();
+

@@ -1,7 +1,8 @@
-import { getFlowData } from "./flow.service.js";
+import { fetchCanvasList,fetchCanvas } from "./flow.service.js";
 import { login,checkSession,logout } from "./login.service.js";
 const apiService = {
-    getFlowData,
+    fetchCanvasList,
+    fetchCanvas,
     login,
     logout,
     checkSession

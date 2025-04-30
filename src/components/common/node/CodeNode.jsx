@@ -1,21 +1,16 @@
-import React,{ useState } from "react";
-import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
+import React, { useState } from "react";
+import { Handle, Position } from "@xyflow/react";
 import { Code, Copy, ChevronDown } from "lucide-react";
-import { useToast } from "../../components/provider/toast";
-import { usewsProxy } from "../../components/provider/WebSocketProvider";
+import { useToast } from "../toast";
+import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
 export default function CodeNode({ id, data, isConnectable, selected }) {
-  const { wsProxy } = usewsProxy();
-  const { updateNode } = useReactFlow();
+  const code = data.code || "";
+  const { updateNode } = useEnhancedReaceFlow();
   const { toast } = useToast();
-  const [code, setCode] = useState(data.code);
   const [language, setLanguage] = useState(data.language || "javascript");
   const [openDropdown, setOpenDropdown] = useState(false);
   const handleCodeChange = (e) => {
-    const newCode = e.target.value;
-    setCode(newCode);
-    updateNode(id, { data: { ...data, code: newCode } })
-    wsProxy.updateNode(1,id,["data","code"],newCode)
-    
+    updateNode(id, ["data", "code"], e.target.value)
   };
   const copyToClipboard = () => {
     navigator.clipboard.writeText(code);

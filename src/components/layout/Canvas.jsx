@@ -12,35 +12,40 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-import { useToast } from "./provider/toast";
-import { nodeTypes, createNode } from "../components/nodes";
-import { edgeTypes, defaultEdgeOption } from "../components/edges";
+import { useToast } from "../common/toast";
+import { nodeTypes, createNode } from "../common/node";
+import { edgeTypes, defaultEdgeOption } from "../common/edge";
 
-import { usewsProxy } from "./provider/WebSocketProvider";
-import { createEdge } from "./edges";
+import { createEdge } from "../common/edge";
+import apiService from "../../api";
+import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
 // Define custom node types
 
 // Define custom edge types
 
 
 
-export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
+export default function Canvas({ canvasId, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const onConnect = (connection) => {
-    console.log("onConnect", connection);
-    const newEdge = createEdge(connection)
-    setEdges((edges) => edges.concat(newEdge))
-    wsProxy.addEdge(1, newEdge)
-  }
-  const { wsProxy } = usewsProxy()
+  const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge } = useEnhancedReaceFlow()
   const { toast } = useToast();
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   useEffect(() => {
+    const getCanvas = async () => {
+      const res = await apiService.fetchCanvas(canvasId)
+      setNodes(res.nodes)
+      setEdges(res.edges)
+    }
+    getCanvas()
+  }, [])
 
-  })
+  const onConnect = (connection) => {
+    const newEdge = createEdge(connection)
+    addEdge(newEdge)
+  }
   const onNodeClick = useCallback(
     (_, node) => {
       setSelectedEdge(null);
@@ -79,9 +84,8 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         x: event.clientX,
         y: event.clientY,
       });
-      const newNode = createNode({type, position});
-      setNodes((nodes) => nodes.concat(newNode))
-      wsProxy.addNode(1, newNode)
+      const newNode = createNode({ type, position });
+      addNode(newNode)
       toast({
         title: "Node added",
         description: `Added a new ${type} node to the canvasch.`,
@@ -96,12 +100,12 @@ export default function Canvas({ selectedNode, setSelectedNode, selectedEdge, se
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
-        onNodeDragStop={(e, node) => wsProxy.updateNode(1, node.id, ["position"], node.position)}
+        onNodeDragStop={(e, node) => updateNode(node.id, ["position"], node.position)}
         onEdgesChange={onEdgesChange}
-        onNodesDelete={deletedNodes => deletedNodes.map(node => wsProxy.deleteNode(1, node.id))}
+        onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}
         onEdgesDelete={deletedEdges => {
           console.log(deletedEdges);
-          deletedEdges.map(edge => wsProxy.deleteEdge(1, edge.id))
+          deletedEdges.map(edge => deleteEdge(edge.id))
         }}
         onConnect={onConnect}
         defaultEdgeOptions={defaultEdgeOption}

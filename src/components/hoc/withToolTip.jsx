@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import IconButton from "../ui/IconButton";
+import IconButton from "../common/IconButton";
 import { Save, Network } from "lucide-react";
-import { usewsProxy } from "../provider/WebSocketProvider";
-import { useReactFlow } from "@xyflow/react";
-import { createNode } from "../nodes";
-import { createEdge } from "../edges";
+import { createNode } from "../common/node";
+import { createEdge } from "../common/edge";
+import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
 const withToolTip = (Component) => {
     return (props) => {
         const { id: nodeId, data: nodeData } = props;
@@ -13,8 +12,7 @@ const withToolTip = (Component) => {
         const bgTheme = nodeData.theme;
         // if (!nodeId || !nodeData || !dataText)s
         //     return <Component {...props} />;
-        const { wsProxy } = usewsProxy();
-        const { updateNodeData, setNodes, setEdges, screenToFlowPosition } = useReactFlow();
+        const { addNode, updateNode, addEdge, screenToFlowPosition } = useEnhancedReaceFlow();
         const [showToolTip, setShowToolTip] = useState(false);
         const wrapperRef = useRef(null);
         const toolTipRef = useRef(null);
@@ -56,6 +54,7 @@ const withToolTip = (Component) => {
                 str = str.slice(0, str.length - 1)
             let strArr = str.slice(1).split(',')
             strArr = strArr.map((str) => {
+                str = str.trim()
                 if (str[0] === '\'' || str[0] === '\"')
                     str = str.slice(1)
                 if (str[str.length - 1] === '\'' || str[str.length - 1] === '\"')
@@ -91,18 +90,12 @@ const withToolTip = (Component) => {
             return reverseTheme;
         }
         const handleClickGenerate = () => {
-            const SSESource = 'api/ai/generate?prompt=' + encodeURIComponent(dataText);
+            const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText);
             const eventSource = new EventSource(SSESource);
             eventSource.addEventListener('push', (event) => {
                 generationContentRef.current += event.data;
                 const prevText = generationContentRef.current;
-                console.log("prevText:", prevText);
-                updateNodeData(nodeId, { text: prevText + event.data })
-                // wsProxy.updateNode(1, nodeId, ["data", "text"], prevText + event.data)
-                // {}控制台会打印两次一样的数据
-                // console.log("prevText:", prevText);
-                // 函数式更新方案
-                // updateNodeData(nodeId, (node) => { return { text: node.data.text + event.data } })
+                updateNode(nodeId,["data","text"], prevText + event.data)
             });
             eventSource.addEventListener('close', () => {
                 eventSource.close();
@@ -114,7 +107,7 @@ const withToolTip = (Component) => {
             };
         }
         const hanldeClickAssociate = () => {
-            const SSESource = 'api/ai/associate?prompt=' + encodeURIComponent(dataText);
+            const SSESource = '/api/ai/associate?prompt=' + encodeURIComponent(dataText);
             const eventSource = new EventSource(SSESource);
             setShowAssociation(true)
             eventSource.addEventListener('push', (event) => {
@@ -131,7 +124,7 @@ const withToolTip = (Component) => {
         }
         const [associationResult, setAssociationResult] = useState("")
         const hanldeGenerateAssociation = (associationIndex) => {
-            const SSESource = 'api/ai/generate?prompt=' + encodeURIComponent(dataText) + '&direction=' + encodeURIComponent(associations[associationIndex]);
+            const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText) + '&direction=' + encodeURIComponent(associations[associationIndex]);
             const parent = document.querySelector(`[data-id="${nodeId}"]`);
             setShowAssociation(false);
             const rect = parent.getBoundingClientRect();
@@ -144,16 +137,13 @@ const withToolTip = (Component) => {
                 data: { text: "" },
                 position: screenToFlowPosition({ x, y }),
             })
-            setNodes((prevNodes) => prevNodes.concat(newNode))
-            wsProxy.addNode(1, newNode)
+            addNode(newNode)
             const newEdge = createEdge({
                 id: `edge-${nodeId}-${newNodeId}`,
                 source: nodeId,
                 target: newNodeId,
             })
-            setEdges((prevEdges) => prevEdges.concat(newEdge))
-            wsProxy.addEdge(1, newEdge)
-
+            addEdge(newEdge)
             const eventSource = new EventSource(SSESource);
             eventSource.addEventListener('push', (event) => {
                 setAssociationResult(prev => prev + event.data);

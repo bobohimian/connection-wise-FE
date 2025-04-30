@@ -2,16 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
-import WebSocketProvider from '../provider/WebSocketProvider';
-import apiService from '@/api';
+import WebSocketProvider from './WebSocketProvider';
+import apiService from '../../api';
 const PrivateRoute = ({ children }) => {
-  console.log("render222")
   
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const userGlobalState = useSelector(selectUser);
   const isAuthenticated = userGlobalState.isAuthenticated;
-  console.log({isAuthenticated})
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log("privateRoute")

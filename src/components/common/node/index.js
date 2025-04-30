@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TextNode from './TextNode.jsx';
 import TodoNode from './TodoNode.jsx';
 import CodeNode from './CodeNode.jsx';
-import { withToolTip } from '../hoc/withToolTip.jsx';
+import { withToolTip } from '../../hoc/withToolTip.jsx';
 const nodeTypes = {
     textNode: withToolTip(TextNode),
     todoNode: withToolTip(TodoNode),

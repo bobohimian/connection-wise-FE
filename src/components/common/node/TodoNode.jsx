@@ -1,12 +1,11 @@
-import React,{ useCallback, useEffect, useRef, useState } from "react";
-import { Handle, Position, useReactFlow, useStoreApi } from "@xyflow/react";
+import React, { useEffect, useState } from "react";
+import { Handle, Position } from "@xyflow/react";
 import { Check, Plus, Trash2 } from "lucide-react";
-import { usewsProxy } from "../../components/provider/WebSocketProvider";
-export default function  ({ id, data, isConnectable, selected }) {
+import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
+export default function ({ id, data, isConnectable, selected }) {
 
-  const { wsProxy } = usewsProxy()
-  const { updateNode } = useReactFlow();
   const items = data.items;
+  const { updateNode } = useEnhancedReaceFlow();
   const [newItemText, setNewItemText] = useState("");
   const [isAddingItem, setIsAddingItem] = useState(true);
   useEffect(() => {
@@ -18,16 +17,12 @@ export default function  ({ id, data, isConnectable, selected }) {
     const updatedItems = items.map((item) =>
       item.id === itemId ? { ...item, completed: !item.completed } : item
     );
-    const updateData = { data: { ...data, items: updatedItems } }
-    updateNode(id, updateData)
-    wsProxy.updateNode(1,id,["data","items"],updatedItems)
+    updateNode(id, ["data", "items"], updatedItems)
   };
 
   const deleteItem = (itemId) => {
     const updatedItems = items.filter((item) => item.id !== itemId);
-    updateNode(id, { data: { ...data, items: updatedItems } })
-    wsProxy.updateNode(1,id,["data","items"],updatedItems)
-
+    updateNode(1, id, ["data", "items"], updatedItems)
   };
 
   const addItem = () => {
@@ -38,8 +33,7 @@ export default function  ({ id, data, isConnectable, selected }) {
         completed: false,
       };
       const updatedItems = [...items, newItem];
-      updateNode(id, { data: { ...data, items: updatedItems } })
-      wsProxy.updateNode(1,id,["data","items"],updatedItems)
+      updateNode(1, id, ["data", "items"], updatedItems)
       setNewItemText("");
     }
     setIsAddingItem(false);

@@ -1,9 +1,9 @@
-import React,{ useEffect } from "react"
-import { BrowserRouter, Navigate, Route, Router, Routes } from "react-router-dom"
-import NoteEditor from "./components/NoteEditor.jsx"
-import PrivateRoute from "./components/common/PrivateRoute"
-import Login from "./components/common/Login"
-
+import React from "react"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import NoteEditor from "./components/pages/NoteEditor"
+import PrivateRoute from "./components/provider/PrivateRoute"
+import Login from "./components/pages/Login"
+import Home from "./components/pages/Home"
 export default function App() {
 
   return (
@@ -13,14 +13,19 @@ export default function App() {
           <Navigate to="/canvas" replace />
         } />
         <Route path="/login" element={<Login />} />
-        <Route path="/canvas" element={
+        <Route path="/canvas/*" element={
           <PrivateRoute>
-            <NoteEditor />
+            <Routes>
+              <Route index element={<Home />} />
+              <Route path=":canvasId" element={
+                <NoteEditor />
+              } />
+            </Routes>
           </PrivateRoute>
         } />
-        <Route path="*" element={<Navigate to="/login"  replace/>}></Route>
+        <Route path="*" element={<Navigate to="/login" replace />}></Route>
       </Routes>
-    </BrowserRouter>
+    </BrowserRouter >
   )
 }
 
