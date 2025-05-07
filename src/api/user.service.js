@@ -10,7 +10,7 @@ export const login = async (username, password) => {
             );
         return responseData
     } catch (error) {
-        throw error; 
+        throw error;
     }
 };
 export const logout = async () => {
@@ -26,6 +26,21 @@ export const checkSession = async () => {
     try {
         const responseData =
             await apiClient.post('/user/check-auth');
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+};
+export const register = async (username, password, email) => {
+    try {
+        const responseData =
+            await apiClient.post('/user/register',
+                {
+                    username: username,
+                    password: password,
+                    email: email
+                }
+            );
         return responseData;
     } catch (error) {
         throw error;

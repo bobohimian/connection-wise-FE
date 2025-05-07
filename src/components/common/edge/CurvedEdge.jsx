@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, useStoreApi } from "@xyflow/react";
+import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
+import { Label } from './Label';
 export default function CurvedEdge({
   id,
   sourceX,
@@ -30,17 +32,16 @@ export default function CurvedEdge({
         strokeWidth: selected ? 3 : 2,
       }}
       path={edgePath}
+      className="cursor-pointer"
     />
     <EdgeLabelRenderer>
-      <p
-        style={{
-          transform: `translate(${labelX}px, ${labelY}px)`,
-          fontSize: "12px",
-          fontWeight: "bold",
-          color: style?.stroke?style.stroke:"#4caf50",
-        }}
-        className={`absolute -translate-1/2 pointer-events-auto nodrag nopan`}
-      >{data?.relationship}</p>
+      <Label
+        id={id}
+        data={data}
+        labelX={labelX}
+        labelY={labelY}
+        style={style}
+      ></Label>
     </EdgeLabelRenderer>
   </>
   );

@@ -31,6 +31,7 @@ export default function PolylineEdge({
         strokeWidth: selected ? 3 : 2,
       }}
       path={edgePath}
-    />
+    >
+    </BaseEdge>
   );
 }

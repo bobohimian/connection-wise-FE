@@ -11,6 +11,7 @@ import {
   applyEdgeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import html2canvas from "html2canvas";
 
 import { useToast } from "../common/toast";
 import { nodeTypes, createNode } from "../common/node";
@@ -25,22 +26,20 @@ import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
 
 
 
-export default function Canvas({ canvasId, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+export default function Canvas({ canvasData, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
+  const [nodes, setNodes, onNodesChange] = useNodesState(canvasData?.nodes || []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData?.edges || []);
   const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge } = useEnhancedReaceFlow()
   const { toast } = useToast();
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
+
+
   useEffect(() => {
-    const getCanvas = async () => {
-      const res = await apiService.fetchCanvas(canvasId)
-      setNodes(res.nodes)
-      setEdges(res.edges)
-    }
-    getCanvas()
-  }, [])
+    setNodes(canvasData?.nodes || []);
+    setEdges(canvasData?.edges || []);
+  }, [canvasData])
 
   const onConnect = (connection) => {
     const newEdge = createEdge(connection)
@@ -68,17 +67,17 @@ export default function Canvas({ canvasId, selectedNode, setSelectedNode, select
   }, [setSelectedNode, setSelectedEdge]);
 
 
-  const onDragOver = useCallback((event) => {
+  const handleDragOver = useCallback((event) => {
     event.preventDefault();
     // event.dataTransfer.dropEffect = "move"; // 将任何其他值赋给 dropEffect 都没有效果，这种情况下会保留旧值。——from MDN
   }, []);
 
-  const onDrop = useCallback(
+  const handleDrop = useCallback(
     (event) => {
       event.preventDefault();
       if (!reactFlowInstance)
         return;
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event.dataTransfer.getData("text/plain");
       if (typeof type === "undefined" || !type) return;
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
@@ -95,7 +94,7 @@ export default function Canvas({ canvasId, selectedNode, setSelectedNode, select
   );
 
   return (
-    <div ref={reactFlowWrapper} className="flex-1 h-full">
+    <div id="canvasContainer" ref={reactFlowWrapper} className="flex-1 h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -113,8 +112,8 @@ export default function Canvas({ canvasId, selectedNode, setSelectedNode, select
         onEdgeClick={onEdgeClick}
         onPaneClick={onPaneClick}
         onInit={setReactFlowInstance}
-        onDrop={onDrop}
-        onDragOver={onDragOver}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         // nodeDragThreshold={10}

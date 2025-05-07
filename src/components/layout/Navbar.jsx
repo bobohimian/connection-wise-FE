@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Save, Share2, Settings, User, Undo2, Redo2, Maximize2, Minimize2, FileText, ChevronDown } from "lucide-react";
 import { useToast } from "../common/toast";
 import Dropdown from "../common/Dropdown";
@@ -9,18 +9,23 @@ import { useDispatch } from "react-redux";
 import { clearActiveDropdownId } from "../../store/slices/ui";
 import apiService from "../../api";
 import { useNavigate } from "react-router-dom";
-export default function Navbar() {
+export default function Navbar({ canvasName, onCanvasNameChange }) {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [documentName, setDocumentName] = useState("Untitled Note");
   const [isEditing, setIsEditing] = useState(false);
-
+  const canvasNameRef = useRef(null)
   const { toast } = useToast();
 
-  const zoomLever =  1 // getZoom is a function from @xyflow/react
+  const zoomLever = 1 // getZoom is a function from @xyflow/react
 
+
+  const handleChangeCanvasName = () => {
+    const newCanvasName = canvasNameRef.current.value;
+    onCanvasNameChange(newCanvasName);
+    setIsEditing(false);
+  }
   const handleSave = () => {
     toast({
       title: "Note saved",
@@ -161,17 +166,17 @@ export default function Navbar() {
           <FileText className="h-5 w-5 text-primary" />
           {isEditing ? (
             <input
+              ref={canvasNameRef}
               type="text"
-              value={documentName}
-              onChange={(e) => setDocumentName(e.target.value)}
-              onBlur={() => setIsEditing(false)}
-              onKeyDown={(e) => e.key === "Enter" && setIsEditing(false)}
+              defaultValue={canvasName || ""}
+              onBlur={() => handleChangeCanvasName()}
+              onKeyDown={(e) => e.key === "Enter" && handleChangeCanvasName()}
               className="w-full border-b border-input bg-transparent px-1 text-sm font-medium focus:outline-none overflow-hidden text-ellipsis"
               autoFocus
             />
           ) : (
             <h1 className="w-full text-sm font-medium cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap" onClick={() => setIsEditing(true)}>
-              {documentName}
+              {canvasName || "untitled"}
             </h1>
           )}
         </div>

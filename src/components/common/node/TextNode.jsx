@@ -14,7 +14,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
     <>
       <div
         // 添加absolute，脱离文档流，避免影响ToolTip的absolute定位,失败，节点位置不明
-        className={` p-1 rounded-md  border box-border ${selected ? "border-primary ring-1 ring-primary/20" : "border"} w-50 h-30`}
+        className={` p-1 rounded-md  w-50 h-30`}
       >
         <Handle
           type="target"

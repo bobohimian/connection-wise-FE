@@ -5,46 +5,58 @@ import { Save, Network } from "lucide-react";
 import { createNode } from "../common/node";
 import { createEdge } from "../common/edge";
 import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
+const themes = [
+    "bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500",
+    "bg-linear-to-r from-cyan-700 via-blue-500 to-indigo-600",
+    "bg-linear-to-r from-green-500 via-emerald-500 to-teal-500",
+    "bg-[linear-gradient(60deg,_rgb(247,_149,_51),_rgb(243,_112,_85),_rgb(239,_78,_123),_rgb(161,_102,_171),_rgb(80,_115,_184),_rgb(16,_152,_173),_rgb(7,_179,_155),_rgb(111,_186,_130))]  ",
+  ]
+  // 显示写出反转的主题色，用于tooltip的association使用函数反转颜色
+  const reverseThemes = [
+    "bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500",
+    "bg-linear-to-r from-indigo-600 via-blue-500 to-cyan-700",
+    "bg-linear-to-r from-teal-500 via-emerald-500 to-green-500",
+    "bg-[linear-gradient(60deg,_rgb(111,_186,_130),_rgb(7,_179,_155),_rgb(16,_152,_173),_rgb(80,_115,_184),_rgb(161,_102,_171),_rgb(239,_78,_123),_rgb(243,_112,_85),_rgb(247,_149,_51))]"
+  ]
 const withToolTip = (Component) => {
     return (props) => {
         const { id: nodeId, data: nodeData } = props;
         const dataText = nodeData.text;
         const bgTheme = nodeData.theme;
-        // if (!nodeId || !nodeData || !dataText)s
-        //     return <Component {...props} />;
-        const { addNode, updateNode, addEdge, screenToFlowPosition } = useEnhancedReaceFlow();
+        const { addNode, updateNode, addEdge,updateEdge, screenToFlowPosition } = useEnhancedReaceFlow();
         const [showToolTip, setShowToolTip] = useState(false);
-        const wrapperRef = useRef(null);
+        const nodeRef = useRef(null);
         const toolTipRef = useRef(null);
         const associationRef = useRef(null);
-        const [associations, setAssociations] = useState(["工厂模式与抽象工厂的区别", "工厂模式与抽象工厂的区别", "", ""]);
-        // const [associations, setAssociations] = useState(x["", "", "", ""]);
+        const [associations, setAssociations] = useState(["", "", "", ""]);
         const [showAssociation, setShowAssociation] = useState(false);
         // 确保generationContentRef是最新的
+
+
         const generationContentRef = useRef(dataText ? dataText : "");
         const associationContentRef = useRef("");
         const associationGenerationRef = useRef("");
         useEffect(() => {
-            const handleClickOutside = (event) => {
-                if (!showToolTip)
-                    if (toolTipRef.current && toolTipRef.current.contains(event.target))
-                        return;
-                if (associationRef.current && associationRef.current.contains(event.target))
-                    return;
-                if (wrapperRef.current &&
-                    !wrapperRef.current.contains(event.target)) {
-                    setShowToolTip(false);
+            const handleClick = (event) => {
+                // 当前未显示tooltip
+                if (!showToolTip) {
+                    if (nodeRef.current?.contains(event.target)) {
+                        setShowToolTip(true);
+                    }
                 }
                 else {
-                    setShowToolTip(true);
-                    console.log("点击ref")
+                    if (!toolTipRef.current?.contains(event.target) &&
+                        !associationRef.current?.contains(event.target) &&
+                        !nodeRef.current?.contains(event.target)) {
+                        setShowToolTip(false);
+                    }
                 }
             };
-            document.addEventListener("click", handleClickOutside);
+            document.addEventListener("click", handleClick);
             return () => {
-                document.removeEventListener("click", handleClickOutside);
+                document.removeEventListener("click", handleClick);
             };
-        }, []);
+        }, [showToolTip]);
         // 补全数组数据，实现结构化数据流式输出
         const completeArray = (str) => {
             if (str.length && str[0] !== '[')
@@ -90,13 +102,16 @@ const withToolTip = (Component) => {
                     .replace(tmp, toColor);
             return reverseTheme;
         }
+        const handleClickColor = (theme) => {
+              updateNode(nodeId, ['data', 'theme'], theme)        
+          }
         const handleClickGenerate = () => {
             const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText);
             const eventSource = new EventSource(SSESource);
             eventSource.addEventListener('push', (event) => {
                 generationContentRef.current += event.data;
                 const prevText = generationContentRef.current;
-                updateNode(nodeId,["data","text"], prevText + event.data)
+                updateNode(nodeId, ["data", "text"], prevText + event.data)
             });
             eventSource.addEventListener('close', () => {
                 eventSource.close();
@@ -142,12 +157,17 @@ const withToolTip = (Component) => {
                 id: `edge-${nodeId}-${newNodeId}`,
                 source: nodeId,
                 target: newNodeId,
+                type:'curvedEdge',
+                animated:true,
+                data:{
+                    label: associations[associationIndex],
+                }
             })
             addEdge(newEdge)
             const eventSource = new EventSource(SSESource);
             eventSource.addEventListener('push', (event) => {
                 associationGenerationRef.current += event.data;
-                updateNode(newNodeId,["data","text"],associationGenerationRef.current);
+                updateNode(newNodeId, ["data", "text"], associationGenerationRef.current);
             });
             eventSource.addEventListener('close', () => {
                 eventSource.close();
@@ -157,8 +177,10 @@ const withToolTip = (Component) => {
                 eventSource.close();
             };
         }
-        return (<div ref={wrapperRef} className={`relative flex ${bgTheme}`}>
-            <Component {...props} />
+        return (<div className={`relative flex ${bgTheme} rounded-md`}>
+            <div ref={nodeRef}>
+                <Component {...props} />
+            </div>
             <div className="w-full absolute bottom-full mb-2 nodrag cursor-auto" ref={toolTipRef}>
                 <div
                     className={`ml-auto mr-0 w-50 h-10 rounded-md ${bgTheme}
@@ -167,6 +189,15 @@ const withToolTip = (Component) => {
                             : 'opacity-0 scale-90 translate-y-5 pointer-events-none'}
             flex justify-around items-center `}
                 >
+                    {themes.map(
+                      (theme, index) => (
+                        <button
+                          key={'theme' + index}
+                          className={`h-4 w-4 ${theme} rounded-full ring-1 hover:ring-offset-2`}
+                          onClick={() => handleClickColor(theme)}
+                        />
+                      )
+                    )}
                     <IconButton icon={<Save className="h-4 w-4" />}
                         onClick={() => handleClickGenerate()}></IconButton>
                     <IconButton icon={<Network className="h-4 w-4" />}

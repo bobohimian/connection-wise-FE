@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
-import WebSocketProvider from './WebSocketProvider';
+import WebSocketProvider from './WebSocketProvider.jsx';
 import apiService from '../../api';
 const PrivateRoute = ({ children }) => {
   
@@ -12,7 +12,6 @@ const PrivateRoute = ({ children }) => {
   const isAuthenticated = userGlobalState.isAuthenticated;
 
   useEffect(() => {
-    console.log("privateRoute")
     const checkSession = async () => {
       try {
         // await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -50,11 +49,7 @@ const PrivateRoute = ({ children }) => {
   }
 
   // 已登录，展示组件
-  return (
-    <WebSocketProvider >
-      {children}
-    </WebSocketProvider >
-  )
+  return children;
 };
 
 export default PrivateRoute;

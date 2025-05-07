@@ -4,6 +4,7 @@ import NoteEditor from "./components/pages/NoteEditor"
 import PrivateRoute from "./components/provider/PrivateRoute"
 import Login from "./components/pages/Login"
 import Home from "./components/pages/Home"
+import WebSocketProvider from "./components/provider/WebSocketProvider"
 export default function App() {
 
   return (
@@ -18,7 +19,9 @@ export default function App() {
             <Routes>
               <Route index element={<Home />} />
               <Route path=":canvasId" element={
-                <NoteEditor />
+                <WebSocketProvider >
+                  <NoteEditor />
+                </WebSocketProvider >
               } />
             </Routes>
           </PrivateRoute>

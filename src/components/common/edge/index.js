@@ -14,6 +14,9 @@ const defaultEdgeOption = {
 }
 const createEdge = (connection) => {
     connection.id = uuidv4()
+    connection.data = connection.data || {
+        label: ""
+    }
     return connection
 }
 export {

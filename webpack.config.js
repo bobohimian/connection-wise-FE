@@ -110,6 +110,7 @@ module.exports = (env) => {
         devServer: {
             compress: false,
             historyApiFallback: true,
+            allowedHosts:"all",
             // 配置额外资源路径
             static: {
                 directory: path.join(__dirname, 'public')
