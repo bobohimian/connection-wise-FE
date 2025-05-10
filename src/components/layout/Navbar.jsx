@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Save, Share2, Settings, User, Undo2, Redo2, Maximize2, Minimize2, FileText, ChevronDown } from "lucide-react";
 import { useToast } from "../common/toast";
 import Dropdown from "../common/Dropdown";
@@ -9,17 +9,18 @@ import { useDispatch } from "react-redux";
 import { clearActiveDropdownId } from "../../store/slices/ui";
 import apiService from "../../api";
 import { useNavigate } from "react-router-dom";
-export default function Navbar({ canvasName, onCanvasNameChange }) {
+import Modal from "../common/Modal";
+import ShareComponent from "./ShareComponent";
+export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
 
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const canvasNameRef = useRef(null)
   const { toast } = useToast();
-
   const zoomLever = 1 // getZoom is a function from @xyflow/react
-
 
   const handleChangeCanvasName = () => {
     const newCanvasName = canvasNameRef.current.value;
@@ -254,9 +255,14 @@ export default function Navbar({ canvasName, onCanvasNameChange }) {
           srOnly={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"} onClick={() => toggleFullscreen()} />
         <IconButton icon={<Save className="h-4 w-4" />} srOnly={"Save"}
           onClick={() => handleSave()} />
-
         <IconButton icon={<Share2 className="h-4 w-4" />} srOnly={"Share"}
-          onClick={() => toast({ title: "Share", description: "Sharing options opened" })} />
+          onClick={() => setShowShareModal(true)} />
+        <Modal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+        >
+          <ShareComponent canvasId={canvasId} />
+        </Modal>
         <IconButton icon={<Settings className="h-4 w-4" />} srOnly={"Settings"}
           onClick={() => toast({ title: "Settings", description: "Settings opened" })} />
         <Dropdown
@@ -269,7 +275,7 @@ export default function Navbar({ canvasName, onCanvasNameChange }) {
               return (
                 <button
                   key={`${item.label}-button`}
-                  onClick={() => { item.onClick() }}
+                  onClick={() => { item.onClick ? item.onClick() : null }}
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   {item.label}

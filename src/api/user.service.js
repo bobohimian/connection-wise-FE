@@ -46,3 +46,12 @@ export const register = async (username, password, email) => {
         throw error;
     }
 };
+export const getUserByUserName = async (username) => {
+    try {
+        const responseData =
+            await apiClient.get('/user/search?username=' + username);
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+};

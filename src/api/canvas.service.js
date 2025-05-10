@@ -41,7 +41,7 @@ export const updateCanvas = async (canvasData) => {
 }
 export const deleteCanvas = async (canvasId) => {
     try {
-        const resData = await apiClient.delete('/canvas' + canvasId);
+        const resData = await apiClient.delete('/canvas/' + canvasId);
         return resData;
     }
     catch (error) {

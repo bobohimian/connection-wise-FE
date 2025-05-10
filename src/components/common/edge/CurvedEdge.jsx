@@ -33,6 +33,7 @@ export default function CurvedEdge({
       }}
       path={edgePath}
       className="cursor-pointer"
+      markerEnd={markerEnd}
     />
     <EdgeLabelRenderer>
       <Label

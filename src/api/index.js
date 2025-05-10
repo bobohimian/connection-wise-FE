@@ -3,9 +3,16 @@ import {
     fetchCanvas,
     createCanvas,
     updateCanvas,
-    deleteCanvas
+    deleteCanvas,
 } from "./canvas.service.js";
 
+import {
+    fetchSharedCanvasList,
+    fetchSharedUserList,
+    shareCanvas,
+    deleteShare,
+    updateShare
+} from "./share.service.js";
 import {
     login,
     checkSession,
@@ -23,6 +30,11 @@ const apiService = {
     createCanvas,
     updateCanvas,
     deleteCanvas,
+    fetchSharedCanvasList,
+    fetchSharedUserList,
+    shareCanvas,
+    deleteShare,
+    updateShare,
     generateGraph,
     login,
     logout,

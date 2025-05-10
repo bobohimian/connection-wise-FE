@@ -1,29 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import IconButton from "../common/IconButton";
-import { Save, Network } from "lucide-react";
+import { Network } from "lucide-react";
 import { createNode } from "../common/node";
 import { createEdge } from "../common/edge";
 import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
 const themes = [
-    "bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500",
-    "bg-linear-to-r from-cyan-700 via-blue-500 to-indigo-600",
-    "bg-linear-to-r from-green-500 via-emerald-500 to-teal-500",
-    "bg-[linear-gradient(60deg,_rgb(247,_149,_51),_rgb(243,_112,_85),_rgb(239,_78,_123),_rgb(161,_102,_171),_rgb(80,_115,_184),_rgb(16,_152,_173),_rgb(7,_179,_155),_rgb(111,_186,_130))]  ",
-  ]
-  // 显示写出反转的主题色，用于tooltip的association使用函数反转颜色
-  const reverseThemes = [
-    "bg-linear-to-r from-blue-500 via-indigo-500 to-purple-500",
-    "bg-linear-to-r from-indigo-600 via-blue-500 to-cyan-700",
-    "bg-linear-to-r from-teal-500 via-emerald-500 to-green-500",
-    "bg-[linear-gradient(60deg,_rgb(111,_186,_130),_rgb(7,_179,_155),_rgb(16,_152,_173),_rgb(80,_115,_184),_rgb(161,_102,_171),_rgb(239,_78,_123),_rgb(243,_112,_85),_rgb(247,_149,_51))]"
-  ]
+    "bg-linear-to-r from-purple-300 via-indigo-300 to-blue-300",
+    "bg-linear-to-r from-green-300 via-emerald-300 to-teal-300",
+    "bg-linear-to-r from-cyan-100 via-blue-100 to-indigo-200",
+    "bg-linear-to-r from-blue-300 via-cyan-300 to-teal-300",
+    "bg-linear-to-r from-orange-100 via-amber-100 to-orange-100",
+]
+// 显示写出反转的主题色，用于tooltip的association使用函数反转颜色
+const reverseThemes = [
+    "bg-linear-to-r from-blue-300 via-indigo-300 to-purple-300",
+    "bg-linear-to-r from-teal-300 via-emerald-300 to-green-300",
+    "bg-linear-to-r from-indigo-200 via-blue-100 to-cyan-100",
+    "bg-linear-to-r from-teal-300 via-cyan-300 to-blue-300",
+    "bg-linear-to-r from-orange-100 via-amber-100 to-orange-100",
+]
 const withToolTip = (Component) => {
     return (props) => {
         const { id: nodeId, data: nodeData } = props;
         const dataText = nodeData.text;
-        const bgTheme = nodeData.theme;
-        const { addNode, updateNode, addEdge,updateEdge, screenToFlowPosition } = useEnhancedReaceFlow();
+        const bgTheme = nodeData.theme?nodeData.theme : themes[0];
+        const { addNode, updateNode, addEdge, updateEdge, screenToFlowPosition } = useEnhancedReaceFlow();
         const [showToolTip, setShowToolTip] = useState(false);
         const nodeRef = useRef(null);
         const toolTipRef = useRef(null);
@@ -42,6 +44,8 @@ const withToolTip = (Component) => {
                 if (!showToolTip) {
                     if (nodeRef.current?.contains(event.target)) {
                         setShowToolTip(true);
+                        if(associationContentRef.current !== "")
+                            setShowAssociation(true);
                     }
                 }
                 else {
@@ -103,8 +107,8 @@ const withToolTip = (Component) => {
             return reverseTheme;
         }
         const handleClickColor = (theme) => {
-              updateNode(nodeId, ['data', 'theme'], theme)        
-          }
+            updateNode(nodeId, ['data', 'theme'], theme)
+        }
         const handleClickGenerate = () => {
             const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText);
             const eventSource = new EventSource(SSESource);
@@ -123,6 +127,7 @@ const withToolTip = (Component) => {
             };
         }
         const hanldeClickAssociate = () => {
+            associationContentRef.current = "";
             const SSESource = '/api/ai/associate?prompt=' + encodeURIComponent(dataText);
             const eventSource = new EventSource(SSESource);
             setShowAssociation(true)
@@ -157,9 +162,9 @@ const withToolTip = (Component) => {
                 id: `edge-${nodeId}-${newNodeId}`,
                 source: nodeId,
                 target: newNodeId,
-                type:'curvedEdge',
-                animated:true,
-                data:{
+                type: 'curvedEdge',
+                animated: true,
+                data: {
                     label: associations[associationIndex],
                 }
             })
@@ -190,16 +195,16 @@ const withToolTip = (Component) => {
             flex justify-around items-center `}
                 >
                     {themes.map(
-                      (theme, index) => (
-                        <button
-                          key={'theme' + index}
-                          className={`h-4 w-4 ${theme} rounded-full ring-1 hover:ring-offset-2`}
-                          onClick={() => handleClickColor(theme)}
-                        />
-                      )
+                        (theme, index) => (
+                            <button
+                                key={'theme' + index}
+                                className={`h-4 w-4 ${theme} rounded-full ring-1 hover:ring-offset-2`}
+                                onClick={() => handleClickColor(theme)}
+                            />
+                        )
                     )}
-                    <IconButton icon={<Save className="h-4 w-4" />}
-                        onClick={() => handleClickGenerate()}></IconButton>
+                    {/* <IconButton icon={<Save className="h-4 w-4" />}
+                        onClick={() => handleClickGenerate()}></IconButton> */}
                     <IconButton icon={<Network className="h-4 w-4" />}
                         onClick={() => hanldeClickAssociate()}></IconButton>
                 </div>
@@ -221,7 +226,9 @@ const withToolTip = (Component) => {
                                         ? "opacity-100"
                                         : "opacity-0 translate-y-10 pointer-events-none absolute"}
                                 px-2 py-0.5`}
-                                    onClick={() => hanldeGenerateAssociation(index)}
+                                    onClick={() => {
+                                        hanldeGenerateAssociation(index)
+                                    }}
                                 >
                                     <span className="break-words" >{association}</span>
                                 </div>

@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-
+import { MarkerType } from '@xyflow/react';
 // 转换函数：将后端数据转换为目标格式
 const transformGraphData = (backendData) => {
     // 存储节点 ID 映射（旧 ID -> 新 UUID）
@@ -34,6 +34,12 @@ const transformGraphData = (backendData) => {
             data: {
                 label: edge.relation, // 关系描述作为 label
             },
+            markerEnd:{
+                type: MarkerType.Arrow,
+                width: 20,
+                height: 20,
+                color: '#FF0072',
+            }
         };
     });
 

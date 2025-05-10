@@ -31,7 +31,6 @@ const createNode = ({ id, type, position, data }) => {
         data: data ? data : initialNodeData[type],
         origin: [0.5, 0.5]
     };
-    node.data.theme="bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500"
     return node;
 }
 export {
