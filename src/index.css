@@ -29,3 +29,22 @@ body {
   margin: 0;
   font-family: sans-serif;
 }
+
+/* 自定义滚动条样式 (仅在 WebKit 浏览器中生效) */
+textarea::-webkit-scrollbar {
+  width: 8px; /* 滚动条宽度 */
+}
+
+textarea::-webkit-scrollbar-track {
+  background: rgba(241, 241, 241, 0.3); /* 滚动条轨道背景色，半透明 */
+  border-radius: 10px; /* 轨道圆角 */
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: rgba(136, 136, 136, 0.3); /* 滚动条滑块颜色，半透明 */
+  border-radius: 10px; /* 滑块圆角 */
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85, 0.5); /* 鼠标悬停时滑块颜色，透明度稍高 */
+}

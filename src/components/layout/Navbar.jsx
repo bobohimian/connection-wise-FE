@@ -191,7 +191,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
                 return (
                   <button
                     key={`${item.label}-button`}
-                    onClick={() => { item.onClick() }}
+                    onClick={() => { item.onClick && item.onClick() }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     {item.label}
@@ -210,7 +210,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
                 return (
                   <button
                     key={`${item.label}-button`}
-                    onClick={() => { item.onClick() }}
+                    onClick={() => { item.onClick && item.onClick() }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     {item.label}
@@ -229,7 +229,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
                 return (
                   <button
                     key={`${item.label}-button`}
-                    onClick={() => { item.onClick() }}
+                    onClick={() => { item.onClick && item.onClick() }}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     {item.label}
@@ -249,7 +249,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
             onClick={() => toast({ title: "Undo", description: "Action undone" })} />
           <IconButton icon={<Redo2 className="h-4 w-4" />} srOnly={"Undo"}
             onClick={() => toast({ title: "Redo", description: "Action redone" })} />
-          <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever * 100).toFixed(0)}%`}</div>
+          {/* <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever * 100).toFixed(0)}%`}</div> */}
         </div>
         <IconButton icon={isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           srOnly={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"} onClick={() => toggleFullscreen()} />

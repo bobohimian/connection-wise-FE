@@ -1,44 +1,14 @@
-import {
-    fetchCanvasList,
-    fetchCanvas,
-    createCanvas,
-    updateCanvas,
-    deleteCanvas,
-} from "./canvas.service.js";
+import * as canvasService from "./canvas.service.js";
 
-import {
-    fetchSharedCanvasList,
-    fetchSharedUserList,
-    shareCanvas,
-    deleteShare,
-    updateShare
-} from "./share.service.js";
-import {
-    login,
-    checkSession,
-    logout,
-    register
-} from "./user.service.js";
+import * as shareService from "./share.service.js";
 
-import {
-    generateGraph
-} from "./ai.service.js"
+import * as userService from "./user.service.js";
 
-const apiService = {
-    fetchCanvasList,
-    fetchCanvas,
-    createCanvas,
-    updateCanvas,
-    deleteCanvas,
-    fetchSharedCanvasList,
-    fetchSharedUserList,
-    shareCanvas,
-    deleteShare,
-    updateShare,
-    generateGraph,
-    login,
-    logout,
-    checkSession,
-    register
+import * as aiService from "./ai.service.js"
+
+export default apiService = {
+    ...canvasService,
+    ...shareService,
+    ...userService,
+    ...aiService,
 };
-export default apiService;

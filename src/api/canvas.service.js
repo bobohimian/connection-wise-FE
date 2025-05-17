@@ -49,3 +49,22 @@ export const deleteCanvas = async (canvasId) => {
         throw error;
     }
 }
+
+export const uploadThumbnail = async (formData) => {
+    try {
+        const resData = await apiClient.post(
+            '/canvas/thumbnail/',
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        return resData;
+    }
+    catch (error) {
+        console.error('Error uploading thumbnail', error);
+        throw error;
+    }
+}

@@ -188,7 +188,7 @@ export default function CanvasGallery() {
                                 </div>
                             </article>
                         </div>
-                        {canvasList.map((canvas) => (
+                        {canvasList.map((canvas,index) => (
                             <div key={canvas.id} className="relative group hover:-translate-y-1 transform transition-transform duration-300">
                                 <Link to={`/canvas/${canvas.id}`} className="block">
                                     <article className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md h-full flex flex-col">

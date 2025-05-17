@@ -51,14 +51,14 @@ export default function Modal({ isOpen, onClose, title, children, footer }) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* 背景遮罩 */}
       <div className="absolute inset-0 bg-black opacity-50" onClick={onClose}></div>
 
       {/* 模态窗口内容 */}
       <div
         ref={modalRef}
-        className="relative  rounded-lg shadow-xl w-full max-w-md mx-auto p-6 z-10"
+        className="relative  rounded-lg  w-full max-w-md mx-auto z-10"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"

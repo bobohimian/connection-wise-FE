@@ -22,7 +22,7 @@ export default function ({ id, data, isConnectable, selected }) {
 
   const deleteItem = (itemId) => {
     const updatedItems = items.filter((item) => item.id !== itemId);
-    updateNode(1, id, ["data", "items"], updatedItems)
+    updateNode(id, ["data", "items"], updatedItems)
   };
 
   const addItem = () => {
@@ -33,7 +33,7 @@ export default function ({ id, data, isConnectable, selected }) {
         completed: false,
       };
       const updatedItems = [...items, newItem];
-      updateNode(1, id, ["data", "items"], updatedItems)
+      updateNode(id, ["data", "items"], updatedItems)
       setNewItemText("");
     }
     setIsAddingItem(false);

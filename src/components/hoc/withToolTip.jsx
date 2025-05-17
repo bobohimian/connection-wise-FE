@@ -24,7 +24,7 @@ const withToolTip = (Component) => {
     return (props) => {
         const { id: nodeId, data: nodeData } = props;
         const dataText = nodeData.text;
-        const bgTheme = nodeData.theme?nodeData.theme : themes[0];
+        const bgTheme = nodeData.theme ? nodeData.theme : themes[0];
         const { addNode, updateNode, addEdge, updateEdge, screenToFlowPosition } = useEnhancedReaceFlow();
         const [showToolTip, setShowToolTip] = useState(false);
         const nodeRef = useRef(null);
@@ -44,7 +44,7 @@ const withToolTip = (Component) => {
                 if (!showToolTip) {
                     if (nodeRef.current?.contains(event.target)) {
                         setShowToolTip(true);
-                        if(associationContentRef.current !== "")
+                        if (associationContentRef.current !== "")
                             setShowAssociation(true);
                     }
                 }
@@ -144,6 +144,7 @@ const withToolTip = (Component) => {
             };
         }
         const hanldeGenerateAssociation = (associationIndex) => {
+            associationGenerationRef.current = "";
             const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText) + '&direction=' + encodeURIComponent(associations[associationIndex]);
             const parent = document.querySelector(`[data-id="${nodeId}"]`);
             setShowAssociation(false);
@@ -218,22 +219,24 @@ const withToolTip = (Component) => {
             flex flex-col justify-center items-center`}
                 >
                     <div className="m-3 flex flex-col space-y-2.5 transition-all duration-500 ease-in-out">
-                        {associations.map((association, index) => {
-                            return (
-                                <div key={index} className={`w-35 rounded-md bg-current/10
+                        {associations[0].length > 0 ?
+                            associations.map((association, index) => {
+                                return (
+                                    <div key={index} className={`w-35 rounded-md bg-current/10
                                 hover:scale-108
                                 transition-all duration-100 ease-in ${association.length > 0
-                                        ? "opacity-100"
-                                        : "opacity-0 translate-y-10 pointer-events-none absolute"}
+                                            ? "opacity-100"
+                                            : "opacity-0 translate-y-10 pointer-events-none absolute"}
                                 px-2 py-0.5`}
-                                    onClick={() => {
-                                        hanldeGenerateAssociation(index)
-                                    }}
-                                >
-                                    <span className="break-words" >{association}</span>
-                                </div>
-                            )
-                        })}
+                                        onClick={() => {
+                                            hanldeGenerateAssociation(index)
+                                        }}
+                                    >
+                                        <span className="break-words" >{association}</span>
+                                    </div>
+                                )
+                            }) : <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
+                        }
                     </div>
                 </div>
             </div>

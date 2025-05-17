@@ -17,7 +17,7 @@
     "@xyflow/react": "^12.4.4",
     "axios": "^1.8.3",
     "dagrejs": "^0.2.1",
-    "html2canvas": "^1.4.1",
+    "dom-to-image": "^2.6.0",
     "https-proxy-agent": "^7.0.6",
     "lucide-react": "^0.479.0",
     "mini-css-extract-plugin": "^2.9.2",

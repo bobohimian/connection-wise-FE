@@ -13,7 +13,7 @@ const transformGraphData = (backendData) => {
             id: `${newId}`,
             data: {
                 text: `${node.title} - ${node.content}`, // 使用 '-' 拼接 title 和 content
-                theme: "bg-linear-to-r from-purple-500 via-indigo-500 to-blue-500", // 默认主题
+                theme: "bg-linear-to-r from-purple-300 via-indigo-300 to-blue-300", // 默认主题
             },
             type: "textNode", // 默认类型
             position: {
@@ -38,7 +38,7 @@ const transformGraphData = (backendData) => {
                 type: MarkerType.Arrow,
                 width: 20,
                 height: 20,
-                color: '#FF0072',
+                color: '#4caf50',
             }
         };
     });

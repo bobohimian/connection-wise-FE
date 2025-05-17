@@ -12,14 +12,17 @@ import apiService from "../../api";
 import { getLayoutedElements, transformGraphData } from "../../utils";
 import { useReactFlow } from "@xyflow/react";
 import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
+import Modal from "../common/Modal";
 
 
 export default function NoteEditor() {
   const canvasId = useParams().canvasId;
   const dispatch = useDispatch();
+  const {fitView} = useReactFlow();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [canvasData, setCanvasData] = useState(null);
+  const [isloading, setIsloading] = useState(false);
   const { addNode, addEdge } = useEnhancedReaceFlow();
   useEffect(() => {
     dispatch(setCanvasId(canvasId));
@@ -35,35 +38,45 @@ export default function NoteEditor() {
     setCanvasData(canvasData);
   }
   const hanldeSubmit = async (text) => {
-    // const resData = await apiService.generateGraph(text);
-    const resData={
-      "nodes": [
-        {"id": 1, "title": "列奥纳多·达·芬奇", "content": "文艺复兴全才，画家、发明家、科学家，代表作《蒙娜丽莎》"},
-        {"id": 2, "title": "米开朗琪罗", "content": "雕塑家、画家、建筑师，代表作《大卫像》和西斯廷教堂天顶画"},
-        {"id": 3, "title": "尼科洛·马基雅维利", "content": "政治哲学家，代表作《君主论》，提出现实主义政治观"},
-        {"id": 4, "title": "但丁·阿利吉耶里", "content": "中世纪晚期诗人，代表作《神曲》，奠定意大利语文学基础"},
-        {"id": 5, "title": "人文主义思想", "content": "文艺复兴核心理念，强调人的价值与古典文化的复兴"}
-      ],
-      "edges": [
-        {"source": 1, "target": 2, "relation": "艺术竞争"},
-        {"source": 1, "target": 5, "relation": "思想实践者"},
-        {"source": 2, "target": 5, "relation": "思想实践者"},
-        {"source": 3, "target": 5, "relation": "思想贡献者"},
-        {"source": 4, "target": 5, "relation": "思想先驱"},
-        {"source": 1, "target": 3, "relation": "同时代交流"},
-        {"source": 2, "target": 4, "relation": "文化传承影响"},
-        {"source": 4, "target": 3, "relation": "文学与政治思想影响"}
-      ]
-    }
+    setIsloading(true);
+    const resData = await apiService.generateGraph(text);
+    // const resData={
+    //   "nodes": [
+    //   {"id": 1, "title": "计算机网络", "content": "连接计算机和设备以实现数据通信的技术体系"},
+    //   {"id": 2, "title": "OSI模型", "content": "开放系统互联模型，七层网络通信标准"},
+    //   {"id": 3, "title": "TCP/IP协议", "content": "互联网核心协议，实际应用中的四层模型"},
+    //   {"id": 4, "title": "HTTP协议", "content": "超文本传输协议，用于网页数据传输"},
+    //   {"id": 5, "title": "路由器", "content": "网络层设备，负责数据包转发"},
+    //   {"id": 6, "title": "交换机", "content": "数据链路层设备，局域网内数据帧转发"},
+    //   {"id": 7, "title": "防火墙", "content": "网络安全设备，控制进出网络的流量"},
+    //   {"id": 8, "title": "DNS服务", "content": "域名系统，将域名解析为IP地址"},
+    //   {"id": 9, "title": "无线网络", "content": "通过无线信号实现设备互联的技术"}
+    //   ],
+    //   "edges": [
+    //   {"source": 1, "target": 2, "relation": "理论模型"},
+    //   {"source": 1, "target": 3, "relation": "实际协议栈"},
+    //   {"source": 2, "target": 3, "relation": "理论与实践对比"},
+    //   {"source": 3, "target": 4, "relation": "应用层协议"},
+    //   {"source": 3, "target": 5, "relation": "网络层设备支持"},
+    //   {"source": 1, "target": 6, "relation": "数据链路层设备"},
+    //   {"source": 1, "target": 7, "relation": "网络安全组件"},
+    //   {"source": 3, "target": 8, "relation": "域名解析支持"},
+    //   {"source": 1, "target": 9, "relation": "无线通信分支"},
+    //   {"source": 5, "target": 9, "relation": "无线路由支持"},
+    //   {"source": 7, "target": 4, "relation": "保护协议通信"},
+    //   {"source": 6, "target": 9, "relation": "局域网无线扩展"}
+    //   ]
+    //   }
     const { nodes: newNodes, edges: newEdges } = transformGraphData(resData);
     const { nodes: newNodes2, edges: newEdges2 } = getLayoutedElements(newNodes, newEdges);
+    setIsloading(false);
     newNodes2.forEach(node => {
       addNode(node);
     })
     newEdges2.forEach(edge => {
       addEdge(edge);
     })
-
+    fitView({duration:1000});
   }
   const handleChangeCanvasName = async (value) => {
     const canvasDataCopy = structuredClone(canvasData);
@@ -91,6 +104,12 @@ export default function NoteEditor() {
         />
       </div>
       <GraphSpotlight onSubmit={hanldeSubmit} />
+      <Modal
+          isOpen={isloading}
+          onClose={() => {}}
+        >
+          <div className="m-auto h-50 w-50 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+        </Modal>
     </div>
   );
 }
