@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
-import WebSocketProvider from './WebSocketProvider.jsx';
 import apiService from '../../api';
 const PrivateRoute = ({ children }) => {
   

@@ -8,14 +8,13 @@ import { ToastProvider } from "./components/common/toast.jsx";
 import { ReactFlowProvider } from '@xyflow/react'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  // <React.StrictMode>
-  <Provider store={store}>
-    <ReactFlowProvider>
+  <React.StrictMode>
+    <Provider store={store}>
+      <ReactFlowProvider>
         <ToastProvider>
-            <App />
+          <App />
         </ToastProvider>
-    </ReactFlowProvider>
-  </Provider >
-
-  // </React.StrictMode>
+      </ReactFlowProvider>
+    </Provider >
+  </React.StrictMode>
 )
