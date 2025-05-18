@@ -1,0 +1,39 @@
+# 依赖目录
+node_modules
+
+# 构建输出
+dist
+
+# 开发环境文件
+.vscode
+.idea
+*.log
+npm-debug.log*
+
+# 版本控制
+.git
+.gitignore
+
+# 环境变量文件
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# 其他不需要的文件
+README.md
+docker-deploy-guide.md
+LICENSE
+*.md
+!README.md
+
+# 测试文件
+__tests__
+*.test.js
+*.spec.js
+
+# Docker相关文件
+Dockerfile*
+docker-compose*
+.dockerignore
