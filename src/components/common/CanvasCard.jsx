@@ -10,7 +10,7 @@ const CanvasCard = forwardRef((props, menuRef) => {
             {type === "mine" && <article className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md h-full flex flex-col">
                 <div className="h-40 bg-gradient-to-r from-blue-200 to-indigo-200 flex items-center justify-center relative">
                     <LazyImage
-                        src={'http://localhost:9000/bucket1/'+canvas.thumbnailFileName} // 替换为实际图片路径
+                        src={'http://localhost/minio/bucket1/'+canvas.thumbnailFileName} // 替换为实际图片路径
                         alt="Canvas Preview Image"
                         placeholder={<span className="text-2xl text-gray-600 font-light">Canvas Preview</span>}
                         className="absolute inset-0  w-full h-full object-cover z-0"
