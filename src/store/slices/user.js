@@ -37,5 +37,7 @@ const userSlice = createSlice({
 });
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
 export const selectUser = (state) => state.user;  
+
+export const selectUserId = (state) => state.user.userInfo.id;
 export const { setAuthenticated,setCanvasId, setUserInfo, clearUserInfo } = userSlice.actions;
 export default userSlice.reducer;

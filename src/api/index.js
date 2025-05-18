@@ -6,9 +6,10 @@ import * as userService from "./user.service.js";
 
 import * as aiService from "./ai.service.js"
 
-export default apiService = {
+const apiService = {
     ...canvasService,
     ...shareService,
     ...userService,
     ...aiService,
 };
+export default apiService;

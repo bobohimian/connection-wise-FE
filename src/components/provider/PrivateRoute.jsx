@@ -22,7 +22,6 @@ const PrivateRoute = ({ children }) => {
           email: user.email,
           avatar: user.avatar,
         }
-        console.log({userInfo})
         dispatch(setUserInfo(userInfo));
         dispatch(setAuthenticated(true));
       } catch (error) {

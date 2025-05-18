@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -11,27 +11,22 @@ import {
   applyEdgeChanges,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import html2canvas from "html2canvas";
 
 import { useToast } from "../common/toast";
 import { nodeTypes, createNode } from "../common/node";
 import { edgeTypes, defaultEdgeOption } from "../common/edge";
 
 import { createEdge } from "../common/edge";
-import apiService from "../../api";
 import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
-// Define custom node types
 
-// Define custom edge types
-
+import withScreenShot from "../hoc/withScreenShot";
 
 
-export default function Canvas({ canvasData, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge }) {
+const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge },ref) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(canvasData?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData?.edges || []);
   const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge } = useEnhancedReaceFlow()
   const { toast } = useToast();
-  const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
 
@@ -94,7 +89,7 @@ export default function Canvas({ canvasData, selectedNode, setSelectedNode, sele
   );
 
   return (
-    <div id="canvasContainer" ref={reactFlowWrapper} className="flex-1 h-full">
+    <div id="canvasContainer" ref={ref} className="flex-1 h-full">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -122,6 +117,7 @@ export default function Canvas({ canvasData, selectedNode, setSelectedNode, sele
         nodeOrigin={[0.5, 0.5]}
         onViewportChange={({ x, y, zoom }) => { }}
         fitView
+        style={{backgroundColor: "#fff"}}
       // snapToGrid
       // snapGrid={[15, 15]}
       // defaultViewport={{ x: 0, y: 0, zoom: 1}}
@@ -162,3 +158,5 @@ export default function Canvas({ canvasData, selectedNode, setSelectedNode, sele
     </div>
   );
 }
+);
+export default withScreenShot(Canvas);

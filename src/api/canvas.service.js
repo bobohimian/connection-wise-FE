@@ -53,7 +53,7 @@ export const deleteCanvas = async (canvasId) => {
 export const uploadThumbnail = async (formData) => {
     try {
         const resData = await apiClient.post(
-            '/canvas/thumbnail/',
+            '/canvas/uploadThumbnail',
             formData,
             {
                 headers: {
