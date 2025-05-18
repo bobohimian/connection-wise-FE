@@ -46,6 +46,6 @@ const WebSocketProvider = ({ children }) => {
         }
     })
 
-    return (children);
+    return children;
 };
 export default WebSocketProvider;

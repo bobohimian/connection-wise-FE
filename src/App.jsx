@@ -4,7 +4,7 @@ import NoteEditor from "./components/pages/NoteEditor"
 import PrivateRoute from "./components/provider/PrivateRoute"
 import Login from "./components/pages/Login"
 import Home from "./components/pages/Home"
-import WebSocketProvider from "./components/provider/WebSocketProvider.jsx"
+import WebSocketProvider from "./components/provider/WebSocketProvider"
 export default function App() {
 
   return (

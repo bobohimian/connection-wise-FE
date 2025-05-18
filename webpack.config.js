@@ -144,7 +144,7 @@ module.exports = (env) => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             },
-            extensions: ['.js', '.jsx','/index.js']
+            extensions: ['.js', '.jsx','./index.js']
         },
         mode: isDevelopment ? 'development' : 'production',
         devtool: isDevelopment ? 'cheap-module-source-map' : 'hidden-source-map'
