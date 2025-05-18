@@ -15,7 +15,7 @@ module.exports = (env) => {
             path: path.resolve(__dirname, 'dist'),
             filename: 'static/js/main.[contenthash:8].bundle.js',
             chunkFilename: 'static/js/[name].[contenthash:8].chunk.js',
-            publicPath:'/', // 告诉webpack打包后资源的访问路径
+            publicPath: '/', // 告诉webpack打包后资源的访问路径
             clean: true
         },
         // 模块加载规则
@@ -66,9 +66,12 @@ module.exports = (env) => {
 
         // 插件配置
         plugins: [
+            // 修改DefinePlugin配置部分
             new webpack.DefinePlugin({
-                'process.env.API_BASE_URL': JSON.stringify('http://localhost/api'),
-                'process.env.WS_BASE_URL': JSON.stringify('ws://localhost/api/ws/canvas'),
+                'process.env.API_BASE_URL':
+                    JSON.stringify(isProduction ? '/api' : 'http://localhost/api'),
+                'process.env.WS_BASE_URL':
+                    JSON.stringify(isProduction ? '/api/ws' : 'ws://localhost/api/ws'),
             }),
             new HtmlWebpackPlugin({
                 template: './index.html', // 指定 HTML 模板文件
@@ -84,7 +87,7 @@ module.exports = (env) => {
                     {
                         from: path.resolve(__dirname, 'public'),
                         // to: path.resolve(__dirname, 'dist'),
-                        to:'public',
+                        to: 'public',
                         globOptions: {
                             ignore: ['**/index.html']
                         }
@@ -110,7 +113,7 @@ module.exports = (env) => {
         devServer: {
             compress: false,
             historyApiFallback: true,
-            allowedHosts:"all",
+            allowedHosts: "all",
             // 配置额外资源路径
             static: {
                 directory: path.join(__dirname, 'public')
@@ -144,7 +147,7 @@ module.exports = (env) => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             },
-            extensions: ['.js', '.jsx','./index.js']
+            extensions: ['.js', '.jsx', './index.js']
         },
         mode: isDevelopment ? 'development' : 'production',
         devtool: isDevelopment ? 'cheap-module-source-map' : 'hidden-source-map'
