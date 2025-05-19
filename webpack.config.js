@@ -69,9 +69,11 @@ module.exports = (env) => {
             // 修改DefinePlugin配置部分
             new webpack.DefinePlugin({
                 'process.env.API_BASE_URL':
-                    JSON.stringify(isProduction ? '/api' : 'http://localhost/api'),
+                    JSON.stringify('/api'),
                 'process.env.WS_BASE_URL':
-                    JSON.stringify(isProduction ? '/api/ws' : 'ws://localhost/api/ws'),
+                    JSON.stringify('/api/ws'),
+                'process.env.MINIO_BASE_URL':
+                    JSON.stringify('/minio/bucket1')
             }),
             new HtmlWebpackPlugin({
                 template: './index.html', // 指定 HTML 模板文件
