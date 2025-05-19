@@ -104,13 +104,12 @@ export default function CanvasGallery() {
     // 点击外部关闭菜单
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (!document.getElementById('card-menu')?.contains(event.target))
-                setExpandedCardId(null)
+            setExpandedCardId(null)
         }
 
-        document.addEventListener('mousedown', handleClickOutside)
+        document.addEventListener('click', handleClickOutside)
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside)
+            document.removeEventListener('click', handleClickOutside)
         }
     }, [expandedCardId])
 
