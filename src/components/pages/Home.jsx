@@ -11,7 +11,6 @@ import useSWR from "swr"
 export default function CanvasGallery() {
     const userId = useSelector(selectUserId)
     const [expandedCardId, setExpandedCardId] = useState(null)
-    const cardRefs = useRef({})
 
     // 使用SWR获取我的画布列表
     const fetchCanvasList = async () => {
@@ -37,16 +36,16 @@ export default function CanvasGallery() {
             revalidateOnReconnect: true
         }
     )
-// 添加更多日志来跟踪状态变化
-useEffect(() => {
-    console.log("SWR States:", { 
-      isLoading, 
-      isValidating,
-      hasData: !!canvasData,
-      hasError: !!canvasError,
-      userId
-    });
-  }, [isLoading, canvasData,isValidating, canvasError, userId]);
+    // 添加更多日志来跟踪状态变化
+    useEffect(() => {
+        console.log("SWR States:", {
+            isLoading,
+            isValidating,
+            hasData: !!canvasData,
+            hasError: !!canvasError,
+            userId
+        });
+    }, [isLoading, canvasData, isValidating, canvasError, userId]);
     // 使用SWR获取共享画布列表
     const fetchSharedCanvasList = async () => {
         return await apiService.fetchSharedCanvasList(userId)
@@ -84,8 +83,10 @@ useEffect(() => {
     }
 
     const handleDeleteCanvas = (e, canvasId) => {
+        console.log("e:", e)
         e.preventDefault();
         e.stopPropagation();
+        console.log("Deleting canvas:", canvasId)
         apiService.deleteCanvas(canvasId).then(() => {
             refreshCanvasList()
             setExpandedCardId(null)
@@ -103,20 +104,8 @@ useEffect(() => {
     // 点击外部关闭菜单
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (expandedCardId === null)
-                return;
-            let isInsideAnyCard = false;
-            for (const cardId in cardRefs.current) {
-                const ref = cardRefs.current[cardId]
-                if (ref && ref.contains(event.target)) {
-                    isInsideAnyCard = true
-                    console.log("isInsideAnyCard", isInsideAnyCard)
-                    break
-                }
-            }
-            if (!isInsideAnyCard) {
+            if (!document.getElementById('card-menu')?.contains(event.target))
                 setExpandedCardId(null)
-            }
         }
 
         document.addEventListener('mousedown', handleClickOutside)
@@ -200,7 +189,6 @@ useEffect(() => {
                                         canvas={canvas}
                                         type={"mine"}
                                         isExpanded={expandedCardId === canvas.id}
-                                        menuRef={cardRefs.current[canvas.id]}
                                         onDelete={(e, canvasId) => handleDeleteCanvas(e, canvasId)}
                                         onToggle={(e, canvasId) => toggleMenu(e, canvasId)}></CanvasCard>
                                 </Link>

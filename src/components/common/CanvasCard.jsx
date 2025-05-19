@@ -1,10 +1,9 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import { MoreVertical, Share2, Trash2 } from "lucide-react";
 import IconButton from "./IconButton";
 import LazyImage from "./LazyImage";
-const CanvasCard = forwardRef((props, menuRef) => {
+const CanvasCard = (props) => {
     const { canvas, type, isExpanded, onDelete, onToggle } = props
-
     return (
         <>
             {type === "mine" && <article className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md h-full flex flex-col">
@@ -24,13 +23,15 @@ const CanvasCard = forwardRef((props, menuRef) => {
 
                     {isExpanded && (
                         <div
-                            ref={menuRef}
+                            id="card-menu"
                             className="absolute top-12 right-3 w-40 bg-white bg-opacity-90 rounded-md shadow-md transition-all duration-500 ease-in-out z-20"
                         >
                             <div className="p-2">
                                 <button
                                     className="w-full flex items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md"
-                                    onClick={(e) => onDelete(e, canvas.id)}
+                                    onClick={(e) => {
+                                        onDelete(e, canvas.id);
+                                    }}
                                 >
                                     <Trash2 className="h-4 w-4 mr-2" />
                                     删除画布
@@ -55,12 +56,12 @@ const CanvasCard = forwardRef((props, menuRef) => {
             {type === "shared" &&
                 <article className="bg-white rounded-lg shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md h-full flex flex-col">
                     <div className="h-40 bg-gradient-to-r from-purple-200 to-pink-200 flex items-center justify-center relative">
-                    <LazyImage
-                        src={'http://localhost:9000/bucket1/'+canvas.thumbnailFileName} // 替换为实际图片路径
-                        alt="Canvas Preview Image"
-                        placeholder={<span className="text-2xl text-gray-600 font-light">Canvas Preview</span>}
-                        className="absolute inset-0  w-full h-full object-cover z-0"
-                    />
+                        <LazyImage
+                            src={`${process.env.MINIO_BASE_URL}/${canvas.thumbnailFileName}`} // 替换为实际图片路径
+                            alt="Canvas Preview Image"
+                            placeholder={<span className="text-2xl text-gray-600 font-light">Canvas Preview</span>}
+                            className="absolute inset-0  w-full h-full object-cover z-0"
+                        />
                         {/* <span className="text-2xl text-gray-600 font-light">Canvas Preview</span> */}
                         <div className="absolute top-3 right-3 bg-white bg-opacity-90 rounded-full p-1.5 shadow-sm">
                             <Share2 className="h-4 w-4 text-purple-500" />
@@ -85,5 +86,5 @@ const CanvasCard = forwardRef((props, menuRef) => {
                 </article>}
         </>
     )
-})
+}
 export default CanvasCard
