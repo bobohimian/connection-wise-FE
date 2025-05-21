@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
 import apiService from '../../api';
 const PrivateRoute = ({ children }) => {
-  
+
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const userGlobalState = useSelector(selectUser);
@@ -13,8 +13,7 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        // await new Promise((resolve) => setTimeout(resolve, 2000));
-        const user = await apiService.checkSession();
+        const user = (await apiService.checkSession()).data;
         const userInfo = {
           id: user.id,
           username: user.username,
@@ -24,8 +23,14 @@ const PrivateRoute = ({ children }) => {
         dispatch(setUserInfo(userInfo));
         dispatch(setAuthenticated(true));
       } catch (error) {
+        if (error.isApi) {
+          const res = error.response
+          console.log(res);
+        }
+        else{
+          console.log(error);
+        }
         dispatch(setAuthenticated(false));
-        console.log(error)
       } finally {
         setLoading(false);
       }

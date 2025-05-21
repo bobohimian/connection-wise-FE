@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import NoteEditor from "./components/pages/NoteEditor"
-import PrivateRoute from "./components/provider/PrivateRoute"
+import PrivateRoute from "./components/hoc/PrivateRoute"
 import Login from "./components/pages/Login"
 import Home from "./components/pages/Home"
 import WebSocketProvider from "./components/provider/WebSocketProvider"

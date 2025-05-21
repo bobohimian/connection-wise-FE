@@ -1,4 +1,4 @@
-import React,{ useState } from "react"
+import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
@@ -24,23 +24,26 @@ export default function Login() {
     let userInfo = {}
     switch (provider) {
       case "password":
-        const user = await apiService.login(username, password)
-        console.log(user)
-        userInfo = {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          avatar: user.avatar,
+        try {
+          const user = (await apiService.login(username, password)).data
+          
+          userInfo = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            avatar: user.avatar,
+          }
+          console.log(userInfo)
+        } catch (error) {
+          if (error.isApi) {
+            console.log('登录失败', error);
+          } else {
+            console.error(error)
+          }
         }
+
         break
       default:
-        userInfo = {
-          id: 12312,
-          username: "chenhong",
-          email: "bobohemian171@gmail.com",
-          avatar: "",
-        }
-        break
     }
     dispatch(setUserInfo(userInfo))
     dispatch(setAuthenticated(true))
@@ -48,12 +51,14 @@ export default function Login() {
   }
 
   const register = async () => {
-    // await new Promise((resolve) => setTimeout(resolve, 1000))
     try {
-      const msg=await apiService.register(username, password,email)
-      console.log(msg)
+      await apiService.register(username, password, email)
     } catch (error) {
-      throw error
+      if (error.isApi) {
+        console.log('注册失败', error);
+      } else {
+        console.error(error)
+      }
     }
   }
 

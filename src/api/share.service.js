@@ -2,8 +2,8 @@ import apiClient from './apiClient.js';
 
 export const fetchSharedCanvasList = async (userId) => {
     try {
-        const resData = await apiClient.get('/share/user/' + userId);
-        return resData;
+        const resposne = await apiClient.get('/share/user/' + userId);
+        return resposne;
     }
     catch (error) {
         console.error('Error getting shared canvas', error);
@@ -12,8 +12,8 @@ export const fetchSharedCanvasList = async (userId) => {
 }
 export const fetchSharedUserList=async(canvasId)=>{
     try {
-        const resData = await apiClient.get('/share/' + canvasId);
-        return resData;
+        const resposne = await apiClient.get('/share/' + canvasId);
+        return resposne;
     }
     catch (error) {
         console.error('Error getting shared user', error);
@@ -22,8 +22,8 @@ export const fetchSharedUserList=async(canvasId)=>{
 }
 export const shareCanvas=async(shareCanvas)=>{
     try {
-        const resData = await apiClient.post('/share',shareCanvas);
-        return resData;
+        const resposne = await apiClient.post('/share',shareCanvas);
+        return resposne;
     }
     catch (error) {
         console.error('Error sharing canvas', error);
@@ -32,8 +32,8 @@ export const shareCanvas=async(shareCanvas)=>{
 }
 export const deleteShare=async(shareId)=>{
     try {
-        const resData = await apiClient.delete('/share/'+shareId);
-        return resData;
+        const resposne = await apiClient.delete('/share/'+shareId);
+        return resposne;
     }
     catch (error) {
         console.error('Error deleting share', error);
@@ -42,8 +42,8 @@ export const deleteShare=async(shareId)=>{
 }
 export const updateShare=async(shareCanvas)=>{
     try {
-        const resData = await apiClient.put('/share',shareCanvas);
-        return resData;
+        const resposne = await apiClient.put('/share',shareCanvas);
+        return resposne;
     }
     catch (error) {
         console.error('Error updating share', error);

@@ -8,10 +8,17 @@ const withScreenShot = (Component) => {
         const handleSaveThumbnail = async () => {
             const dataUrl = await DomToImage.toPng(ComponentRef.current)
             const formData = new FormData();
-            formData.append('thumbnail', dataURLtoBlob(dataUrl),"thumbnail.png");
+            formData.append('thumbnail', dataURLtoBlob(dataUrl), "thumbnail.png");
             formData.append('canvasId', canvasId)
-            const response = await apiService.uploadThumbnail(formData)
-            console.log(response)
+            try {
+                await apiService.uploadThumbnail(formData)
+            } catch (error) {
+                if (error.isApi) {
+                    
+                } else {
+
+                }
+            }
         }
         const dataURLtoBlob = (dataURL) => {
             const arr = dataURL.split(',');
@@ -20,10 +27,10 @@ const withScreenShot = (Component) => {
             let n = bstr.length;
             const u8arr = new Uint8Array(n);
             while (n--) {
-              u8arr[n] = bstr.charCodeAt(n);
+                u8arr[n] = bstr.charCodeAt(n);
             }
             return new Blob([u8arr], { type: mime });
-          };
+        };
         useEffect(() => {
             const interval = setInterval(() => {
                 handleSaveThumbnail()

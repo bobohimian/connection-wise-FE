@@ -33,7 +33,20 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
       description: "Your note has been saved successfully.",
     });
   };
+  const handleLogout =async () => {
+    try {
+      await apiService.logout()
+      dispatch(clearActiveDropdownId())
+      dispatch(clearUserInfo())
+      dispatch(setAuthenticated(false))
+    } catch (error) {
+      if (error.isApi) {
 
+      } else {
+
+      }
+    }
+  };
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
@@ -151,12 +164,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
       {
         type: "button",
         label: "Log out",
-        onClick: () => {
-          dispatch(clearActiveDropdownId())
-          dispatch(clearUserInfo())
-          apiService.logout();
-          dispatch(setAuthenticated(false))
-        }
+        onClick: () => handleLogout()
       },
     ]
   }

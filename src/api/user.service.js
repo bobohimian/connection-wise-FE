@@ -1,39 +1,39 @@
 import apiClient from './apiClient.js';
 export const login = async (username, password) => {
     try {
-        const responseData =
+        const resposne =
             await apiClient.post('/user/login',
                 {
                     username: username,
                     password: password
                 }
             );
-        return responseData
+        return resposne
     } catch (error) {
         throw error;
     }
 };
 export const logout = async () => {
     try {
-        const responseData =
+        const resposne =
             await apiClient.post('/user/logout');
-        return responseData;
+        return resposne;
     } catch (error) {
         throw error;
     }
 };
 export const checkSession = async () => {
     try {
-        const responseData =
+        const resposne =
             await apiClient.post('/user/check-auth');
-        return responseData;
+        return resposne;
     } catch (error) {
         throw error;
     }
 };
 export const register = async (username, password, email) => {
     try {
-        const responseData =
+        const resposne =
             await apiClient.post('/user/register',
                 {
                     username: username,
@@ -41,16 +41,16 @@ export const register = async (username, password, email) => {
                     email: email
                 }
             );
-        return responseData;
+        return resposne;
     } catch (error) {
         throw error;
     }
 };
 export const getUserByUserName = async (username) => {
     try {
-        const responseData =
+        const resposne =
             await apiClient.get('/user/search?username=' + username);
-        return responseData;
+        return resposne;
     } catch (error) {
         throw error;
     }

@@ -12,8 +12,8 @@ export const generateGraph = async (prompt, abortSignal = null) => {
             config.signal = abortSignal;
         }
         
-        const resData = await apiClient.get('/ai/generate-graph-str?prompt='+prompt, config);
-        return resData;
+        const resposne = await apiClient.get('/ai/generate-graph-str?prompt='+prompt, config);
+        return resposne;
     }
     catch (error) {
         // 如果是请求被取消的错误，提供更友好的错误信息

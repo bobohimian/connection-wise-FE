@@ -18,7 +18,7 @@ import Modal from "../common/Modal";
 export default function NoteEditor() {
   const canvasId = useParams().canvasId;
   const dispatch = useDispatch();
-  const {fitView} = useReactFlow();
+  const { fitView } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [canvasData, setCanvasData] = useState(null);
@@ -34,12 +34,20 @@ export default function NoteEditor() {
     getCanvas()
   }, [])
   const getCanvas = async () => {
-    const canvasData = await apiService.fetchCanvas(canvasId)
-    setCanvasData(canvasData);
+    try {
+      const canvasData = (await apiService.fetchCanvas(canvasId)).data
+      setCanvasData(canvasData);
+    } catch (error) {
+      if (error.isApi) {
+        console.log('获取画布失败', error);
+      } else {
+        console.error(error);
+      }
+    }
   }
   const hanldeSubmit = async (text) => {
     setIsloading(true);
-    const resData = await apiService.generateGraph(text);
+    const resData = (await apiService.generateGraph(text)).data;
     // const resData={
     //   "nodes": [
     //   {"id": 1, "title": "计算机网络", "content": "连接计算机和设备以实现数据通信的技术体系"},
@@ -76,20 +84,28 @@ export default function NoteEditor() {
     newEdges2.forEach(edge => {
       addEdge(edge);
     })
-    fitView({duration:1000});
+    fitView({ duration: 1000 });
   }
   const handleChangeCanvasName = async (value) => {
     const canvasDataCopy = structuredClone(canvasData);
     canvasDataCopy.title = value;
-    await apiService.updateCanvas(canvasDataCopy);
-    getCanvas();
+    try {
+      await apiService.updateCanvas(canvasDataCopy);
+      getCanvas();
+    } catch (error) {
+      if (error.isApi) {
+        console.log('更新画布失败', error);
+      } else {
+        console.error(error);
+      }
+    }
   }
   return (
     <div className="flex h-screen flex-col bg-white">
       <Navbar
-        canvasName={canvasData?.title} 
+        canvasName={canvasData?.title}
         canvasId={canvasId}
-        onCanvasNameChange={(value)=> handleChangeCanvasName(value)}/>
+        onCanvasNameChange={(value) => handleChangeCanvasName(value)} />
       <div className="grow flex">
         <Toolbox
           selectedNode={selectedNode}
@@ -105,11 +121,11 @@ export default function NoteEditor() {
       </div>
       <GraphSpotlight onSubmit={hanldeSubmit} />
       <Modal
-          isOpen={isloading}
-          onClose={() => {}}
-        >
-          <div className="m-auto h-50 w-50 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
-        </Modal>
+        isOpen={isloading}
+        onClose={() => { }}
+      >
+        <div className="m-auto h-50 w-50 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+      </Modal>
     </div>
   );
 }

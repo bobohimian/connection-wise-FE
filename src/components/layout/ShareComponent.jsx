@@ -12,12 +12,16 @@ export default function ShareComponent({ canvasId }) {
   const fetchSharedUsers = async () => {
     try {
       setLoading(true);
-      const data = await apiService.fetchSharedUserList(canvasId);
-      setSharedUsers(data);
+      const response = await apiService.fetchSharedUserList(canvasId);
+      setSharedUsers(response.data);
       setError('');
-    } catch (err) {
-      console.error('获取分享用户列表失败', err);
-      setError('获取分享用户列表失败');
+    } catch (error) {
+      if (error.isApi) {
+        console.log('获取分享用户列表失败', error);
+        setError(error.message);
+      } else {
+        console.error('获取分享用户列表失败', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -50,27 +54,35 @@ export default function ShareComponent({ canvasId }) {
       setError('');
       fetchSharedUsers(); // 刷新列表
     } catch (err) {
-      console.error('分享失败', err);
-      setError('分享失败，请确认用户名是否正确');
+      if (error.isApi) {
+        console.log('分享失败', err);
+        setError('分享失败，请确认用户名是否正确');
+      } else {
+        console.error('分享失败', err);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   // 更新分享权限
-  const handleUpdatePermission = async (userId,canvasId, newPermission) => {
+  const handleUpdatePermission = async (userId, canvasId, newPermission) => {
     try {
       setLoading(true);
-      
+
       await apiService.updateShare({
-        userId:userId,
+        userId: userId,
         canvasId: canvasId,
         permission: newPermission,
       });
       fetchSharedUsers(); // 刷新列表
-    } catch (err) {
-      console.error('更新权限失败', err);
-      setError('更新权限失败');
+    } catch (error) {
+      if (error.isApi) {
+        console.log('更新权限失败', error);
+        setError('更新权限失败');
+      } else {
+        console.error('更新权限失败', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -82,9 +94,13 @@ export default function ShareComponent({ canvasId }) {
       setLoading(true);
       await apiService.deleteShare(userId);
       fetchSharedUsers(); // 刷新列表
-    } catch (err) {
-      console.error('删除分享失败', err);
-      setError('删除分享失败');
+    } catch (error) {
+      if (error.isApi) {
+        console.log('删除分享失败', error);
+        setError('删除分享失败');
+      } else {
+        console.error('删除分享失败', error);
+      }
     } finally {
       setLoading(false);
     }
@@ -96,7 +112,7 @@ export default function ShareComponent({ canvasId }) {
         <h2 className="text-2xl font-bold mb-2">分享管理</h2>
         <p className="opacity-80">邀请其他用户访问您的画布</p>
       </div>
-      
+
       {/* 添加新分享表单 */}
       <form onSubmit={handleAddShare} className="px-8 flex flex-col space-y-4 mt-4 mb-6">
         {error && (
@@ -122,7 +138,7 @@ export default function ShareComponent({ canvasId }) {
             </div>
           </div>
         )}
-        
+
         <div>
           <label htmlFor="username" className="mb-2 text-sm font-medium text-gray-700">
             用户名
@@ -137,7 +153,7 @@ export default function ShareComponent({ canvasId }) {
             disabled={loading}
           />
         </div>
-        
+
         <div>
           <label className="mb-2 text-sm font-medium text-gray-700 block">
             权限设置
@@ -167,7 +183,7 @@ export default function ShareComponent({ canvasId }) {
             </label>
           </div>
         </div>
-        
+
         <button
           type="submit"
           disabled={loading}
@@ -190,14 +206,14 @@ export default function ShareComponent({ canvasId }) {
             <div className="w-24 text-center text-gray-700">权限</div>
             <div className="w-16 text-center text-gray-700">操作</div>
           </div>
-          
+
           {loading && (
             <div className="p-6 text-center">
               <div className="inline-block h-6 w-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
               <p className="mt-2 text-gray-500">加载中...</p>
             </div>
           )}
-          
+
           {!loading && sharedUsers.length === 0 && (
             <div className="p-8 text-center text-gray-500">
               <svg
@@ -218,7 +234,7 @@ export default function ShareComponent({ canvasId }) {
               <p className="mt-1 text-sm text-gray-500">添加用户以共享您的画布</p>
             </div>
           )}
-          
+
           {!loading && sharedUsers.map((user) => (
             <div key={user.id} className="px-4 py-3 border-t flex items-center hover:bg-gray-50 transition-colors">
               <div className="flex-1 font-medium text-gray-800">{user.username}</div>

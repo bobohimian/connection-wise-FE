@@ -14,7 +14,7 @@ export default function CanvasGallery() {
 
     // 使用SWR获取我的画布列表
     const fetchCanvasList = async () => {
-        return await apiService.fetchCanvasList(userId)
+        return (await apiService.fetchCanvasList(userId)).data
     }
     const {
         data: canvasData,
@@ -30,25 +30,20 @@ export default function CanvasGallery() {
                 console.log("Canvas list fetched successfully")
             },
             onError: (error) => {
-                console.error("Failed to fetch canvas list:", error)
+                if (error.isApi) {
+                    console.log('获取分享用户列表失败', error);
+                } else {
+                    console.error(error)
+                }
             },
             revalidateOnFocus: true,
             revalidateOnReconnect: true
         }
     )
-    // 添加更多日志来跟踪状态变化
-    useEffect(() => {
-        console.log("SWR States:", {
-            isLoading,
-            isValidating,
-            hasData: !!canvasData,
-            hasError: !!canvasError,
-            userId
-        });
-    }, [isLoading, canvasData, isValidating, canvasError, userId]);
+
     // 使用SWR获取共享画布列表
     const fetchSharedCanvasList = async () => {
-        return await apiService.fetchSharedCanvasList(userId)
+        return (await apiService.fetchSharedCanvasList(userId)).data
     }
 
     const { data: sharedCanvasData, error: sharedCanvasError, isLoading: isSharedLoading, mutate: refreshSharedCanvasList } = useSWR(
@@ -59,7 +54,11 @@ export default function CanvasGallery() {
                 console.log("Shared canvas list fetched successfully")
             },
             onError: (error) => {
-                console.error("Failed to fetch shared canvas list:", error)
+                if (error.isApi) {
+                    console.log('获取分享用户列表失败', error);
+                } else {
+                    console.error(error)
+                }
             },
             revalidateOnFocus: true,
             revalidateOnReconnect: true
@@ -77,9 +76,16 @@ export default function CanvasGallery() {
     ) : []
 
     const handleCreateNewCanvas = () => {
-        apiService.createCanvas(userId).then((res) => {
+        apiService.createCanvas(userId).then(() => {
             refreshCanvasList()
+        }).catch(error => {
+            if (error.isApi) {
+                console.log('创建画布失败', error);
+            } else {
+                console.error(error)
+            }
         })
+
     }
 
     const handleDeleteCanvas = (e, canvasId) => {
@@ -91,7 +97,11 @@ export default function CanvasGallery() {
             refreshCanvasList()
             setExpandedCardId(null)
         }).catch(error => {
-            console.error("删除画布失败:", error)
+            if (error.isApi) {
+                console.log('删除画布失败', error);
+            } else {
+                console.error(error)
+            }
         })
     }
 
