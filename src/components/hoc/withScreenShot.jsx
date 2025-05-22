@@ -1,14 +1,20 @@
 import React, { useEffect, useRef } from 'react'
-import DomToImage from 'dom-to-image'
+import { domToWebp,domToPng } from 'modern-screenshot'
 import apiService from '../../api'
+const options = {
+    // width:300,
+    // height:160,
+    quality:0.5,
+    // scale:1,
+}
 const withScreenShot = (Component) => {
     return (props) => {
         const canvasId = props.canvasId
         const ComponentRef = useRef(null)
         const handleSaveThumbnail = async () => {
-            const dataUrl = await DomToImage.toPng(ComponentRef.current)
+            const dataUrl = await domToWebp(ComponentRef.current,options)
             const formData = new FormData();
-            formData.append('thumbnail', dataURLtoBlob(dataUrl), "thumbnail.png");
+            formData.append('thumbnail', dataURLtoBlob(dataUrl), "thumbnail.webp");
             formData.append('canvasId', canvasId)
             try {
                 await apiService.uploadThumbnail(formData)
