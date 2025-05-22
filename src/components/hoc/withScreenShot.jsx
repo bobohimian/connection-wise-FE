@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import { domToWebp,domToPng } from 'modern-screenshot'
+import { domToWebp } from 'modern-screenshot'
 import apiService from '../../api'
 const options = {
     // width:300,
     // height:160,
     quality:0.5,
-    // scale:1,
+    scale:0.7,
 }
 const withScreenShot = (Component) => {
     return (props) => {
