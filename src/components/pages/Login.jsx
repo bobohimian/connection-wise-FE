@@ -33,20 +33,15 @@ export default function Login() {
             email: user.email,
             avatar: user.avatar,
           }
-          console.log(userInfo)
+          dispatch(setUserInfo(userInfo))
+          dispatch(setAuthenticated(true))
         } catch (error) {
-          if (error.isApi) {
-            console.log('登录失败', error);
-          } else {
-            console.error(error)
-          }
+          throw error
         }
 
         break
       default:
     }
-    dispatch(setUserInfo(userInfo))
-    dispatch(setAuthenticated(true))
     return
   }
 
@@ -71,12 +66,12 @@ export default function Login() {
       await login(provider)
       navigate("/canvas")
     } catch (error) {
-      console.error(error)
-      setError(
-        provider === "password"
-          ? "用户名或密码错误，请重试"
-          : `使用${provider === "google" ? "Google" : "GitHub"}登录失败，请稍后再试`,
-      )
+      if (error.isApi) {
+        setError(error.message)
+        console.log('登录失败', error);
+      } else {
+        console.error(error)
+      }
     } finally {
       setLoading(null)
     }
