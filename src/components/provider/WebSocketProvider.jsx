@@ -6,35 +6,35 @@ import { useEnhancedReaceFlow } from '../../hooks/useEnhancedReaceFlow.js';
 const WebSocketProvider = ({ children }) => {
     const { wsProxy } = usewsProxy();
     const {addNode,deleteNode,updateNode,addEdge,deleteEdge,updateEdge}=useEnhancedReaceFlow();
-    const option={
+    const options={
         userws:false
     }
     const messageHandlers = {
         addNode:(operation)=>{
             const {value}=operation;
             const node=JSON.parse(value);
-            addNode(node,option);
+            addNode(node,options);
         },
         deleteNode:(operation)=>{
             const {id}=operation;
-            deleteNode(id,option);
+            deleteNode(id,options);
         },
         updateNode:(operation)=>{
             const {id,path,value}=operation;
-            updateNode(id,path,JSON.parse(value),option);
+            updateNode(id,path,JSON.parse(value),options);
         },
         addEdge:(operation)=>{
             const {value}=operation;
             const edge=JSON.parse(value);
-            addEdge(edge,option);
+            addEdge(edge,options);
         },
         deleteEdge:(operation)=>{
             const {id}=operation;
-            deleteEdge(id,option);
+            deleteEdge(id,options);
         },
         updateEdge:(operation)=>{
             const {id,path,value}=operation;
-            updateEdge(id,path,JSON.parse(value),option);
+            updateEdge(id,path,JSON.parse(value),options);
         },
         pong: () => {
             console.log("Receive pong.");

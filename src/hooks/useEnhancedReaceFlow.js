@@ -13,17 +13,17 @@ export function useEnhancedReaceFlow() {
     } = useReactFlow();
     const { wsProxy } = usewsProxy();
 
-    const addNode = (node, option = { usews: true }) => {
+    const addNode = (node, options = { usews: true }) => {
         setNodesRF((nodes) => nodes.concat(node));
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.addNode(node);
     }
-    const deleteNode = (nodeId, option = { usews: true }) => {
+    const deleteNode = (nodeId, options = { usews: true }) => {
         setNodesRF((nodes) => nodes.filter((node) => node.id !== nodeId));
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.deleteNode(nodeId);
     }
-    const updateNode = (nodeId, path, newValue, option = { usews: true }) => {
+    const updateNode = (nodeId, path, newValue, options = { usews: true }) => {
         // 对函数式更新需要特殊处理
         // if(typeof edge ==="function")
 
@@ -31,7 +31,7 @@ export function useEnhancedReaceFlow() {
             throw new Error("path must be an array and length must be greater than 0");
         }
 
-        const updateFunc = (node, option = { usews: true }) => {
+        const updateFunc = (node, options = { usews: true }) => {
             const pathLen = path.length;
             const newNode = structuredClone(node);
             let current = newNode;
@@ -47,26 +47,26 @@ export function useEnhancedReaceFlow() {
             return newNode;
         }
         updateNodeRF(nodeId, updateFunc);
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.updateNode(nodeId, path, newValue);
     };
-    const updateNodeData = (nodeId, baseObj, path, newValue, option = { usews: true }) => {
+    const updateNodeData = (nodeId, baseObj, path, newValue, options = { usews: true }) => {
         // setEdgesRF((nodes) => nodes.concat(node));
         // wsProxy.addNode( node);
     }
 
 
-    const addEdge = (edge, option = { usews: true }) => {
+    const addEdge = (edge, options = { usews: true }) => {
         setEdgesRF((edges) => edges.concat(edge));
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.addEdge(edge);
     }
-    const deleteEdge = (edgeId, option = { usews: true }) => {
+    const deleteEdge = (edgeId, options = { usews: true }) => {
         setEdgesRF((edges) => edges.filter((edge) => edge.id!== edgeId));
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.deleteEdge(edgeId);
     }
-    const updateEdge = (edgeId, path, newValue, option = { usews: true }) => {
+    const updateEdge = (edgeId, path, newValue, options = { usews: true }) => {
 
         // 对函数式更新需要特殊处理
         // if(typeof edge ==="function")
@@ -75,7 +75,7 @@ export function useEnhancedReaceFlow() {
             throw new Error("path must be an array and length must be greater than 0");
         }
 
-        const updateFunc = (edge, option = { usews: true }) => {
+        const updateFunc = (edge, options = { usews: true }) => {
             const pathLen = path.length;
             const newEdge = structuredClone(edge);
             let current = newEdge;
@@ -91,7 +91,7 @@ export function useEnhancedReaceFlow() {
             return newEdge;
         }
         updateEdgeRF(edgeId, updateFunc);
-        if (option?.usews)
+        if (options?.usews)
             wsProxy.updateEdge(edgeId, path, newValue);
     };
 

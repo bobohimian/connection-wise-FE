@@ -8,6 +8,7 @@ module.exports =  {
     ],
     theme: {
         extend: {
+            // 不起作用
             backgroundImage:{
                 'theme-breeze':'linear-gradient(to right, #38bdf8, #0891b2, #0ea5e9)',
                 'theme-sunset':'linear-gradient(to right, #f87171, #fbbf24, #fcd34d)',
