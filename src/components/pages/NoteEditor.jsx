@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-
-import Navbar from "../layout/Navbar";
-import Toolbox from "../layout/Toolbox";
-import Canvas from "../layout/Canvas";
-import { useDispatch } from "react-redux";
-import { setCanvasId } from "../../store/slices/user";
-import { setActiveDropdownId } from "../../store/slices/ui";
-import { GraphSpotlight } from "../common/GraphSpotlight"
-import apiService from "../../api";
-import { getLayoutedElements, transformGraphData } from "../../utils";
-import { useReactFlow } from "@xyflow/react";
-import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
-import Modal from "../common/Modal";
+import { useReactFlow } from '@xyflow/react';
+import { useEffect, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import apiService from '../../api';
+import { useEnhancedReaceFlow } from '../../hooks/useEnhancedReaceFlow';
+import { setActiveDropdownId } from '../../store/slices/ui';
+import { setCanvasId } from '../../store/slices/user';
+import { getLayoutedElements, transformGraphData } from '../../utils';
+import { GraphSpotlight } from '../common/GraphSpotlight';
+import Modal from '../common/Modal';
+import Canvas from '../layout/Canvas';
+import Navbar from '../layout/Navbar';
+import Toolbox from '../layout/Toolbox';
 
 
 export default function NoteEditor() {
@@ -28,14 +27,14 @@ export default function NoteEditor() {
     dispatch(setCanvasId(canvasId));
     return () => {
       dispatch(setActiveDropdownId(null));
-    }
-  }, [])
+    };
+  }, [canvasId, dispatch]);
   useEffect(() => {
-    getCanvas()
-  }, [])
-  const getCanvas = async () => {
+    getCanvas();
+  }, [getCanvas]);
+  const getCanvas = useCallback(async () => {
     try {
-      const canvasData = (await apiService.fetchCanvas(canvasId)).data
+      const canvasData = (await apiService.fetchCanvas(canvasId)).data;
       setCanvasData(canvasData);
     } catch (error) {
       if (error.isApi) {
@@ -44,7 +43,7 @@ export default function NoteEditor() {
         console.error(error);
       }
     }
-  }
+  },[canvasId]);
   const hanldeSubmit = async (text) => {
     setIsloading(true);
     const resData = (await apiService.generateGraph(text)).data;
@@ -80,12 +79,12 @@ export default function NoteEditor() {
     setIsloading(false);
     newNodes2.forEach(node => {
       addNode(node);
-    })
+    });
     newEdges2.forEach(edge => {
       addEdge(edge);
-    })
+    });
     fitView({ duration: 1000 });
-  }
+  };
   const handleChangeCanvasName = async (value) => {
     const canvasDataCopy = structuredClone(canvasData);
     canvasDataCopy.title = value;
@@ -99,17 +98,19 @@ export default function NoteEditor() {
         console.error(error);
       }
     }
-  }
+  };
   return (
     <div className="flex h-screen flex-col bg-white">
       <Navbar
         canvasName={canvasData?.title}
         canvasId={canvasId}
-        onCanvasNameChange={(value) => handleChangeCanvasName(value)} />
+        onCanvasNameChange={(value) => handleChangeCanvasName(value)}
+      />
       <div className="grow flex">
         <Toolbox
           selectedNode={selectedNode}
-          selectedEdge={selectedEdge} />
+          selectedEdge={selectedEdge}
+        />
         <Canvas
           canvasData={canvasData}
           canvasId={canvasId}

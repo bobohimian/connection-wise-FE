@@ -1,2 +1,2 @@
-export { transformGraphData } from './format'
-export { getLayoutedElements } from './layout'
+export { transformGraphData } from './format';
+export { getLayoutedElements } from './layout';

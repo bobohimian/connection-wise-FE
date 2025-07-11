@@ -1,4 +1,3 @@
-import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import {
   ReactFlow,
   Background,
@@ -7,25 +6,21 @@ import {
   Panel,
   useNodesState,
   useEdgesState,
-  addEdge,
-  applyEdgeChanges,
-} from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
-
-import { useToast } from "../common/toast";
-import { nodeTypes, createNode } from "../common/node";
-import { edgeTypes, defaultEdgeOption } from "../common/edge";
-
-import { createEdge } from "../common/edge";
-import { useEnhancedReaceFlow } from "../../hooks/useEnhancedReaceFlow";
-
-import withScreenShot from "../hoc/withScreenShot";
+} from '@xyflow/react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
+import '@xyflow/react/dist/style.css';
+import { useEnhancedReaceFlow } from '../../hooks/useEnhancedReaceFlow';
+import { edgeTypes, defaultEdgeOption , createEdge } from '../common/edge';
+import { nodeTypes, createNode } from '../common/node';
+import { useToast } from '../common/toast';
+import withScreenShot from '../hoc/withScreenShot';
 
 
-const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selectedEdge, setSelectedEdge },ref) => {
+// eslint-disable-next-line react-refresh/only-export-components
+const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _selectedEdge, setSelectedEdge },ref) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(canvasData?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData?.edges || []);
-  const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge } = useEnhancedReaceFlow()
+  const { addNode, deleteNode, updateNode, addEdge, deleteEdge } = useEnhancedReaceFlow();
   const { toast } = useToast();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -34,25 +29,25 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
   useEffect(() => {
     setNodes(canvasData?.nodes || []);
     setEdges(canvasData?.edges || []);
-  }, [canvasData])
+  }, [canvasData, setEdges, setNodes]);
 
   const onConnect = (connection) => {
-    const newEdge = createEdge(connection)
-    addEdge(newEdge)
-  }
+    const newEdge = createEdge(connection);
+    addEdge(newEdge);
+  };
   const onNodeClick = useCallback(
     (_, node) => {
       setSelectedEdge(null);
       setSelectedNode(node.id);
     },
-    [setSelectedNode]
+    [setSelectedEdge, setSelectedNode],
   );
   const onEdgeClick = useCallback(
     (_, edge) => {
       setSelectedNode(null);
       setSelectedEdge(edge.id);
     },
-    [setSelectedEdge]
+    [setSelectedEdge, setSelectedNode],
   );
   const onPaneClick = useCallback(() => {
     const mousedownEvent = new MouseEvent('mousedown', { bubbles: true });
@@ -72,20 +67,20 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
       event.preventDefault();
       if (!reactFlowInstance)
         return;
-      const type = event.dataTransfer.getData("text/plain");
-      if (typeof type === "undefined" || !type) return;
+      const type = event.dataTransfer.getData('text/plain');
+      if (typeof type === 'undefined' || !type) return;
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
       const newNode = createNode({ type, position });
-      addNode(newNode)
+      addNode(newNode);
       toast({
-        title: "Node added",
+        title: 'Node added',
         description: `Added a new ${type} node to the canvasch.`,
       });
     },
-    [reactFlowInstance, toast]
+    [addNode, reactFlowInstance, toast],
   );
 
   return (
@@ -94,12 +89,12 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
-        onNodeDragStop={(e, node) => updateNode(node.id, ["position"], node.position)}
+        onNodeDragStop={(e, node) => updateNode(node.id, ['position'], node.position)}
         onEdgesChange={onEdgesChange}
         onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}
         onEdgesDelete={deletedEdges => {
           console.log(deletedEdges);
-          deletedEdges.map(edge => deleteEdge(edge.id))
+          deletedEdges.map(edge => deleteEdge(edge.id));
         }}
         onConnect={onConnect}
         defaultEdgeOptions={defaultEdgeOption}
@@ -115,9 +110,9 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
         paneClickDistance={5}
         nodeClickDistance={10}
         nodeOrigin={[0.5, 0.5]}
-        onViewportChange={({ x, y, zoom }) => { }}
+        onViewportChange={({ _x, _y, _zoom }) => { }}
         fitView
-        style={{backgroundColor: "#fff"}}
+        style={{ backgroundColor: '#fff' }}
       // snapToGrid
       // snapGrid={[15, 15]}
       // defaultViewport={{ x: 0, y: 0, zoom: 1}}
@@ -131,11 +126,11 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
                 toast({
-                  title: "画布清空",
-                  description: "所有内容已被清除",
+                  title: '画布清空',
+                  description: '所有内容已被清除',
                 });
-                setNodes([])
-                setEdges([])
+                setNodes([]);
+                setEdges([]);
               }}
             >
               Clear Canvas
@@ -144,8 +139,8 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
                 toast({
-                  title: "Layout reset",
-                  description: "Canvas view has been reset.",
+                  title: 'Layout reset',
+                  description: 'Canvas view has been reset.',
                 });
                 reactFlowInstance?.fitView();
               }}
@@ -157,6 +152,7 @@ const Canvas = forwardRef(({ canvasData, selectedNode, setSelectedNode, selected
       </ReactFlow>
     </div>
   );
-}
+},
 );
+// eslint-disable-next-line react-refresh/only-export-components
 export default withScreenShot(Canvas);

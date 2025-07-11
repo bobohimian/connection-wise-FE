@@ -1,5 +1,4 @@
-import React from 'react';
-import { BaseEdge, getSmoothStepPath } from "@xyflow/react";
+import { BaseEdge, getSmoothStepPath } from '@xyflow/react';
 
 export default function PolylineEdge({
   id,
@@ -10,8 +9,8 @@ export default function PolylineEdge({
   sourcePosition,
   targetPosition,
   style = {},
-  markerEnd,
-  selected
+  _markerEnd,
+  selected,
 }) {
   const [edgePath] = getSmoothStepPath({
     sourceX,
@@ -26,7 +25,7 @@ export default function PolylineEdge({
     <BaseEdge
       id={id}
       style={{
-        stroke: "#f44336",
+        stroke: '#f44336',
         ...style,
         strokeWidth: selected ? 3 : 2,
       }}

@@ -1,15 +1,15 @@
-import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Handle, Position } from "@xyflow/react";
-import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
-const TextNode = ({ id, data, isConnectable, selected }) => {
-  const text = data.text || "";
+import { Handle, Position } from '@xyflow/react';
+import {  useCallback, useEffect, useRef } from 'react';
+import { useEnhancedReaceFlow } from '../../../hooks/useEnhancedReaceFlow';
+const TextNode = ({ id, data, isConnectable, _selected }) => {
+  const text = data.text || '';
   const { updateNode } = useEnhancedReaceFlow();
   const textareaRef = useRef(null);
   
   const handleTextChange = useCallback(
     (e) => {
       const nextText = e.target.value;
-      updateNode(id, ["data", "text"], nextText)
+      updateNode(id, ['data', 'text'], nextText);
     }, [id, updateNode]);
     
   useEffect(() => {
@@ -38,7 +38,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
     <>
       <div
         // 添加absolute，脱离文档流，避免影响ToolTip的absolute定位,失败，节点位置不明
-        className={` p-2 rounded-md  w-50 h-30`}
+        className={' p-2 rounded-md  w-50 h-30'}
       >
         <Handle
           type="target"
@@ -64,5 +64,5 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
 
     </>
   );
-}
+};
 export default TextNode;

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Handle, Position } from "@xyflow/react";
-import { Check, Plus, Trash2 } from "lucide-react";
-import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
-export default function ({ id, data, isConnectable, selected }) {
+import { Handle, Position } from '@xyflow/react';
+import { Check, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useEnhancedReaceFlow } from '../../../hooks/useEnhancedReaceFlow';
+export default function TodoNode({ id, data, isConnectable, selected }) {
 
   const items = data.items;
   const { updateNode } = useEnhancedReaceFlow();
-  const [newItemText, setNewItemText] = useState("");
+  const [newItemText, setNewItemText] = useState('');
   const [isAddingItem, setIsAddingItem] = useState(true);
   useEffect(() => {
     if (!selected) {
@@ -15,14 +15,14 @@ export default function ({ id, data, isConnectable, selected }) {
   }, [selected]);
   const toggleItem = (itemId) => {
     const updatedItems = items.map((item) =>
-      item.id === itemId ? { ...item, completed: !item.completed } : item
+      item.id === itemId ? { ...item, completed: !item.completed } : item,
     );
-    updateNode(id, ["data", "items"], updatedItems)
+    updateNode(id, ['data', 'items'], updatedItems);
   };
 
   const deleteItem = (itemId) => {
     const updatedItems = items.filter((item) => item.id !== itemId);
-    updateNode(id, ["data", "items"], updatedItems)
+    updateNode(id, ['data', 'items'], updatedItems);
   };
 
   const addItem = () => {
@@ -33,15 +33,15 @@ export default function ({ id, data, isConnectable, selected }) {
         completed: false,
       };
       const updatedItems = [...items, newItem];
-      updateNode(id, ["data", "items"], updatedItems)
-      setNewItemText("");
+      updateNode(id, ['data', 'items'], updatedItems);
+      setNewItemText('');
     }
     setIsAddingItem(false);
   };
 
   return (
     <div
-      className={`p-2 rounded-md  ${selected ? "border-primary ring-1" : ""} shadow-sm w-50`}
+      className={`p-2 rounded-md  ${selected ? 'border-primary ring-1' : ''} shadow-sm w-50`}
     >
       <Handle
         type="target"
@@ -63,7 +63,7 @@ export default function ({ id, data, isConnectable, selected }) {
               />
               <label
                 htmlFor={`todo-${item.id}`}
-                className={`text-sm flex-1 ${item.completed ? "line-through text-muted-foreground" : ""}`}
+                className={`text-sm flex-1 ${item.completed ? 'line-through text-muted-foreground' : ''}`}
               >
                 {item.text}
               </label>
@@ -83,13 +83,13 @@ export default function ({ id, data, isConnectable, selected }) {
               <input
                 value={newItemText}
                 onChange={(e) => setNewItemText(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addItem()}
+                onKeyDown={(e) => e.key === 'Enter' && addItem()}
                 autoFocus
                 className="h-6 text-sm border rounded focus:outline-none"
                 placeholder="New task..."
               />
               <button
-                className={`h-6 w-10 flex items-center justify-center rounded hover:bg-gray-100 `}
+                className={'h-6 w-10 flex items-center justify-center rounded hover:bg-gray-100 '}
                 onClick={() => addItem()}
               >
                 <Check className="h-3 w-3" />

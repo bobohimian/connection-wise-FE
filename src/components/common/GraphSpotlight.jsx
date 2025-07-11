@@ -1,79 +1,79 @@
-import React, { useEffect, useState, useRef } from "react"
-import { createPortal } from "react-dom"
-import { Search, X } from "lucide-react"
+import { Search, X } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 export const GraphSpotlight = ({ onSubmit }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [query, setQuery] = useState("")
-  const inputRef = useRef(null)
-  const [portalContainer, setPortalContainer] = useState(null)
-  const [lastSpaceTime, setLastSpaceTime] = useState(0)
+  const [isOpen, setIsOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const inputRef = useRef(null);
+  const [portalContainer, setPortalContainer] = useState(null);
+  const [lastSpaceTime, setLastSpaceTime] = useState(0);
 
   // Create portal container on mount
   useEffect(() => {
-    const div = document.createElement("div")
-    div.style.position = "fixed"
-    div.style.top = "0"
-    div.style.left = "0"
-    div.style.width = "100%"
-    div.style.height = "100%"
-    div.style.zIndex = "9999"
-    div.style.pointerEvents = isOpen ? "auto" : "none"
-    document.body.appendChild(div)
-    setPortalContainer(div)
+    const div = document.createElement('div');
+    div.style.position = 'fixed';
+    div.style.top = '0';
+    div.style.left = '0';
+    div.style.width = '100%';
+    div.style.height = '100%';
+    div.style.zIndex = '9999';
+    div.style.pointerEvents = isOpen ? 'auto' : 'none';
+    document.body.appendChild(div);
+    setPortalContainer(div);
 
     return () => {
-      document.body.removeChild(div)
-    }
-  }, [isOpen])
+      document.body.removeChild(div);
+    };
+  }, [isOpen]);
 
   // Handle keyboard events
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Double space detection
-      if (e.key === " " && !isOpen) {
-        const now = Date.now()
+      if (e.key === ' ' && !isOpen) {
+        const now = Date.now();
         if (now - lastSpaceTime < 500) {
           // 500ms threshold for double-click
-          e.preventDefault()
-          setIsOpen(true)
-          setLastSpaceTime(0)
+          e.preventDefault();
+          setIsOpen(true);
+          setLastSpaceTime(0);
         } else {
-          setLastSpaceTime(now)
+          setLastSpaceTime(now);
         }
       }
 
       // Close on escape
-      if (e.key === "Escape" && isOpen) {
-        setIsOpen(false)
-        setQuery("")
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        setQuery('');
       }
-    }
+    };
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, lastSpaceTime])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, lastSpaceTime]);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (query.trim()) {
-      onSubmit ? onSubmit(query) : console.error("onSubmit is not defined")
+      onSubmit ? onSubmit(query) : console.error('onSubmit is not defined');
       // setQuery("")
-      setIsOpen(false)
+      setIsOpen(false);
     }
-  }
+  };
 
   const handleClose = () => {
-    setIsOpen(false)
-    setQuery("")
-  }
+    setIsOpen(false);
+    setQuery('');
+  };
 
-  if (!portalContainer || !isOpen) return null
+  if (!portalContainer || !isOpen) return null;
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-[30vh] p-4 transition-opacity duration-200 ${isOpen ? "opacity-100" : "opacity-0"
-        }`}
+      className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center pt-[30vh] p-4 transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'
+      }`}
       onClick={handleClose}
     >
       <div
@@ -110,5 +110,5 @@ export const GraphSpotlight = ({ onSubmit }) => {
       </div>
     </div>,
     portalContainer,
-  )
-}
+  );
+};

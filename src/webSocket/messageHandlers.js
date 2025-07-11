@@ -1,5 +1,5 @@
 export const messageHandlers = {
-    pong: () => {
-        console.log("Receive pong.");
-    }
-}
+  pong: () => {
+    console.log('Receive pong.');
+  },
+};

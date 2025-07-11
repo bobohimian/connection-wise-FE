@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { X } from 'lucide-react';
+import  { createContext, useContext, useState, useCallback } from 'react';
 
 const ToastContext = createContext(undefined);
 
@@ -29,10 +29,11 @@ export function ToastProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast() {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error("useToast must be used within a ToastProvider");
+    throw new Error('useToast must be used within a ToastProvider');
   }
 
   return {
@@ -44,7 +45,7 @@ export function useToast() {
 export function Toaster() {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error("Toaster must be used within a ToastProvider");
+    throw new Error('Toaster must be used within a ToastProvider');
   }
 
   const { toasts, removeToast } = context;

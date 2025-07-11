@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
+import { Navigate } from 'react-router-dom';
 import apiService from '../../api';
+import { selectUser, setAuthenticated, setUserInfo } from '../../store/slices/user';
 const PrivateRoute = ({ children }) => {
 
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,12 @@ const PrivateRoute = ({ children }) => {
           username: user.username,
           email: user.email,
           avatar: user.avatar,
-        }
+        };
         dispatch(setUserInfo(userInfo));
         dispatch(setAuthenticated(true));
       } catch (error) {
         if (error.isApi) {
-          const res = error.response
+          const res = error.response;
           console.log(res);
         }
         else{
@@ -39,12 +39,12 @@ const PrivateRoute = ({ children }) => {
       checkSession();
     else
       setLoading(false);
-  }, [dispatch])
+  }, [dispatch, isAuthenticated]);
 
   if (loading) {
     return <div className='flex flex-col justify-center items-center h-screen'>
       <h1>Loading...</h1>
-    </div>
+    </div>;
   }
 
   if (!isAuthenticated) {

@@ -1,138 +1,132 @@
-import React, { useState } from "react"
-import { useDispatch } from "react-redux"
-import { useNavigate } from "react-router-dom"
-
-import { setUserInfo } from "../../store/slices/user.js"
-import { setAuthenticated } from "../../store/slices/user.js"
-import apiService from "../../api/index.js"
-import { useToast } from "../common/toast.jsx"
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import apiService from '../../api/index.js';
+import { setUserInfo , setAuthenticated } from '../../store/slices/user.js';
+import { useToast } from '../common/toast.jsx';
 
 export default function Login() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(null)
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [email, setEmail] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [error, setError] = useState(null)
-  const [isLogin, setIsLogin] = useState(true)
+  const [loading, setLoading] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [isLogin, setIsLogin] = useState(true);
 
   const login = async (provider) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    let userInfo = {}
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    let userInfo = {};
     switch (provider) {
-      case "password":
-        try {
-          const user = (await apiService.login(username, password)).data
-          
-          userInfo = {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            avatar: user.avatar,
-          }
-          dispatch(setUserInfo(userInfo))
-          dispatch(setAuthenticated(true))
-        } catch (error) {
-          throw error
-        }
-
-        break
+      case 'password': {
+        const user = (await apiService.login(username, password)).data;
+        
+        userInfo = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          avatar: user.avatar,
+        };
+        dispatch(setUserInfo(userInfo));
+        dispatch(setAuthenticated(true));
+        break;
+      }
       default:
     }
-    return
-  }
+    return;
+  };
 
   const register = async () => {
     try {
-      await apiService.register(username, password, email)
+      await apiService.register(username, password, email);
     } catch (error) {
       if (error.isApi) {
         console.log('注册失败', error);
       } else {
-        console.error(error)
+        console.error(error);
       }
     }
-  }
+  };
 
   const handleLogin = async (e, provider) => {
-    e.preventDefault()
-    setLoading(provider)
-    setError(null)
-    console.log("使用 " + provider + " 登录")
+    e.preventDefault();
+    setLoading(provider);
+    setError(null);
+    console.log('使用 ' + provider + ' 登录');
     try {
-      await login(provider)
-      navigate("/canvas")
+      await login(provider);
+      navigate('/canvas');
     } catch (error) {
       if (error.isApi) {
-        setError(error.message)
+        setError(error.message);
         console.log('登录失败', error);
       } else {
-        console.error(error)
+        console.error(error);
       }
     } finally {
-      setLoading(null)
+      setLoading(null);
     }
-  }
+  };
 
   const handleRegister = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Validation
     if (!username || !email || !password || !confirmPassword) {
-      setError("请填写所有必填字段")
-      return
+      setError('请填写所有必填字段');
+      return;
     }
 
     if (password !== confirmPassword) {
-      setError("两次输入的密码不一致")
-      return
+      setError('两次输入的密码不一致');
+      return;
     }
 
     // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError("请输入有效的电子邮箱地址")
-      return
+      setError('请输入有效的电子邮箱地址');
+      return;
     }
 
-    setLoading("register")
-    setError(null)
+    setLoading('register');
+    setError(null);
 
     try {
-      await register()
+      await register();
       toast({
-        title: "register successfully",
-        description: "Please login now"
+        title: 'register successfully',
+        description: 'Please login now',
       });
       setTimeout(() => {
-        setIsLogin(true)
-      }, 1000)
+        setIsLogin(true);
+      }, 1000);
     } catch (error) {
-      console.error(error)
-      setError("注册失败，请稍后再试")
+      console.error(error);
+      setError('注册失败，请稍后再试');
     } finally {
-      setLoading(null)
+      setLoading(null);
     }
-  }
+  };
 
   const toggleForm = () => {
-    setIsLogin(!isLogin)
-    setError(null)
-  }
+    setIsLogin(!isLogin);
+    setError(null);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md w-full">
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white text-center">
-          <h2 className="text-3xl font-bold mb-2">{isLogin ? "欢迎回来" : "创建账户"}</h2>
-          <p className="opacity-80">{isLogin ? "请登录以继续访问您的账户" : "请注册一个新账户"}</p>
+          <h2 className="text-3xl font-bold mb-2">{isLogin ? '欢迎回来' : '创建账户'}</h2>
+          <p className="opacity-80">{isLogin ? '请登录以继续访问您的账户' : '请注册一个新账户'}</p>
         </div>
 
         {isLogin ? (
-          <form onSubmit={(e) => handleLogin(e, "password")} className="px-8 flex flex-col space-y-4 mt-4 mb-6">
+          <form onSubmit={(e) => handleLogin(e, 'password')} className="px-8 flex flex-col space-y-4 mt-4 mb-6">
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-md animate-fadeIn">
                 <div className="flex items-center">
@@ -166,7 +160,7 @@ export default function Login() {
                 placeholder="请输入用户名"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !username ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !username ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
 
@@ -180,14 +174,14 @@ export default function Login() {
                 placeholder="请输入密码"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !password ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !password ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
             <button
               type="submit"
-              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-indigo-500 rounded-lg text-white font-medium transition-colors hover:bg-indigo-700 ${loading === "password" ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-indigo-500 rounded-lg text-white font-medium transition-colors hover:bg-indigo-700 ${loading === 'password' ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              {loading === "password" ? (
+              {loading === 'password' ? (
                 <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <span>登录</span>
@@ -229,7 +223,7 @@ export default function Login() {
                 placeholder="请输入用户名"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !username ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !username ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
 
@@ -243,7 +237,7 @@ export default function Login() {
                 placeholder="请输入电子邮箱"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !email ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !email ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
 
@@ -257,7 +251,7 @@ export default function Login() {
                 placeholder="请输入密码"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !password ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !password ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
 
@@ -271,15 +265,15 @@ export default function Login() {
                 placeholder="请再次输入密码"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={`w-full py-3 px-4 border ${error && !confirmPassword ? "border-red-300 ring-1 ring-red-300" : "border-gray-300"} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
+                className={`w-full py-3 px-4 border ${error && !confirmPassword ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
               />
             </div>
 
             <button
               type="submit"
-              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-indigo-500 rounded-lg text-white font-medium transition-colors hover:bg-indigo-700 ${loading === "register" ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-indigo-500 rounded-lg text-white font-medium transition-colors hover:bg-indigo-700 ${loading === 'register' ? 'opacity-70 cursor-not-allowed' : ''}`}
             >
-              {loading === "register" ? (
+              {loading === 'register' ? (
                 <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <span>注册</span>
@@ -293,10 +287,10 @@ export default function Login() {
             onClick={toggleForm}
             className="text-indigo-600 hover:text-indigo-700 hover:font-extrabold text-sm font-medium transition-colors"
           >
-            {isLogin ? "没有账户？点击注册" : "已有账户？点击登录"}
+            {isLogin ? '没有账户？点击注册' : '已有账户？点击登录'}
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }

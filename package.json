@@ -6,11 +6,18 @@
     "start": "webpack serve --env development --open",
     "dev": "webpack serve --env development --open",
     "build": "webpack  -c  webpack.config.js --env production ",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext js,jsx --report-unused-disable-directives --fix",
+    "lint:staged": "eslint --fix --ext js,jsx $(git diff --cached --name-only --diff-filter=ACMR | grep -E \"\\.(js|jsx)$\")"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@dagrejs/dagre": "^1.1.4",
+    "@milkdown/crepe": "^7.14.0",
+    "@milkdown/kit": "^7.14.0",
+    "@milkdown/react": "^7.14.0",
+    "@milkdown/theme-nord": "^7.14.0",
+    "@milkdown/utils": "^7.14.0",
     "@reduxjs/toolkit": "^2.6.1",
     "@stomp/stompjs": "^7.1.0",
     "@tailwindcss/postcss": "^4.1.4",
@@ -27,7 +34,9 @@
     "react-router-dom": "^7.4.0",
     "sockjs-client": "^1.6.1",
     "swr": "^2.3.3",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
@@ -43,7 +52,8 @@
     "copy-webpack-plugin": "^13.0.0",
     "css-loader": "^7.1.2",
     "eslint": "^8.55.0",
-    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "html-webpack-plugin": "^5.6.3",

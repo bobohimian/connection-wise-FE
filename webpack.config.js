@@ -30,7 +30,7 @@ module.exports = (env) => {
                         {
                             loader: 'babel-loader',
                             options: {
-                                presets: ['@babel/preset-env', '@babel/preset-react'],
+                                presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }]],
                                 plugins: [isDevelopment && 'react-refresh/babel'].filter(Boolean)
                             }
                         }

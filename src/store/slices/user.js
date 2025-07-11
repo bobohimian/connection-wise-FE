@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import apiService from "../../api";
+import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isAuthenticated: false,
   loading: false,
@@ -23,7 +22,7 @@ const userSlice = createSlice({
     setUserInfo: (state, action) => {
       state.userInfo = {
         ...state.userInfo,
-        ...action.payload
+        ...action.payload,
       };
     },
     setCanvasId:(state,action)=>{
@@ -32,8 +31,8 @@ const userSlice = createSlice({
     clearUserInfo: (state) => {
       state.isAuthenticated = false;
       state.userInfo = initialState.userInfo;
-    }
-  }
+    },
+  },
 });
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
 export const selectUser = (state) => state.user;  

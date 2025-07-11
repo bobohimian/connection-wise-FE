@@ -1,0 +1,29 @@
+# 构建输出目录
+dist/
+build/
+
+# 依赖目录
+node_modules/
+
+# 测试覆盖率报告
+coverage/
+
+# 配置文件
+.eslintrc.cjs
+
+# 其他不需要检查的文件
+*.min.js
+*.config.js
+
+# 日志文件
+logs/
+*.log
+
+# 临时文件
+.tmp/
+.temp/
+
+# 环境变量文件
+.env
+.env.*
+!.env.example

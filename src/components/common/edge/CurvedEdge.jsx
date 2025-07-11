@@ -1,6 +1,4 @@
-import React, { useState, useCallback } from 'react';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, useStoreApi } from "@xyflow/react";
-import { useEnhancedReaceFlow } from "../../../hooks/useEnhancedReaceFlow";
+import { BaseEdge, EdgeLabelRenderer, getBezierPath } from '@xyflow/react';
 import { Label } from './Label';
 export default function CurvedEdge({
   id,
@@ -13,7 +11,7 @@ export default function CurvedEdge({
   data,
   style = {},
   markerEnd,
-  selected
+  selected,
 }) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -27,7 +25,7 @@ export default function CurvedEdge({
     <BaseEdge
       id={id}
       style={{
-        stroke: "#4caf50",
+        stroke: '#4caf50',
         ...style,
         strokeWidth: selected ? 3 : 2,
       }}

@@ -8,51 +8,47 @@ import axios from 'axios';
  * 
  */
 class ApiError extends Error {
-    constructor(response) {
-        const apiResponse = response.data;
-        super(apiResponse.msg);
-        this.name = 'ApiError';
-        this.response = apiResponse;
-        this.isApi = true;
-        this.stack = `${this.name}: ${this.message}\n` +
+  constructor(response) {
+    const apiResponse = response.data;
+    super(apiResponse.msg);
+    this.name = 'ApiError';
+    this.response = apiResponse;
+    this.isApi = true;
+    this.stack = `${this.name}: ${this.message}\n` +
             `    at ${response.config.method.toUpperCase()} ${response.config.url}\n`;
-    }
+  }
 }
 
 
 const apiClient = axios.create({
-    // baseURL: 'http://localhost:3000/api',
-    baseURL: `${process.env.API_BASE_URL}`,
+  // baseURL: 'http://localhost:3000/api',
+  baseURL: `${process.env.API_BASE_URL}`,
 
-    timeout: 10000,
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  timeout: 10000,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // 请求拦截器
-apiClient.interceptors.request.use(config => {
-    return config;
-}, error => {
-    return Promise.reject(error);
-});
+apiClient.interceptors.request.use(config => config, error => Promise.reject(error));
 
 // 响应拦截器
 apiClient.interceptors.response.use(response => {
-    const apiResponse = response.data;
-    if (!apiResponse.ok) {
-        const error = new ApiError(response);
-        return Promise.reject(error);
-    }
-    return apiResponse;
-}, error => {
-    const status = error.response.status;
-    if (status === 401) {
-        location.href = '/login';
-    }
-    console.error('API Error:', error);
+  const apiResponse = response.data;
+  if (!apiResponse.ok) {
+    const error = new ApiError(response);
     return Promise.reject(error);
+  }
+  return apiResponse;
+}, error => {
+  const status = error.response.status;
+  if (status === 401) {
+    location.href = '/login';
+  }
+  console.error('API Error:', error);
+  return Promise.reject(error);
 });
 
 export default apiClient;

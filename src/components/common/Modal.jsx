@@ -1,54 +1,54 @@
-import React, { useEffect, useRef } from "react"
+import { useEffect, useRef } from 'react';
 
-export default function Modal({ isOpen, onClose, title, children, footer }) {
-  const modalRef = useRef(null)
+export default function Modal({ isOpen, onClose, _title, children, _footer }) {
+  const modalRef = useRef(null);
 
   // 处理ESC键关闭模态窗口
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose()
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
       }
-    }
+    };
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [isOpen, onClose])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   // 处理焦点陷阱
   useEffect(() => {
     if (isOpen) {
       const focusableElements = modalRef.current?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      )
+      );
 
       if (focusableElements && focusableElements.length > 0) {
-        const firstElement = focusableElements[0]
-        const lastElement = focusableElements[focusableElements.length - 1]
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
 
         const handleTabKey = (e) => {
-          if (e.key === "Tab") {
+          if (e.key === 'Tab') {
             if (e.shiftKey && document.activeElement === firstElement) {
-              e.preventDefault()
-              lastElement.focus()
+              e.preventDefault();
+              lastElement.focus();
             } else if (!e.shiftKey && document.activeElement === lastElement) {
-              e.preventDefault()
-              firstElement.focus()
+              e.preventDefault();
+              firstElement.focus();
             }
           }
-        }
+        };
 
-        window.addEventListener("keydown", handleTabKey)
-        firstElement.focus()
+        window.addEventListener('keydown', handleTabKey);
+        firstElement.focus();
 
         return () => {
-          window.removeEventListener("keydown", handleTabKey)
-        }
+          window.removeEventListener('keydown', handleTabKey);
+        };
       }
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -99,5 +99,5 @@ export default function Modal({ isOpen, onClose, title, children, footer }) {
         {/* {footer && <div className="flex justify-end gap-3">{footer}</div>} */}
       </div>
     </div>
-  )
+  );
 }
