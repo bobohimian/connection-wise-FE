@@ -21,16 +21,20 @@ module.exports = (env) => {
         // 模块加载规则
         module: {
             rules: [
-                // 处理 JS/JSX 文件
+                // 处理 JS/JSX/TS/TSX 文件
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(js|jsx|ts|tsx)$/,
                     include: path.resolve(__dirname, 'src'),
                     exclude: /node_modules/,
                     use: [
                         {
                             loader: 'babel-loader',
                             options: {
-                                presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }]],
+                                presets: [
+                                    '@babel/preset-env', 
+                                    ['@babel/preset-react', { runtime: 'automatic' }],
+                                    '@babel/preset-typescript'
+                                ],
                                 plugins: [isDevelopment && 'react-refresh/babel'].filter(Boolean)
                             }
                         }
@@ -149,7 +153,7 @@ module.exports = (env) => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             },
-            extensions: ['.js', '.jsx', './index.js']
+            extensions: ['.ts', '.tsx', '.js', '.jsx', './index.js','index.ts']
         },
         mode: isDevelopment ? 'development' : 'production',
         devtool: isDevelopment ? 'cheap-module-source-map' : 'hidden-source-map'

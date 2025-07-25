@@ -20,6 +20,8 @@ module.exports = {
   extends: [
     // 基础 ESLint 推荐规则
     'eslint:recommended',
+    // TypeScript 推荐规则
+    'plugin:@typescript-eslint/recommended',
     // React 推荐规则
     'plugin:react/recommended',
     // React 17+ 的 JSX 运行时规则
@@ -39,6 +41,9 @@ module.exports = {
     'coverage',      // 测试覆盖率报告目录
   ],
   
+  // 解析器配置
+  parser: '@typescript-eslint/parser',
+  
   // JavaScript 语言选项
   parserOptions: { 
     ecmaVersion: 'latest', // 使用最新的 ECMAScript 版本
@@ -46,6 +51,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,           // 启用 JSX
     },
+    project: './tsconfig.json', // TypeScript 项目配置
   },
   
   // 共享设置
@@ -55,13 +61,14 @@ module.exports = {
     },
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx'] // 导入解析器支持的扩展名
+        extensions: ['.js', '.jsx', '.ts', '.tsx'] // 导入解析器支持的扩展名
       }
     }
   },
   
   // 使用的插件
   plugins: [
+    '@typescript-eslint', // TypeScript ESLint 插件
     'react-refresh', // React Fast Refresh 插件
     'react',         // React 插件
     'import',        // import/export 语法插件
@@ -80,9 +87,9 @@ module.exports = {
     'react/jsx-uses-react': 'off',        // React 17+ 不需要导入 React
     'react/react-in-jsx-scope': 'off',    // React 17+ 不需要在 JSX 文件中导入 React
     'react/display-name': 'off',          // 禁用组件定义必须有 displayName 的检查
-    'react/jsx-filename-extension': ['warn', { 'extensions': ['.jsx', '.js'] }], // JSX 可以在 .jsx 和 .js 文件中
-    'react/jsx-indent': ['warn', 2],      // JSX 缩进为 2 个空格
-    'react/jsx-indent-props': ['warn', 2], // JSX 属性缩进为 2 个空格
+    'react/jsx-filename-extension': ['warn', { 'extensions': ['.jsx', '.js', '.tsx', '.ts'] }], // JSX 可以在 .jsx/.js/.tsx/.ts 文件中
+    // 'react/jsx-indent': ['warn', 3],      // JSX 缩进为 2 个空格
+    // 'react/jsx-indent-props': ['warn', 3], // JSX 属性缩进为 2 个空格
     'react/jsx-closing-bracket-location': ['warn', 'line-aligned'], // JSX 闭合标签位置
     
     // React Hooks 规则
@@ -91,14 +98,15 @@ module.exports = {
     
     // 常规 JavaScript 规则
     'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }], // 允许一些console使用，但仍然提示警告
-    'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }], // 未使用变量警告，忽略下划线开头的变量和参数
+    'no-unused-vars': 'off', // 关闭基础规则，使用 TypeScript 版本
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }], // 未使用变量警告，忽略下划线开头的变量和参数
     'prefer-const': 'warn',               // 优先使用 const
     'arrow-body-style': ['warn', 'as-needed'], // 箭头函数体风格
     'no-param-reassign': 'warn',          // 禁止参数重新赋值
     'no-prototype-builtins': 'off',       // 允许直接调用Object.prototype方法
     
     // 代码风格规则
-    'indent': ['warn', 2, { 'SwitchCase': 1 }], // 使用 2 空格缩进
+    'indent': ['warn', 4, { 'SwitchCase': 2 }], //使用 2 空格缩进
     'quotes': ['warn', 'single', { 'avoidEscape': true }], // 使用单引号
     'semi': ['warn', 'always'],           // 始终使用分号
     'comma-dangle': ['warn', 'always-multiline'], // 多行时尾随逗号
@@ -125,10 +133,21 @@ module.exports = {
   // 针对特定文件的覆盖规则
   overrides: [
     {
-      files: ['*.test.js', '*.test.jsx', '*.spec.js', '*.spec.jsx'],
+      files: ['*.test.js', '*.test.jsx', '*.test.ts', '*.test.tsx', '*.spec.js', '*.spec.jsx', '*.spec.ts', '*.spec.tsx'],
       rules: {
         // 测试文件中放宽一些规则
         'no-unused-expressions': 'off',
+      }
+    },
+    {
+      files: ['*.js', '*.jsx'],
+      rules: {
+        // 对于 JS 文件，关闭一些 TypeScript 特定的规则
+        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+        '@typescript-eslint/no-unused-expressions': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+        'no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       }
     }
   ]

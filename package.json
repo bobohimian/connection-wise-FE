@@ -6,9 +6,11 @@
     "start": "webpack serve --env development --open",
     "dev": "webpack serve --env development --open",
     "build": "webpack  -c  webpack.config.js --env production ",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint . --ext js,jsx --report-unused-disable-directives --fix",
-    "lint:staged": "eslint --fix --ext js,jsx $(git diff --cached --name-only --diff-filter=ACMR | grep -E \"\\.(js|jsx)$\")"
+    "lint": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext js,jsx,ts,tsx --report-unused-disable-directives --fix",
+    "lint:staged": "eslint --fix --ext js,jsx,ts,tsx $(git diff --cached --name-only --diff-filter=ACMR | grep -E \"\\.(js|jsx|ts|tsx)$\")",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -42,9 +44,13 @@
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.27.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.16",
+    "@types/node": "^24.1.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.21",
     "babel-loader": "^10.0.0",
@@ -62,6 +68,7 @@
     "postcss-preset-env": "^10.1.6",
     "react-refresh": "^0.17.0",
     "style-loader": "^4.0.0",
+    "typescript": "^5.8.3",
     "webpack": "^5.99.6",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
