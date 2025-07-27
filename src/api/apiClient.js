@@ -10,7 +10,7 @@ import axios from 'axios';
 class ApiError extends Error {
   constructor(response) {
     const apiResponse = response.data;
-    super(apiResponse.msg);
+    super(apiResponse.msg||'API请求失败');
     this.name = 'ApiError';
     this.response = apiResponse;
     this.isApi = true;
