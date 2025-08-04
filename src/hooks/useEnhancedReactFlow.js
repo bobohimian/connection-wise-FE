@@ -1,6 +1,8 @@
 import { useReactFlow } from '@xyflow/react';
-import { useWsProxy } from './usewsProxy';
-export function useEnhancedReaceFlow() {
+import { useCallback } from 'react';
+import { useWSProxy } from './usewsProxy';
+
+export function useEnhancedReactFlow() {
   const {
     setNodes: setNodesRF,
     updateNode: updateNodeRF,
@@ -8,19 +10,21 @@ export function useEnhancedReaceFlow() {
     updateEdge: updateEdgeRF,
     screenToFlowPosition: screenToFlowPositionRF,
   } = useReactFlow();
-  const { wsProxy } = useWsProxy();
+  const { wsProxy } = useWSProxy();
 
-  const addNode = (node, options = { usews: true }) => {
+  const addNode = useCallback((node, options = { usews: true }) => {
     setNodesRF((nodes) => nodes.concat(node));
     if (options?.usews)
       wsProxy.addNode(node);
-  };
-  const deleteNode = (nodeId, options = { usews: true }) => {
+  }, [setNodesRF, wsProxy]);
+
+  const deleteNode = useCallback((nodeId, options = { usews: true }) => {
     setNodesRF((nodes) => nodes.filter((node) => node.id !== nodeId));
     if (options?.usews)
       wsProxy.deleteNode(nodeId);
-  };
-  const updateNode = (nodeId, path, newValue, options = { usews: true }) => {
+  }, [setNodesRF, wsProxy]);
+
+  const updateNode = useCallback((nodeId, path, newValue, options = { usews: true }) => {
     // 对函数式更新需要特殊处理
     // if(typeof edge ==="function")
 
@@ -46,19 +50,21 @@ export function useEnhancedReaceFlow() {
     updateNodeRF(nodeId, updateFunc);
     if (options?.usews)
       wsProxy.updateNode(nodeId, path, newValue);
-  };
+  }, [updateNodeRF, wsProxy]);
 
-  const addEdge = (edge, options = { usews: true }) => {
+  const addEdge = useCallback((edge, options = { usews: true }) => {
     setEdgesRF((edges) => edges.concat(edge));
     if (options?.usews)
       wsProxy.addEdge(edge);
-  };
-  const deleteEdge = (edgeId, options = { usews: true }) => {
-    setEdgesRF((edges) => edges.filter((edge) => edge.id!== edgeId));
+  }, [setEdgesRF, wsProxy]);
+
+  const deleteEdge = useCallback((edgeId, options = { usews: true }) => {
+    setEdgesRF((edges) => edges.filter((edge) => edge.id !== edgeId));
     if (options?.usews)
       wsProxy.deleteEdge(edgeId);
-  };
-  const updateEdge = (edgeId, path, newValue, options = { usews: true }) => {
+  }, [setEdgesRF, wsProxy]);
+
+  const updateEdge = useCallback((edgeId, path, newValue, options = { usews: true }) => {
 
     // 对函数式更新需要特殊处理
     // if(typeof edge ==="function")
@@ -85,9 +91,12 @@ export function useEnhancedReaceFlow() {
     updateEdgeRF(edgeId, updateFunc);
     if (options?.usews)
       wsProxy.updateEdge(edgeId, path, newValue);
-  };
+  }, [updateEdgeRF, wsProxy]);
 
-  const screenToFlowPosition = (position) => screenToFlowPositionRF(position);
+  const screenToFlowPosition = useCallback((position) =>
+    screenToFlowPositionRF(position)
+    , [screenToFlowPositionRF]);
+
   return {
     addNode,
     deleteNode,

@@ -1,0 +1,125 @@
+version: '3.8'  # 指定 Compose 文件版本
+
+# 自定义网络（隔离服务，避免端口冲突）
+networks:
+  app-network:
+    driver: bridge  # 默认桥接网络
+
+# 定义数据卷（用于持久化数据）
+volumes:
+  # PostgreSQL 数据卷（绑定宿主机目录）
+  postgres-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/postgres/data  
+  
+  # Redis 数据卷
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/redis/data 
+
+  # MinIO 数据卷
+  minio-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/minio/data
+
+# 定义服务（按依赖顺序排列）
+services:
+  # ---------------------- 前端应用（Nginx） ----------------------
+  frontend:
+    image: nginx:alpine  # 使用官方 Nginx 镜像（可替换为你的前端镜像）
+    container_name: frontend
+    restart: always  # 容器崩溃后自动重启
+    ports:
+      - "80:80"       # 映射宿主机 80 端口到容器 80 端口（HTTP）
+      - "443:443"     # 映射 HTTPS 端口（若需要）
+    # volumes:
+    #   - ./nginx-conf:/etc/nginx/conf.d  # 挂载自定义 Nginx 配置（可选）
+    #   - ./frontend-dist:/usr/share/nginx/html  # 挂载前端静态文件（可选）
+    networks:
+      - app-network
+    depends_on:
+      - java-app  # 前端启动后依赖 Java 应用（但不会等待 Java 启动完成）
+
+  # ---------------------- Java 应用（Spring Boot） ----------------------
+  java-app:
+    image: your-java-app:v1  # 替换为你的 Java 应用镜像（如 Docker Hub 或私有仓库）
+    container_name: java-app
+    restart: always
+    ports:
+      - "8080:8080"  # 映射应用接口端口
+    environment:
+      # 数据库连接配置（通过环境变量传递给容器）
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb?useSSL=false&serverTimezone=Asia/Shanghai
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgrespass
+      # Redis 连接配置
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: ""  # 若 Redis 有密码则填写
+    networks:
+      - app-network
+    depends_on:
+      postgres:
+        condition: service_healthy  # 等待 PostgreSQL 健康后再启动
+      redis:
+        condition: service_started  # 等待 Redis 启动后（不检查健康状态）
+
+  # ---------------------- PostgreSQL 数据库 ----------------------
+  postgres:
+    image: postgres:14-alpine  # 轻量版 PostgreSQL
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres  # 初始管理员用户名
+      POSTGRES_PASSWORD: postgrespass  # 初始管理员密码
+      POSTGRES_DB: conwiese_db  # 初始创建的数据库名
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # 挂载数据卷（持久化数据）
+    ports:
+      - "5432:5432"  # 暴露数据库端口（仅本地访问可省略，或限制 IP）
+    healthcheck:  # 健康检查（确保服务启动完成）
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # ---------------------- Redis 缓存 ----------------------
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    command: redis-server --appendonly yes --requirepass "redispass"  # 启用 AOF 持久化+密码
+    volumes:
+      - redis-data:/data  # 挂载数据卷（持久化缓存数据）
+    ports:
+      - "6379:6379"  # 暴露 Redis 端口
+    networks:
+      - app-network
+
+  # ---------------------- MinIO 对象存储 ----------------------
+  minio:
+    image: minio/minio:RELEASE.2024-01-24T06-50-31Z  # 最新稳定版
+    container_name: minio
+    restart: always
+    environment:
+      MINIO_ROOT_USER: minioadmin  # 访问密钥（控制台登录用户名）
+      MINIO_ROOT_PASSWORD: minioadminpass  # 私有密钥（控制台登录密码）
+    volumes:
+      - minio-data:/data  # 挂载数据存储目录
+    command: server /data --console-address ":9001"  # 启用控制台（9001 端口）
+    ports:
+      - "9000:9000"  # 对象存储 API 端口（用于程序调用）
+      - "9001:9001"  # 控制台 Web 端口（用于浏览器管理）
+    networks:
+      - app-network

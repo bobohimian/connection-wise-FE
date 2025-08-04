@@ -1,9 +1,9 @@
 import { useReactFlow } from '@xyflow/react';
 import { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../../api';
-import { useEnhancedReaceFlow } from '../../hooks/useEnhancedReaceFlow';
+import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { setActiveDropdownId } from '../../store/slices/ui';
 import { setCanvasId } from '../../store/slices/user';
 import { getLayoutedElements, transformGraphData } from '../../utils';
@@ -17,12 +17,13 @@ import Toolbox from '../layout/Toolbox';
 export default function NoteEditor() {
   const canvasId = useParams().canvasId;
   const dispatch = useDispatch();
+  const navigator = useNavigate();
   const { fitView } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [canvasData, setCanvasData] = useState(null);
   const [isloading, setIsloading] = useState(false);
-  const { addNode, addEdge } = useEnhancedReaceFlow();
+  const { addNode, addEdge } = useEnhancedReactFlow();
   useEffect(() => {
     dispatch(setCanvasId(canvasId));
     return () => {
@@ -39,11 +40,14 @@ export default function NoteEditor() {
     } catch (error) {
       if (error.isApi) {
         console.log('获取画布失败', error);
+        if (error.code === 3006) {
+          navigator('/canvas');
+        }
       } else {
         console.error(error);
       }
     }
-  },[canvasId]);
+  }, [canvasId, navigator]);
   const hanldeSubmit = async (text) => {
     setIsloading(true);
     const resData = (await apiService.generateGraph(text)).data;
@@ -123,7 +127,7 @@ export default function NoteEditor() {
       <GraphSpotlight onSubmit={hanldeSubmit} />
       <Modal
         isOpen={isloading}
-        onClose={() => { }}
+        onClose={() => {}}
       >
         <div className="m-auto h-50 w-50 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
       </Modal>

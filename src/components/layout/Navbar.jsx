@@ -33,7 +33,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
       description: 'Your note has been saved successfully.',
     });
   };
-  const handleLogout =async () => {
+  const handleLogout = async () => {
     try {
       await apiService.logout();
       dispatch(clearActiveDropdownId());
@@ -186,7 +186,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
           )}
         </div>
         <div className="hidden md:flex items-center gap-1">
-          <Dropdown
+          {/* <Dropdown
             id={fileDropdown.id}
             label={fileDropdown.label}
           >
@@ -239,22 +239,22 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
                 return (<div key={`${item.label}-button`} className="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>);
               return null;
             })}
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
 
       <div className="flex items-center gap-2">
-        <ThemeToggle></ThemeToggle>
+        {/* <ThemeToggle></ThemeToggle> */}
         <div className="md:flex items-center gap-2">
-          <IconButton icon={<Undo2 className="h-4 w-4" />} srOnly={'Undo'}
+          {/* <IconButton icon={<Undo2 className="h-4 w-4" />} srOnly={'Undo'}
             onClick={() => toast({ title: 'Undo', description: 'Action undone' })}
           />
           <IconButton icon={<Redo2 className="h-4 w-4" />} srOnly={'Undo'}
             onClick={() => toast({ title: 'Redo', description: 'Action redone' })}
-          />
+          /> */}
           {/* <div className="text-xs text-muted-foreground">{`Zoom:${(zoomLever * 100).toFixed(0)}%`}</div> */}
         </div>
-        <IconButton icon={isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+        {/* <IconButton icon={isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
           srOnly={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'} onClick={() => toggleFullscreen()}
         />
         <IconButton icon={<Save className="h-4 w-4" />} srOnly={'Save'}
@@ -271,7 +271,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
         </Modal>
         <IconButton icon={<Settings className="h-4 w-4" />} srOnly={'Settings'}
           onClick={() => toast({ title: 'Settings', description: 'Settings opened' })}
-        />
+        /> */}
         <Dropdown
           id={userDropdown.id}
           label={userDropdown.label}

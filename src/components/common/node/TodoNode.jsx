@@ -1,11 +1,11 @@
 import { Handle, Position } from '@xyflow/react';
 import { Check, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useEnhancedReaceFlow } from '../../../hooks/useEnhancedReaceFlow';
+import { useEnhancedReactFlow } from '../../../hooks/useEnhancedReactFlow';
 export default function TodoNode({ id, data, isConnectable, selected }) {
 
   const items = data.items;
-  const { updateNode } = useEnhancedReaceFlow();
+  const { updateNode } = useEnhancedReactFlow();
   const [newItemText, setNewItemText] = useState('');
   const [isAddingItem, setIsAddingItem] = useState(true);
   useEffect(() => {
