@@ -1,16 +1,16 @@
 import { domToWebp } from 'modern-screenshot';
-import  { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import apiService from '../../api';
 const options = {
   // width:300,
   // height:160,
-  quality:0.5,
-  scale:0.7,
+  quality: 0.5,
+  scale: 0.7,
 };
 const withScreenShot = (Component) => (props) => {
   const canvasId = props.canvasId;
   const ComponentRef = useRef(null);
-    
+
   const dataURLtoBlob = (dataURL) => {
     const arr = dataURL.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -22,7 +22,7 @@ const withScreenShot = (Component) => (props) => {
     }
     return new Blob([u8arr], { type: mime });
   };
-    
+
   const handleSaveThumbnail = useCallback(async () => {
     const dataUrl = await domToWebp(ComponentRef.current, options);
     const formData = new FormData();
@@ -43,8 +43,11 @@ const withScreenShot = (Component) => (props) => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleSaveThumbnail();
-    }, 5000);
-    return () => clearInterval(interval);
+    }, 20000);
+    return () => {
+
+      clearInterval(interval);
+    };
   }, [handleSaveThumbnail]);
   return (
     <Component {...props} ref={ComponentRef} />

@@ -157,5 +157,5 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
 },
 );
 // eslint-disable-next-line react-refresh/only-export-components
-// export default withScreenShot(Canvas);
-export default Canvas;
+export default withScreenShot(Canvas);
+// export default Canvas;
