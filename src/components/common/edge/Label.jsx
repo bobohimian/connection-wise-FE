@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useEnhancedReaceFlow } from '../../../hooks/useEnhancedReaceFlow';
+import { useEnhancedReactFlow } from '../../../hooks/useEnhancedReactFlow';
 
 export const Label = ({ id, data, labelX, labelY, style }) => {
 
   const [isEditing, setIsEditing] = useState(false);
-  const { updateEdge } = useEnhancedReaceFlow();
+  const { updateEdge } = useEnhancedReactFlow();
 
   const handleDoubleClick = (e) => {
     e.stopPropagation();

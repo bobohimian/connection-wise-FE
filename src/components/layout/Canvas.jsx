@@ -9,18 +9,19 @@ import {
 } from '@xyflow/react';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import '@xyflow/react/dist/style.css';
-import { useEnhancedReaceFlow } from '../../hooks/useEnhancedReaceFlow';
-import { edgeTypes, defaultEdgeOption , createEdge } from '../common/edge';
+import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
+import { edgeTypes, defaultEdgeOption, createEdge } from '../common/edge';
 import { nodeTypes, createNode } from '../common/node';
 import { useToast } from '../common/toast';
 import withScreenShot from '../hoc/withScreenShot';
 
 
 // eslint-disable-next-line react-refresh/only-export-components
-const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _selectedEdge, setSelectedEdge },ref) => {
+const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _selectedEdge, setSelectedEdge }, ref) => {
+  console.log('Canvas');
   const [nodes, setNodes, onNodesChange] = useNodesState(canvasData?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData?.edges || []);
-  const { addNode, deleteNode, updateNode, addEdge, deleteEdge } = useEnhancedReaceFlow();
+  const { addNode, deleteNode, updateNode, addEdge, deleteEdge } = useEnhancedReactFlow();
   const { toast } = useToast();
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
@@ -86,6 +87,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
   return (
     <div id="canvasContainer" ref={ref} className="flex-1 h-full">
       <ReactFlow
+        onlyRenderVisibleElements
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -110,7 +112,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
         paneClickDistance={5}
         nodeClickDistance={10}
         nodeOrigin={[0.5, 0.5]}
-        onViewportChange={({ _x, _y, _zoom }) => { }}
+        onViewportChange={({ _x, _y, _zoom }) => {}}
         fitView
         style={{ backgroundColor: '#fff' }}
       // snapToGrid
@@ -155,4 +157,5 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
 },
 );
 // eslint-disable-next-line react-refresh/only-export-components
-export default withScreenShot(Canvas);
+// export default withScreenShot(Canvas);
+export default Canvas;

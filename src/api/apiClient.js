@@ -10,12 +10,13 @@ import axios from 'axios';
 class ApiError extends Error {
   constructor(response) {
     const apiResponse = response.data;
-    super(apiResponse.msg||'API请求失败');
+    super(apiResponse.msg || 'API请求失败');
     this.name = 'ApiError';
+    this.code = apiResponse.code;
     this.response = apiResponse;
     this.isApi = true;
     this.stack = `${this.name}: ${this.message}\n` +
-            `    at ${response.config.method.toUpperCase()} ${response.config.url}\n`;
+      `    at ${response.config.method.toUpperCase()} ${response.config.url}\n`;
   }
 }
 
