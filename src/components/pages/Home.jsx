@@ -172,18 +172,12 @@ export default function CanvasGallery() {
 
         {isLoading ? (
           <LoadingSkeleton />
-        ) : canvasList.length === 0 ? (
-          <EmptyState
-            message="No canvases"
-            action="Get started by creating a new canvas."
-            onClick={handleCreateNewCanvas}
-          />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {/* 新增画布选项 */}
             <div
               onClick={handleCreateNewCanvas}
-              className="group hover:-translate-y-1 transform transition-transform duration-300 cursor-pointer row-span-2 col-span-2"
+              className="group hover:-translate-y-1 transform transition-transform duration-300 cursor-pointer"
             >
               <AddCanvas />
             </div>
@@ -211,13 +205,7 @@ export default function CanvasGallery() {
 
         {isSharedLoading ? (
           <LoadingSkeleton />
-        ) : sharedCanvasList.length === 0 ? (
-          <EmptyState
-            message="No shared canvases"
-            action="Canvases shared with you will appear here."
-            onClick={null}
-          />
-        ) : (
+        ) :
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {sharedCanvasList.map((canvas) => (
               <Link to={`/canvas/${canvas.id}`} key={canvas.id}
@@ -227,7 +215,7 @@ export default function CanvasGallery() {
               </Link>
             ))}
           </div>
-        )}
+        }
       </div>
     </main>
   );

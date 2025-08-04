@@ -24,14 +24,13 @@ module.exports = (env) => {
                 // 处理 JS/JSX/TS/TSX 文件
                 {
                     test: /\.(js|jsx|ts|tsx)$/,
-                    include: path.resolve(__dirname, 'src'),
-                    exclude: /node_modules/,
+                    include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'node_modules/@remix-run')],
                     use: [
                         {
                             loader: 'babel-loader',
                             options: {
                                 presets: [
-                                    '@babel/preset-env', 
+                                    '@babel/preset-env',
                                     ['@babel/preset-react', { runtime: 'automatic' }],
                                     '@babel/preset-typescript'
                                 ],
@@ -153,7 +152,7 @@ module.exports = (env) => {
             alias: {
                 '@': path.resolve(__dirname, 'src')
             },
-            extensions: ['.ts', '.tsx', '.js', '.jsx', './index.js','/index.ts']
+            extensions: ['.ts', '.tsx', '.js', '.jsx', './index.js', '/index.ts']
         },
         mode: isDevelopment ? 'development' : 'production',
         devtool: isDevelopment ? 'cheap-module-source-map' : 'hidden-source-map'
