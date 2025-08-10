@@ -1,15 +1,14 @@
 import { useEffect } from 'react';
 import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow.js';
 import { useWSProxy } from '../../hooks/usewsProxy.js';
-
+const options = {
+  isLocal: false,
+};
 const WebSocketProvider = ({ children }) => {
   const { wsProxy, removeWSProxy } = useWSProxy();
   const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge, flushNode, flushEdge } = useEnhancedReactFlow();
 
   useEffect(() => {
-    const options = {
-      isRemove: true,
-    };
     const messageHandlers = {
       addNode: (operation) => {
         const { value } = operation;
@@ -21,6 +20,7 @@ const WebSocketProvider = ({ children }) => {
         deleteNode(id, options);
       },
       updateNode: (operation) => {
+        console.log('update');
         const { id, path, value } = operation;
         updateNode(id, path, JSON.parse(value), options);
       },

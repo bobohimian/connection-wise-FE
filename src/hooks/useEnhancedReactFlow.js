@@ -2,7 +2,7 @@ import { useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
 import { useWSProxy } from './usewsProxy';
 const defaultOption = {
-  isRemote: false,
+  isLocal: true,
 };
 export function useEnhancedReactFlow() {
   const {
@@ -17,13 +17,13 @@ export function useEnhancedReactFlow() {
   const { wsProxy } = useWSProxy();
   const addNode = useCallback((node, options = defaultOption) => {
     setNodesRF((nodes) => nodes.concat(node));
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.addNode(node);
   }, [setNodesRF, wsProxy]);
 
   const deleteNode = useCallback((nodeId, options = defaultOption) => {
     setNodesRF((nodes) => nodes.filter((node) => node.id !== nodeId));
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.deleteNode(nodeId);
   }, [setNodesRF, wsProxy]);
 
@@ -37,13 +37,13 @@ export function useEnhancedReactFlow() {
     // '[]'::jsonb
     // '[]'::jsonb    
     let currentVersion;
-    if (options.isRemote) {
+    if (options.isLocal) {
       currentVersion = getNodeRF(nodeId).version || 0;
     }
     const updateFunc = (obj) => {
       const pathLen = path.length;
       const newObj = structuredClone(obj);
-      if (options.isRemote) {
+      if (options.isLocal) {
         newObj.version = currentVersion + 1;
       }
       let current = newObj;
@@ -59,19 +59,19 @@ export function useEnhancedReactFlow() {
       return newObj;
     };
     updateNodeRF(nodeId, updateFunc);
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.updateNode(nodeId, path, newValue, currentVersion);
   }, [getNodeRF, updateNodeRF, wsProxy]);
 
   const addEdge = useCallback((edge, options = defaultOption) => {
     setEdgesRF((edges) => edges.concat(edge));
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.addEdge(edge);
   }, [setEdgesRF, wsProxy]);
 
   const deleteEdge = useCallback((edgeId, options = defaultOption) => {
     setEdgesRF((edges) => edges.filter((edge) => edge.id !== edgeId));
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.deleteEdge(edgeId);
   }, [setEdgesRF, wsProxy]);
 
@@ -85,12 +85,12 @@ export function useEnhancedReactFlow() {
     }
 
     let currentVersion;
-    if (options.isRemote)
+    if (options.isLocal)
       currentVersion = getEdgeRF(edgeId).version || 0;
     const updateFunc = (obj) => {
       const pathLen = path.length;
       const newObj = structuredClone(obj);
-      if (!options.isRemote) {
+      if (!options.isLocal) {
         newObj.version = currentVersion + 1;
       }
       let current = newObj;
@@ -106,7 +106,7 @@ export function useEnhancedReactFlow() {
       return newObj;
     };
     updateEdgeRF(edgeId, updateFunc);
-    if (options.isRemote)
+    if (options.isLocal)
       wsProxy.updateEdge(edgeId, path, newValue, currentVersion);
   }, [getEdgeRF, updateEdgeRF, wsProxy]);
   const flushNode = useCallback((nodeId, node) => {

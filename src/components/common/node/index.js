@@ -5,7 +5,7 @@ import TodoNode from './TodoNode.jsx';
 import { withToolTip } from '../../hoc/withToolTip.jsx';
 const nodeTypes = {
   textNode: withToolTip(TextNode),
-  todoNode: TodoNode,
+  todoNode: withToolTip(TodoNode),
   codeNode: withToolTip(CodeNode),
 };
 const initialNodeData = {
