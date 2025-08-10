@@ -260,6 +260,11 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
         <IconButton icon={<Save className="h-4 w-4" />} srOnly={'Save'}
           onClick={() => handleSave()}
         />
+       
+        
+        <IconButton icon={<Settings className="h-4 w-4" />} srOnly={'Settings'}
+          onClick={() => toast({ title: 'Settings', description: 'Settings opened' })}
+        /> */}
         <IconButton icon={<Share2 className="h-4 w-4" />} srOnly={'Share'}
           onClick={() => setShowShareModal(true)}
         />
@@ -269,9 +274,6 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
         >
           <ShareComponent canvasId={canvasId} />
         </Modal>
-        <IconButton icon={<Settings className="h-4 w-4" />} srOnly={'Settings'}
-          onClick={() => toast({ title: 'Settings', description: 'Settings opened' })}
-        /> */}
         <Dropdown
           id={userDropdown.id}
           label={userDropdown.label}

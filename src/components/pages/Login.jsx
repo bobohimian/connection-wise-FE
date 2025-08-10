@@ -3,8 +3,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import apiService from '../../api/index.js';
 import { setUserInfo, setAuthenticated } from '../../store/slices/user.js';
-import { useToast } from '../common/toast.jsx';
 import Form from '../common/Form';
+import { useToast } from '../common/toast.jsx';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,7 +35,6 @@ export default function Login() {
       } else {
         console.error(error);
       }
-    } finally {
     }
   };
 
@@ -59,7 +58,6 @@ export default function Login() {
       } else {
         console.error(error);
       }
-    } finally {
     }
   };
 
@@ -86,9 +84,9 @@ export default function Login() {
         type: 'password',
         placeholder: '请输入密码',
         required: true,
-      }
-    ]
-  }
+      },
+    ],
+  };
   const registerForm = {
     initialValues: {
       username: formDataRef.current.username,
@@ -128,7 +126,7 @@ export default function Login() {
             return '两次输入的密码不一致';
           }
           return null;
-        }
+        },
       },
       {
         name: 'email',
@@ -140,8 +138,8 @@ export default function Login() {
         pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         patternMessage: '请输入有效的电子邮箱地址',
       },
-    ]
-  }
+    ],
+  };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md w-full">
@@ -177,7 +175,8 @@ export default function Login() {
             key='login-form'
             initialValues={loginForm.initialValues}
             fields={loginForm.fields}
-            onSubmit={handleLogin}>
+            onSubmit={handleLogin}
+          >
           </Form>
           :
           <Form
@@ -186,7 +185,8 @@ export default function Login() {
             fields={registerForm.fields}
             onSubmit={handleRegister}
             validateOnChange={false}
-            validateOnBlur={false}>
+            validateOnBlur={false}
+          >
           </Form>
         }
 

@@ -220,10 +220,10 @@ export class WebSocketProxy {
    * @param {Array<string>} path - 修改属性的路径数组
    * @param {*} updateData - 修改的属性的新值
    */
-  updateEdge(edgeId, path, updateData) {
+  updateEdge(edgeId, path, updateData, version) {
     const message = {
       type: 'updateEdge',
-      operation: { id: edgeId, path, value: `${JSON.stringify(updateData)}` },
+      operation: { id: edgeId, path, value: `${JSON.stringify(updateData)}`, version: version },
     };
     this.sendMessage(message);
   }
@@ -256,10 +256,10 @@ export class WebSocketProxy {
    * @param {Array<string>} path - 修改属性的路径数组
    * @param {*} updateData - 修改的属性的新值
    */
-  updateNode(nodeId, path, updateData) {
+  updateNode(nodeId, path, updateData, version) {
     const message = {
       type: 'updateNode',
-      operation: { id: nodeId, path, value: `${JSON.stringify(updateData)}` },
+      operation: { id: nodeId, path, value: `${JSON.stringify(updateData)}`, version: version },
     };
     this.sendMessage(message);
   }

@@ -4,11 +4,11 @@ import { useWSProxy } from '../../hooks/usewsProxy.js';
 
 const WebSocketProvider = ({ children }) => {
   const { wsProxy, removeWSProxy } = useWSProxy();
-  const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge } = useEnhancedReactFlow();
+  const { addNode, deleteNode, updateNode, addEdge, deleteEdge, updateEdge, flushNode, flushEdge } = useEnhancedReactFlow();
 
   useEffect(() => {
     const options = {
-      userws: false,
+      isRemove: true,
     };
     const messageHandlers = {
       addNode: (operation) => {
@@ -37,6 +37,16 @@ const WebSocketProvider = ({ children }) => {
         const { id, path, value } = operation;
         updateEdge(id, path, JSON.parse(value), options);
       },
+      flushNode: (operation) => {
+        const { id, value } = operation;
+        const node = JSON.parse(value);
+        flushNode(id, node);
+      },
+      flushEdge: (operation) => {
+        const { id, value } = operation;
+        const edge = JSON.parse(value);
+        flushEdge(id, edge);
+      },
       pong: () => {
         console.log('Receive pong.');
       },
@@ -48,7 +58,7 @@ const WebSocketProvider = ({ children }) => {
       if (wsProxy)
         removeWSProxy();
     };
-  }, [addEdge, addNode, deleteEdge, deleteNode, updateEdge, updateNode, removeWSProxy, wsProxy]);
+  }, [addEdge, addNode, deleteEdge, deleteNode, updateEdge, updateNode, removeWSProxy, wsProxy, flushNode, flushEdge]);
   return children;
 };
 export default WebSocketProvider;
