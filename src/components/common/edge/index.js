@@ -16,6 +16,7 @@ const createEdge = (connection) => {
   connection.data = connection.data || {
     label: '',
   };
+  connection.version=1;
   return connection;
 };
 export {

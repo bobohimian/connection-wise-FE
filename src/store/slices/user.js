@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isAuthenticated: false,
   loading: false,
-  canvasId:null,
+  canvasId: null,
+  permission: '',
   userInfo: {
-    id:null,
+    id: null,
     username: '',
     email: '',
     avatar: '',
@@ -25,18 +26,24 @@ const userSlice = createSlice({
         ...action.payload,
       };
     },
-    setCanvasId:(state,action)=>{
+    setCanvasId: (state, action) => {
       state.canvasId = action.payload;
     },
     clearUserInfo: (state) => {
-      state.isAuthenticated = false;
       state.userInfo = initialState.userInfo;
+      state.isAuthenticated = false;
+      state.permission = '';
+      state.canvasId = null;
+      state.loading = false;
+
+    },
+    setPermission: (state, action) => {
+      state.permission = action.payload;
     },
   },
 });
 export const selectIsAuthenticated = (state) => state.user.isAuthenticated;
-export const selectUser = (state) => state.user;  
-
+export const selectUser = (state) => state.user;
 export const selectUserId = (state) => state.user.userInfo.id;
-export const { setAuthenticated,setCanvasId, setUserInfo, clearUserInfo } = userSlice.actions;
+export const { setAuthenticated, setCanvasId, setUserInfo, clearUserInfo, setPermission } = userSlice.actions;
 export default userSlice.reducer;

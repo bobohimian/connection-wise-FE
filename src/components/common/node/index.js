@@ -30,6 +30,7 @@ const createNode = ({ id, type, position, data }) => {
     position,
     data: data ? data : initialNodeData[type],
     origin: [0.5, 0.5],
+    version: 1,
   };
   return node;
 };

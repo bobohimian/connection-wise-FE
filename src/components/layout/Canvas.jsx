@@ -13,12 +13,12 @@ import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { edgeTypes, defaultEdgeOption, createEdge } from '../common/edge';
 import { nodeTypes, createNode } from '../common/node';
 import { useToast } from '../common/toast';
+import { withPermission } from '../hoc/withPermission';
 import withScreenShot from '../hoc/withScreenShot';
 
 
 // eslint-disable-next-line react-refresh/only-export-components
 const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _selectedEdge, setSelectedEdge }, ref) => {
-  console.log('Canvas');
   const [nodes, setNodes, onNodesChange] = useNodesState(canvasData?.nodes || []);
   const [edges, setEdges, onEdgesChange] = useEdgesState(canvasData?.edges || []);
   const { addNode, deleteNode, updateNode, addEdge, deleteEdge } = useEnhancedReactFlow();
@@ -90,12 +90,12 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
         onlyRenderVisibleElements
         nodes={nodes}
         edges={edges}
+        // onNodesChange={withPermission(onNodesChange, 'edit')}
         onNodesChange={onNodesChange}
-        onNodeDragStop={(e, node) => updateNode(node.id, ['position'], node.position)}
+        onNodeDragStop={(e, node, movedNodes) => movedNodes.forEach(node => updateNode(node.id, ['position'], node.position))}
         onEdgesChange={onEdgesChange}
         onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}
         onEdgesDelete={deletedEdges => {
-          console.log(deletedEdges);
           deletedEdges.map(edge => deleteEdge(edge.id));
         }}
         onConnect={onConnect}
@@ -117,14 +117,14 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
         style={{ backgroundColor: '#fff' }}
       // snapToGrid
       // snapGrid={[15, 15]}
-      // defaultViewport={{ x: 0, y: 0, zoom: 1}}
+      // defaultViewport={{ x: 0, y: 0, zoom: 1 }}
       >
         <Background color="#aaa" gap={16} />
         <Controls />
         <MiniMap nodeStrokeWidth={3} zoomable pannable />
         <Panel position="top-right" className="bg-background/80 p-2 rounded-md shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-2">
-            <button
+            {/* <button
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
                 toast({
@@ -136,7 +136,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
               }}
             >
               Clear Canvas
-            </button>
+            </button> */}
             <button
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
@@ -152,7 +152,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
           </div>
         </Panel>
       </ReactFlow>
-    </div>
+    </div >
   );
 },
 );

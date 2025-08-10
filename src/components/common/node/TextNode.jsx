@@ -1,25 +1,16 @@
 import { Handle, NodeResizer, Position } from '@xyflow/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useEnhancedReactFlow } from '../../../hooks/useEnhancedReactFlow';
 const TextNode = ({ id, data, isConnectable, selected }) => {
   const text = data.text || '';
-  console.log('TextNode', text);
-  // const [text, setText] = useState(data?.text || '');
   const { updateNode } = useEnhancedReactFlow();
   const textareaRef = useRef(null);
   const [width, setWidth] = useState(data?.size?.width || 160);
-  const [height, setHeight] = useState(data?.size?.width || 160);
-  // const handleTextChange = useCallback(
-  //   (e) => {
-  //     const nextText = e.target.value;
-  //     // updateNode(id, ['data', 'text'], nextText);
-  //     // setText(nextText);
-  //   }, [id, updateNode]);
+  const [height, setHeight] = useState(data?.size?.height || 160);
   const handleTextChange =
     (e) => {
       const nextText = e.target.value;
       updateNode(id, ['data', 'text'], nextText);
-      // setText(nextText);
     };
   // 滚动事件
   useEffect(() => {
@@ -47,6 +38,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
       <NodeResizer minWidth={160} minHeight={160} isVisible={selected}
         onResizeEnd={(event, { width, height }) => {
           updateNode(id, ['data', 'size'], { width: width - 16, height: height - 16 });
+          console.log(width, height);
           setWidth(width - 16);
           setHeight(height - 16);
         }}

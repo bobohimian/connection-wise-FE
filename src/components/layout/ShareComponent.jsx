@@ -1,13 +1,15 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import apiService from '../../api';
+import { selectUser } from '../../store/slices/user';
 
 export default function ShareComponent({ canvasId }) {
   const [sharedUsers, setSharedUsers] = useState([]);
   const [newUsername, setNewUsername] = useState('');
-  const [permission, setPermission] = useState('read'); // 默认为只读权限
+  const [permission, setPermission] = useState('view'); // 默认为只读权限
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const currentUserInfo = useSelector(selectUser).userInfo;
   // 获取已分享用户列表
   const fetchSharedUsers = useCallback(async () => {
     try {
@@ -25,7 +27,7 @@ export default function ShareComponent({ canvasId }) {
     } finally {
       setLoading(false);
     }
-  },[canvasId]);
+  }, [canvasId]);
 
   // 组件加载时获取分享用户列表
   useEffect(() => {
@@ -33,7 +35,11 @@ export default function ShareComponent({ canvasId }) {
       fetchSharedUsers();
     }
   }, [canvasId, fetchSharedUsers]);
-
+  const hanldeInputUserName = (e) => {
+    if (error)
+      setError('');
+    setNewUsername(e.target.value);
+  };
   // 添加新的分享
   const handleAddShare = async (e) => {
     e.preventDefault();
@@ -41,7 +47,10 @@ export default function ShareComponent({ canvasId }) {
       setError('请输入用户名');
       return;
     }
-
+    else if (newUsername === currentUserInfo.username) {
+      setError('不能分享给自己');
+      return;
+    }
     try {
       setLoading(true);
       await apiService.shareCanvas({
@@ -50,7 +59,7 @@ export default function ShareComponent({ canvasId }) {
         permission: permission,
       });
       setNewUsername('');
-      setPermission('read');
+      setPermission('view');
       setError('');
       fetchSharedUsers(); // 刷新列表
     } catch (err) {
@@ -108,7 +117,7 @@ export default function ShareComponent({ canvasId }) {
 
   return (
     <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
-      <div className="bg-gradient-to-r bg-linear-to-r from-blue-500 via-cyan-500 to-teal-500 p-6 text-white text-center">
+      <div className="bg-gradient-to-r bg-blue-500 p-6 text-white text-center">
         <h2 className="text-2xl font-bold mb-2">分享管理</h2>
         <p className="opacity-80">邀请其他用户访问您的画布</p>
       </div>
@@ -147,7 +156,7 @@ export default function ShareComponent({ canvasId }) {
             id="username"
             type="text"
             value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
+            onChange={hanldeInputUserName}
             placeholder="请输入用户名"
             className={`w-full py-3 px-4 border ${error && !newUsername ? 'border-red-300 ring-1 ring-red-300' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition`}
             disabled={loading}
@@ -163,9 +172,9 @@ export default function ShareComponent({ canvasId }) {
               <input
                 type="radio"
                 name="permission"
-                value="read"
-                checked={permission === 'read'}
-                onChange={() => setPermission('read')}
+                value="view"
+                checked={permission === 'view'}
+                onChange={() => setPermission('view')}
                 className="mr-2 text-indigo-500 focus:ring-indigo-500"
               />
               <span className="text-gray-700">只读</span>
@@ -187,7 +196,7 @@ export default function ShareComponent({ canvasId }) {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-cyan-500 rounded-lg text-white font-medium transition-colors hover:bg-cyan-400 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+          className={`w-full flex items-center justify-center space-x-3 py-3 px-4 bg-blue-500 rounded-lg text-white font-medium transition-colors hover:bg-cyan-400 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
         >
           {loading ? (
             <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>

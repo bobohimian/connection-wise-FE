@@ -27,6 +27,7 @@
     "axios": "^1.8.3",
     "dagrejs": "^0.2.1",
     "https-proxy-agent": "^7.0.6",
+    "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.479.0",
     "mini-css-extract-plugin": "^2.9.2",

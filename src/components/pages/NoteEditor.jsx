@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import apiService from '../../api';
 import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { setActiveDropdownId } from '../../store/slices/ui';
-import { setCanvasId } from '../../store/slices/user';
+import { setCanvasId, setPermission } from '../../store/slices/user';
 import { getLayoutedElements, transformGraphData } from '../../utils';
 import { GraphSpotlight } from '../common/GraphSpotlight';
 import Modal from '../common/Modal';
@@ -36,6 +36,7 @@ export default function NoteEditor() {
   const getCanvas = useCallback(async () => {
     try {
       const canvasData = (await apiService.fetchCanvas(canvasId)).data;
+      dispatch(setPermission(canvasData.permission));
       setCanvasData(canvasData);
     } catch (error) {
       if (error.isApi) {
@@ -47,7 +48,7 @@ export default function NoteEditor() {
         console.error(error);
       }
     }
-  }, [canvasId, navigator]);
+  }, [canvasId, dispatch, navigator]);
   const hanldeSubmit = async (text) => {
     setIsloading(true);
     const resData = (await apiService.generateGraph(text)).data;

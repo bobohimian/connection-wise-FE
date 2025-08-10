@@ -23,7 +23,6 @@ const reverseThemes = [
 ];
 const withToolTip = (Component) => {
   const WithToolTip = (props) => {
-    console.log('WithToolTip', props);
     const { id: nodeId, data: nodeData } = props;
     const dataText = nodeData.text;
     const bgTheme = nodeData.theme ? nodeData.theme : themes[0];
@@ -247,13 +246,13 @@ const withToolTip = (Component) => {
     </div >);
   };
   WithToolTip.displayName = `WithLog(${Component.displayName || Component.name})`;
-  return WithToolTip;
-  // return React.memo(WithToolTip, (prevProps, nextProps) =>
-  //   prevProps.id === nextProps.id
-  //   && prevProps.data === nextProps.data
-  //   && prevProps.isConnectable === nextProps.isConnectable
-  //   && prevProps.selected === nextProps.selected,
-  // );
+  // return WithToolTip;
+  return React.memo(WithToolTip, (prevProps, nextProps) =>
+    prevProps.id === nextProps.id
+    && prevProps.data === nextProps.data
+    && prevProps.isConnectable === nextProps.isConnectable
+    && prevProps.selected === nextProps.selected,
+  );
 };
 const memoWithToolTip = memo(withToolTip);
 export { withToolTip, memoWithToolTip };
