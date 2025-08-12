@@ -90,8 +90,8 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
         onlyRenderVisibleElements
         nodes={nodes}
         edges={edges}
-        // onNodesChange={withPermission(onNodesChange, 'edit')}
-        onNodesChange={onNodesChange}
+        onNodesChange={withPermission(onNodesChange, 'edit')}
+        // onNodesChange={onNodesChange}
         onNodeDragStop={(e, node, movedNodes) => movedNodes.forEach(node => updateNode(node.id, ['position'], node.position))}
         onEdgesChange={onEdgesChange}
         onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}

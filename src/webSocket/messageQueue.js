@@ -1,9 +1,8 @@
 import { messageStorageUtil } from '../utils/localstorageUtil';
 class MessageQueue {
     /**
-     * 构造函数
-     * @param {LocalStorage} storageUtil LocalStorage 工具实例
-     * @param {string} queueKey 队列在 localStorage 中的key 必须有初始值
+     * @param {LocalStorage} storageUtil
+     * @param {string} queueKey
      */
     constructor(queueKey, storageUtil = messageStorageUtil) {
         if (queueKey === undefined) {
@@ -14,7 +13,6 @@ class MessageQueue {
     }
 
     /**
-     * 向队列尾部添加消息（入队）
      * @param {any} message 要存储的消息
      * @returns {boolean}   操作结果
      */
@@ -72,7 +70,7 @@ class MessageQueue {
     }
 
     /**
-     * 私有方法：获取当前队列的原始数据（内部使用）
+     * 获取当前队列的原始数据（内部使用）
      * @returns {any[]} 当前队列数组（可能为空）
      */
     #getCurrentQueue() {

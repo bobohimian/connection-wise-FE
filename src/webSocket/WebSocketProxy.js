@@ -51,6 +51,7 @@ export class WebSocketProxy {
       let message = this.messageQueue.dequeue();
       while (message) {
         // console.log('发送消息队列中的消息', message);
+        message.operation.includeSender = true;
         this.sendMessage(message);
         message = this.messageQueue.dequeue();
       }
@@ -117,8 +118,8 @@ export class WebSocketProxy {
     this.currentReconnectAttempt++;
     // 指数退避
     const delay = this.option.initialReconnectDelay * Math.pow(2, this.currentReconnectAttempt - 1);
+    console.log(`WebSocket重连中，尝试次数${this.currentReconnectAttempt}, 延迟${delay}ms`);
     this.reconnectTimeoutId = setTimeout(() => {
-      console.log(`WebSocket重连中，尝试次数${this.currentReconnectAttempt}, 延迟${delay}ms`);
       this.connect();
     }, delay);
   }
@@ -159,6 +160,7 @@ export class WebSocketProxy {
     delete this.messageHandlers[type];
   }
   sendMessage(message) {
+    // message.operation.includeSender = false;
     // console.log('发送消息', message);
     if (!this.isConnected || this.socket?.readyState !== WebSocket.OPEN || !navigator.onLine) {
       console.error('WebSocket未连接，无法发送消息,消息存入localstorage');
@@ -187,6 +189,7 @@ export class WebSocketProxy {
       this.socket.onmessage = null;
       this.socket.onclose = null;
       this.socket.onerror = null;
+      console.log('关闭');
       this.socket.close(WebSocketProxy.CLOSE_CODES.MANUAL_CLOSE, '手动关闭');
       this.socket = null;
     }

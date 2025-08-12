@@ -10,7 +10,7 @@ const PERMISSION_LEVEL = {
     [PERMISSION.OWNER]: 3,
 };
 export const usePermission = (requiredPermission) => {
-    const currentPermission = useSelector(state => state.user.permission);
+    const currentPermission = useSelector(state => state.canvas.permission);
     const currentLevel = PERMISSION_LEVEL[currentPermission] || 0;
     const requiredLevel = PERMISSION_LEVEL[requiredPermission];
     const hasPermission = currentLevel >= requiredLevel;
