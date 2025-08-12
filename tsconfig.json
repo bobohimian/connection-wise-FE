@@ -20,9 +20,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // },
     "incremental": true,
     "declaration": false,
     "declarationMap": false,

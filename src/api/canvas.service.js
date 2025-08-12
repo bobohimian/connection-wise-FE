@@ -68,3 +68,18 @@ export const uploadThumbnail = async (formData) => {
     throw error;
   }
 };
+export const requestToConnect = async (canvasId) => {
+  try {
+    const response = await apiClient.get(
+      '/canvas/connection',
+      {
+        params: { canvasId },
+      },
+    );
+    return response;
+  }
+  catch (error) {
+    console.error('Error requesting to connect', error);
+    throw error;
+  }
+};

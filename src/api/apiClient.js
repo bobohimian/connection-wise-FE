@@ -44,7 +44,7 @@ apiClient.interceptors.response.use(response => {
   }
   return apiResponse;
 }, error => {
-  const status = error.response.status;
+  const status = error.response?.status;
   if (status === 401) {
     location.href = '/login';
   }

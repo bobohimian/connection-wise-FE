@@ -1,6 +1,7 @@
 import { useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
-import { useWSProxy } from './usewsProxy';
+import { usePermission } from './usePermission';
+import { useWebSokcet } from './useWebSokcet';
 const defaultOption = {
   isLocal: true,
 };
@@ -14,23 +15,30 @@ export function useEnhancedReactFlow() {
     updateEdge: updateEdgeRF,
     screenToFlowPosition: screenToFlowPositionRF,
   } = useReactFlow();
-  const { wsProxy } = useWSProxy();
+  const { wsProxy } = useWebSokcet();
+  const hasEditPermission = usePermission('edit');
   const addNode = useCallback((node, options = defaultOption) => {
+    if (options.isLocal && !hasEditPermission)
+      return;
     setNodesRF((nodes) => nodes.concat(node));
     if (options.isLocal)
       wsProxy.addNode(node);
-  }, [setNodesRF, wsProxy]);
+  }, [hasEditPermission, setNodesRF, wsProxy]);
 
   const deleteNode = useCallback((nodeId, options = defaultOption) => {
+    if (options.isLocal && !hasEditPermission)
+      return;
     setNodesRF((nodes) => nodes.filter((node) => node.id !== nodeId));
     if (options.isLocal)
       wsProxy.deleteNode(nodeId);
-  }, [setNodesRF, wsProxy]);
+  }, [hasEditPermission, setNodesRF, wsProxy]);
 
   const updateNode = useCallback((nodeId, path, newValue, options = defaultOption) => {
+
+    if (options.isLocal && !hasEditPermission)
+      return;
     // 对函数式更新需要特殊处理
     // if(typeof edge ==="function")
-
     if (!Array.isArray(path) || path.length === 0) {
       throw new Error('修改路径必须是数组且长度大于0');
     }
@@ -61,22 +69,27 @@ export function useEnhancedReactFlow() {
     updateNodeRF(nodeId, updateFunc);
     if (options.isLocal)
       wsProxy.updateNode(nodeId, path, newValue, currentVersion);
-  }, [getNodeRF, updateNodeRF, wsProxy]);
+  }, [getNodeRF, hasEditPermission, updateNodeRF, wsProxy]);
 
   const addEdge = useCallback((edge, options = defaultOption) => {
+    if (options.isLocal && !hasEditPermission)
+      return;
     setEdgesRF((edges) => edges.concat(edge));
     if (options.isLocal)
       wsProxy.addEdge(edge);
-  }, [setEdgesRF, wsProxy]);
+  }, [hasEditPermission, setEdgesRF, wsProxy]);
 
   const deleteEdge = useCallback((edgeId, options = defaultOption) => {
+    if (options.isLocal && !hasEditPermission)
+      return;
     setEdgesRF((edges) => edges.filter((edge) => edge.id !== edgeId));
     if (options.isLocal)
       wsProxy.deleteEdge(edgeId);
-  }, [setEdgesRF, wsProxy]);
+  }, [hasEditPermission, setEdgesRF, wsProxy]);
 
   const updateEdge = useCallback((edgeId, path, newValue, options = defaultOption) => {
-
+    if (options.isLocal && !hasEditPermission)
+      return;
     // 对函数式更新需要特殊处理
     // if(typeof edge ==="function")
 
@@ -108,7 +121,7 @@ export function useEnhancedReactFlow() {
     updateEdgeRF(edgeId, updateFunc);
     if (options.isLocal)
       wsProxy.updateEdge(edgeId, path, newValue, currentVersion);
-  }, [getEdgeRF, updateEdgeRF, wsProxy]);
+  }, [getEdgeRF, hasEditPermission, updateEdgeRF, wsProxy]);
   const flushNode = useCallback((nodeId, node) => {
     updateNodeRF(nodeId, node);
   }, [updateNodeRF]);

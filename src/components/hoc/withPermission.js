@@ -21,10 +21,10 @@ const withPermission = (func, requiredPermission) => {
         throw new Error(`未知权限类型: ${requiredPermission}`);
     return (...args) => {
         const currentState = store.getState();
-        const currentPermission = currentState.user.permission;
+        const currentPermission = currentState.canvas.permission;
         const currentLevel = PERMISSION_LEVEL[currentPermission];
         const requiredLevel = PERMISSION_LEVEL[requiredPermission];
-        if (currentLevel === requiredLevel) {
+        if (currentLevel >= requiredLevel) {
             return func(...args);
         }
     };

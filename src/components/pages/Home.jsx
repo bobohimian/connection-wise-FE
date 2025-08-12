@@ -187,7 +187,7 @@ export default function CanvasGallery() {
               <Link to={`/canvas/${canvas.id}`} key={canvas.id}
                 className="group hover:-translate-y-1 transform transition-transform duration-300"
               >
-                <CanvasCard canvas={canvas} type={'shared'}></CanvasCard>
+                <CanvasCard   canvas={canvas} type={'shared'}></CanvasCard>
               </Link>
             ))}
           </div>
