@@ -23,7 +23,7 @@ const reverseThemes = [
 ];
 const withToolTip = (Component) => {
   const WithToolTip = (props) => {
-    const { id: nodeId, data: nodeData } = props;
+    const { id: nodeId, data: nodeData, nodeType } = props;
     const dataText = nodeData.text;
     const bgTheme = nodeData.theme ? nodeData.theme : themes[0];
     const { addNode, updateNode, addEdge, screenToFlowPosition } = useEnhancedReactFlow();
@@ -210,9 +210,9 @@ const withToolTip = (Component) => {
         )}
         {/* <IconButton icon={<Save className="h-4 w-4" />}
                         onClick={() => handleClickGenerate()}></IconButton> */}
-        <IconButton icon={<Network className="h-4 w-4" />}
+        {nodeType && <IconButton icon={<Network className="h-4 w-4" />}
           onClick={() => hanldeClickAssociate()}
-        ></IconButton>
+        ></IconButton>}
         {/* </div> */}
       </div>
       {/* <div className="absolute left-full ml-2 nodrag cursor-auto" ref={associationRef}> */}
