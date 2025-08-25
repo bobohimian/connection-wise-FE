@@ -1,5 +1,5 @@
 import { Network } from 'lucide-react';
-import React, { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { createEdge } from '../common/edge';
@@ -21,20 +21,22 @@ const reverseThemes = [
   'bg-linear-to-r from-teal-300 via-cyan-300 to-blue-300',
   'bg-linear-to-r from-orange-100 via-amber-100 to-orange-100',
 ];
+const MAX_URL_LENGTH = 6000;
 const withToolTip = (Component) => {
   const WithToolTip = (props) => {
-    const { id: nodeId, data: nodeData, nodeType } = props;
+    const { id: nodeId, data: nodeData, type: nodeType } = props;
     const dataText = nodeData.text;
     const bgTheme = nodeData.theme ? nodeData.theme : themes[0];
     const { addNode, updateNode, addEdge, screenToFlowPosition } = useEnhancedReactFlow();
     const [showToolTip, setShowToolTip] = useState(false);
+    // 管理点击事件
     const nodeRef = useRef(null);
     const toolTipRef = useRef(null);
     const associationRef = useRef(null);
+
     const [associations, setAssociations] = useState(['', '', '', '']);
     const [showAssociation, setShowAssociation] = useState(false);
     // 确保generationContentRef是最新的
-
 
     const generationContentRef = useRef(dataText ? dataText : '');
     const associationContentRef = useRef('');
@@ -50,9 +52,9 @@ const withToolTip = (Component) => {
           }
         }
         else {
-          if (!toolTipRef.current?.contains(event.target) &&
-            !associationRef.current?.contains(event.target) &&
-            !nodeRef.current?.contains(event.target)) {
+          if (!toolTipRef.current?.contains(event.target)
+            && !associationRef.current?.contains(event.target)
+            && !nodeRef.current?.contains(event.target)) {
             setShowToolTip(false);
           }
         }
@@ -131,7 +133,12 @@ const withToolTip = (Component) => {
     };
     const hanldeClickAssociate = () => {
       associationContentRef.current = '';
-      const SSESource = '/api/ai/associate?prompt=' + encodeURIComponent(dataText);
+      const encodedText = encodeURIComponent(dataText);
+      const SSESource = '/api/ai/associate?prompt=' + encodedText;
+      if (SSESource.length > MAX_URL_LENGTH) {
+        console.log('url过长');
+        return;
+      }
       const eventSource = new EventSource(SSESource);
       setShowAssociation(true);
       eventSource.addEventListener('push', (event) => {
@@ -148,7 +155,13 @@ const withToolTip = (Component) => {
     };
     const hanldeGenerateAssociation = (associationIndex) => {
       associationGenerationRef.current = '';
-      const SSESource = '/api/ai/generate?prompt=' + encodeURIComponent(dataText) + '&direction=' + encodeURIComponent(associations[associationIndex]);
+      const encodedText = encodeURIComponent(dataText);
+      const encodedDirection = encodeURIComponent(associations[associationIndex]);
+      const SSESource = '/api/ai/generate?prompt=' + encodedText + '&direction=' + encodedDirection;
+      if (SSESource.length > MAX_URL_LENGTH) {
+        console.log('内容过长');
+        return;
+      }
       const parent = document.querySelector(`[data-id="${nodeId}"]`);
       setShowAssociation(false);
       const rect = parent.getBoundingClientRect();
@@ -246,13 +259,13 @@ const withToolTip = (Component) => {
     </div >);
   };
   WithToolTip.displayName = `WithLog(${Component.displayName || Component.name})`;
-  // return WithToolTip;
-  return React.memo(WithToolTip, (prevProps, nextProps) =>
-    prevProps.id === nextProps.id
-    && prevProps.data === nextProps.data
-    && prevProps.isConnectable === nextProps.isConnectable
-    && prevProps.selected === nextProps.selected,
-  );
+  return WithToolTip;
+  // return React.memo(WithToolTip, (prevProps, nextProps) =>
+  //   prevProps.id === nextProps.id
+  //   && prevProps.data === nextProps.data
+  //   && prevProps.isConnectable === nextProps.isConnectable
+  //   && prevProps.selected === nextProps.selected,
+  // );
 };
 const memoWithToolTip = memo(withToolTip);
 export { withToolTip, memoWithToolTip };

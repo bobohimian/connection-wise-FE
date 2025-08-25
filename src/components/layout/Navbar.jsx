@@ -1,9 +1,10 @@
 import { Save, Share2, Settings, User, Undo2, Redo2, Maximize2, Minimize2, FileText, ChevronDown } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import ShareComponent from './ShareComponent';
 import apiService from '../../api';
+import { selectCanvas } from '../../store/slices/canvas';
 import { clearActiveDropdownId } from '../../store/slices/ui';
 import { clearUserInfo, setAuthenticated } from '../../store/slices/user';
 import Dropdown from '../common/Dropdown';
@@ -16,6 +17,7 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const isOwner = useSelector(selectCanvas).permission === 'owner';
   const [isEditing, setIsEditing] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const canvasNameRef = useRef(null);
@@ -265,9 +267,9 @@ export default function Navbar({ canvasName, canvasId, onCanvasNameChange }) {
         <IconButton icon={<Settings className="h-4 w-4" />} srOnly={'Settings'}
           onClick={() => toast({ title: 'Settings', description: 'Settings opened' })}
         /> */}
-        <IconButton icon={<Share2 className="h-4 w-4" />} srOnly={'Share'}
+        {isOwner && <IconButton icon={<Share2 className="h-4 w-4" />} srOnly={'Share'}
           onClick={() => setShowShareModal(true)}
-        />
+        />}
         <Modal
           isOpen={showShareModal}
           onClose={() => setShowShareModal(false)}

@@ -3,6 +3,7 @@ import { debounce } from 'lodash';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useEnhancedReactFlow } from '../../../hooks/useEnhancedReactFlow';
 
+const MAX_TEXT_LENGTH = 4000;
 const TextNode = ({ id, data, isConnectable, selected }) => {
   // const text = data.text || '';
   const [text, setText] = useState(data.text || '');
@@ -27,25 +28,32 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
   }, [debouncedUpdateNode]);
 
   const handleTextChange = (e) => {
-    const nextText = e.target.value;
+    let nextText = e.target.value;
+    if (nextText.length > MAX_TEXT_LENGTH)
+      nextText = nextText.slice(0, MAX_TEXT_LENGTH);
     setText(nextText);
     // 使用防抖函数更新节点，减少频繁更新
     debouncedUpdateNode(id, ['data', 'text'], nextText);
   };
   // 滚动事件
+  // 为什么需要显式添加滚动事件，不添加滚动条不会滚动
   useEffect(() => {
-    const handleWheel = (e) => {
-      // Prevent the canvas from zooming
-      e.stopPropagation();
-      // e.preventDefault();
+    const handleWheel = async (e) => {
 
-      const textarea = e.currentTarget;
-      textarea.scrollTop += e.deltaY;
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Prevent the canvas from zooming
+      console.log(e);
+      e.stopPropagation();
+      e.preventDefault();
+
+      // const textarea = e.currentTarget;
+      // textarea.scrollTop += e.deltaY;
+      textareaRef.current.scrollTop += e.deltaY;
     };
 
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.addEventListener('wheel', handleWheel, { passive: false });
+      textarea.addEventListener('wheel', handleWheel, { passive: true });
       return () => {
         textarea.removeEventListener('wheel', handleWheel);
       };
@@ -64,7 +72,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
       />
       <div
         // 添加absolute，脱离文档流，避免影响ToolTip的absolute定位,失败，节点位置不明
-        className={'w-full h-full p-2 rounded-md'}
+        className={'w-full h-full p-2 rounded-md bg-red-400'}
       >
 
         <Handle

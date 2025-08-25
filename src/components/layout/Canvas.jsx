@@ -13,7 +13,7 @@ import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { edgeTypes, defaultEdgeOption, createEdge } from '../common/edge';
 import { nodeTypes, createNode } from '../common/node';
 import { useToast } from '../common/toast';
-import { withPermission } from '../hoc/withPermission';
+import { withPermission } from '../hoc/withPermission.jsx';
 import withScreenShot from '../hoc/withScreenShot';
 
 
@@ -92,6 +92,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
         edges={edges}
         onNodesChange={withPermission(onNodesChange, 'edit')}
         // onNodesChange={onNodesChange}
+        onNodeDrag={(e, node) => { console.log(e); }}
         onNodeDragStop={(e, node, movedNodes) => movedNodes.forEach(node => updateNode(node.id, ['position'], node.position))}
         onEdgesChange={onEdgesChange}
         onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}
