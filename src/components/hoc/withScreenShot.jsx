@@ -43,7 +43,7 @@ const withScreenShot = (Component) => (props) => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleSaveThumbnail();
-    }, 20000);
+    }, 30000);
     return () => {
 
       clearInterval(interval);
