@@ -40,15 +40,13 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
   useEffect(() => {
     const handleWheel = async (e) => {
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
       // Prevent the canvas from zooming
-      console.log(e);
       e.stopPropagation();
-      e.preventDefault();
+      // e.preventDefault();
 
-      // const textarea = e.currentTarget;
-      // textarea.scrollTop += e.deltaY;
-      textareaRef.current.scrollTop += e.deltaY;
+      const textarea = e.currentTarget;
+      textarea.scrollTop += e.deltaY;
+      // textareaRef.current.scrollTop += e.deltaY;
     };
 
     const textarea = textareaRef.current;
@@ -72,7 +70,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
       />
       <div
         // 添加absolute，脱离文档流，避免影响ToolTip的absolute定位,失败，节点位置不明
-        className={'w-full h-full p-2 rounded-md bg-red-400'}
+        className={'w-full h-full p-2 rounded-md'}
       >
 
         <Handle
