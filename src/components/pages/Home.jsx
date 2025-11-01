@@ -159,7 +159,7 @@ export default function CanvasGallery() {
             </div>
             {canvasList.map((canvas) => (
               <div key={canvas.id} className="relative group hover:-translate-y-1 transform transition-transform duration-300">
-                <Link to={`/canvas/${canvas.id}`} className="block">
+                <Link to={`/canvas/${canvas.id}`} data-testid={`canvas-${canvas.title}`} className="block">
                   <CanvasCard
                     canvas={canvas}
                     type={'mine'}
@@ -187,7 +187,7 @@ export default function CanvasGallery() {
               <Link to={`/canvas/${canvas.id}`} key={canvas.id}
                 className="group hover:-translate-y-1 transform transition-transform duration-300"
               >
-                <CanvasCard   canvas={canvas} type={'shared'}></CanvasCard>
+                <CanvasCard canvas={canvas} type={'shared'}></CanvasCard>
               </Link>
             ))}
           </div>

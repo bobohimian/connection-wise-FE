@@ -4,6 +4,8 @@ import TextNode from './TextNode.jsx';
 import TodoNode from './TodoNode.jsx';
 import { withToolTip } from '../../hoc/withToolTip.jsx';
 const nodeTypes = {
+  // textNode: () => null,
+  // textNode: () => <div>123</div>,
   textNode: withToolTip(TextNode),
   todoNode: withToolTip(TodoNode),
   codeNode: withToolTip(CodeNode),

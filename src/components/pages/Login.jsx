@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Component from './1.jsx';
 import apiService from '../../api/index.js';
 import { setUserInfo, setAuthenticated } from '../../store/slices/user.js';
 import Form from '../common/Form';
 import { useToast } from '../common/toast.jsx';
-
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -142,7 +142,7 @@ export default function Login() {
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md w-full">
+      {/* <div className="bg-white rounded-xl shadow-xl overflow-hidden max-w-md w-full">
         <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white text-center">
           <h2 className="text-3xl font-bold mb-2">{isLogin ? '欢迎回来' : '创建账户'}</h2>
           <p className="opacity-80">{isLogin ? '请登录以继续访问您的账户' : '请注册一个新账户'}</p>
@@ -198,7 +198,10 @@ export default function Login() {
             {isLogin ? '没有账户？点击注册' : '已有账户？点击登录'}
           </button>
         </div>
-      </div>
+      </div> */}
+      <Component>
+
+      </Component>
     </div>
   );
 }

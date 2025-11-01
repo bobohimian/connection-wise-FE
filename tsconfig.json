@@ -33,7 +33,11 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.js",
-    "src/**/*.jsx"
+    "src/**/*.jsx",
+    "cypress/**/*.js",
+    "cypress/**/*.ts",
+    "cypress/**/*.jsx",
+    "cypress/**/*.tsx"
   ],
   "exclude": [
     "node_modules",

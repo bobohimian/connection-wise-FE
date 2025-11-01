@@ -7,7 +7,11 @@
 module.exports = {
   // 标记为根配置文件，ESLint 不会继续向上查找配置
   root: true,
-
+  globals: {
+    cy: true,
+    Cypress: true,
+    after: true,
+  },
   // 定义代码运行的环境
   env: {
     browser: true, // 浏览器环境中的全局变量

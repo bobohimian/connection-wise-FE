@@ -1,3 +1,4 @@
+import Observer from '@researchgate/react-intersection-observer';
 import { Network } from 'lucide-react';
 import { memo, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -5,6 +6,7 @@ import { useEnhancedReactFlow } from '../../hooks/useEnhancedReactFlow';
 import { createEdge } from '../common/edge';
 import IconButton from '../common/IconButton';
 import { createNode } from '../common/node';
+
 const themes = [
   'bg-linear-to-r from-purple-300 via-indigo-300 to-blue-300',
   'bg-linear-to-r from-green-300 via-emerald-300 to-teal-300',
@@ -28,6 +30,7 @@ const withToolTip = (Component) => {
     const dataText = nodeData.text;
     const bgTheme = nodeData.theme ? nodeData.theme : themes[0];
     const { addNode, updateNode, addEdge, screenToFlowPosition } = useEnhancedReactFlow();
+    const [isView, setIsView] = useState(true);
     const [showToolTip, setShowToolTip] = useState(false);
     // 管理点击事件
     const nodeRef = useRef(null);
@@ -199,64 +202,80 @@ const withToolTip = (Component) => {
         eventSource.close();
       };
     };
-    return (<div className={`w-full h-full flex ${bgTheme} rounded-md`}>
-      <div ref={nodeRef} className={'w-full'}>
-        <Component {...props} />
-      </div>
-      {/* <div className="w-full absolute bottom-full mb-2 nodrag cursor-auto" ref={toolTipRef}> */}
-      <div ref={toolTipRef}
-        className={`absolute bottom-full mb-2 right-0 nodrag cursor-auto
+    const handleIntersectionChange = (event) => {
+      // updateNode(nodeId, ['hidden'], !event.isIntersecting, { isLocal: false });
+      setTimeout(() => setIsView(event.isIntersecting), 1000);
+      // requestAnimationFrame(() => {
+      //   setIsView(event.isIntersecting);
+      // });
+      // setIsView(event.isIntersecting);
+      // console.log(event);
+    };
+    return (
+      <Observer
+        // rootMargin='-200px -200px'
+        onChange={handleIntersectionChange}
+      >
+        {isView ? <div className={`w-full h-full flex ${bgTheme} rounded-md`}>
+          <div ref={nodeRef} className={'w-full'}>
+            <Component {...props} />
+          </div>
+          {/* <div className="w-full absolute bottom-full mb-2 nodrag cursor-auto" ref={toolTipRef}> */}
+          <div ref={toolTipRef}
+            className={`absolute bottom-full mb-2 right-0 nodrag cursor-auto
             w-50 h-10 rounded-md ${bgTheme}
              transition-all duration-500 ease-in-out origin-bottom ${showToolTip
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-90 translate-y-5 pointer-events-none'}
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-90 translate-y-5 pointer-events-none hidden'}
             flex justify-around items-center `}
-      >
-        {themes.map(
-          (theme, index) => (
-            <button
-              key={'theme' + index}
-              className={`h-4 w-4 ${theme} rounded-full ring-1 hover:ring-offset-2`}
-              onClick={() => handleClickColor(theme)}
-            />
-          ),
-        )}
-        {/* <IconButton icon={<Save className="h-4 w-4" />}
+          >
+            {themes.map(
+              (theme, index) => (
+                <button
+                  key={'theme' + index}
+                  className={`h-4 w-4 ${theme} rounded-full ring-1 hover:ring-offset-2`}
+                  onClick={() => handleClickColor(theme)}
+                />
+              ),
+            )}
+            {/* <IconButton icon={<Save className="h-4 w-4" />}
                         onClick={() => handleClickGenerate()}></IconButton> */}
-        {nodeType && <IconButton icon={<Network className="h-4 w-4" />}
-          onClick={() => hanldeClickAssociate()}
-        ></IconButton>}
-        {/* </div> */}
-      </div>
-      {/* <div className="absolute left-full ml-2 nodrag cursor-auto" ref={associationRef}> */}
-      <div
-        ref={associationRef}
-        className={`absolute left-full ml-2 nodrag cursor-auto w-40 rounded-md ${reverseTheme(bgTheme)}
+            {nodeType && <IconButton icon={<Network className="h-4 w-4" />}
+              onClick={() => hanldeClickAssociate()}
+            ></IconButton>}
+            {/* </div> */}
+          </div>
+          {/* <div className="absolute left-full ml-2 nodrag cursor-auto" ref={associationRef}> */}
+          <div
+            ref={associationRef}
+            className={`absolute left-full ml-2 nodrag cursor-auto w-40 rounded-md ${reverseTheme(bgTheme)}
              transition-all duration-500 ease-in-out origin-bottom ${(showToolTip && showAssociation)
-            ? 'opacity-100 scale-100'
-            : 'opacity-0 scale-90 -translate-x-5 pointer-events-none'}
+                ? 'opacity-100 scale-100'
+                : 'opacity-0 scale-90 -translate-x-5 pointer-events-none hidden'}
             flex flex-col justify-center items-center`}
-      >
-        <div className="m-3 flex flex-col space-y-2.5 transition-all duration-500 ease-in-out">
-          {associations[0].length > 0 ?
-            associations.map((association, index) => (
-              <div key={index}
-                onClick={() => { hanldeGenerateAssociation(index); }}
-                className={`w-35 rounded-md bg-current/10
+          >
+            <div className="m-3 flex flex-col space-y-2.5 transition-all duration-500 ease-in-out">
+              {associations[0].length > 0 ?
+                associations.map((association, index) => (
+                  <div key={index}
+                    onClick={() => { hanldeGenerateAssociation(index); }}
+                    className={`w-35 rounded-md bg-current/10
                                 hover:scale-108
                                 transition-all duration-100 ease-in ${association.length > 0
-                    ? 'opacity-100'
-                    : 'opacity-0 translate-y-10 pointer-events-none absolute'}
+                        ? 'opacity-100'
+                        : 'opacity-0 translate-y-10 pointer-events-none absolute'}
                                 px-2 py-0.5`}
-              >
-                <span className="break-words" >{association}</span>
-              </div>
-            )) : <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
-          }
-        </div>
-        {/* </div> */}
-      </div>
-    </div >);
+                  >
+                    <span className="break-words" >{association}</span>
+                  </div>
+                )) : <div className="h-5 w-5 border-2 border-gray-100 border-t-transparent rounded-full animate-spin"></div>
+              }
+            </div>
+            {/* </div> */}
+          </div>
+        </div > : <div></div>}
+      </Observer>
+    );
   };
   WithToolTip.displayName = `WithLog(${Component.displayName || Component.name})`;
   return WithToolTip;

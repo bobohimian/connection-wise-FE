@@ -1,4 +1,4 @@
-import { Handle, NodeResizer, Position } from '@xyflow/react';
+import { Handle, NodeResizer, NodeToolbar, Position } from '@xyflow/react';
 import { debounce } from 'lodash';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useEnhancedReactFlow } from '../../../hooks/useEnhancedReactFlow';
@@ -70,9 +70,8 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
       />
       <div
         // 添加absolute，脱离文档流，避免影响ToolTip的absolute定位,失败，节点位置不明
-        className={'w-full h-full p-2 rounded-md'}
+        className={'w-full h-full p-2 rounded-md bg-linear-to-r from-blue-300 via-indigo-300 to-purple-300'}
       >
-
         <Handle
           type="target"
           position={Position.Left}
@@ -83,7 +82,7 @@ const TextNode = ({ id, data, isConnectable, selected }) => {
           ref={textareaRef}
           value={text}
           onChange={handleTextChange}
-          autoFocus
+          // autoFocus
           style={{
             width: width,
             height: height,

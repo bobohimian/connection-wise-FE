@@ -26,7 +26,9 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
 
-
+  useEffect(() => {
+    window.reactFlowInstance = reactFlowInstance;
+  }, [reactFlowInstance]);
   useEffect(() => {
     setNodes(canvasData?.nodes || []);
     setEdges(canvasData?.edges || []);
@@ -87,12 +89,12 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
   return (
     <div id="canvasContainer" ref={ref} className="flex-1 h-full">
       <ReactFlow
-        onlyRenderVisibleElements
+        // onlyRenderVisibleElements
         nodes={nodes}
         edges={edges}
         onNodesChange={withPermission(onNodesChange, 'edit')}
         // onNodesChange={onNodesChange}
-        onNodeDrag={(e, node) => { console.log(e); }}
+        // onNodeDrag={(e, node) => { console.log(e); }}
         onNodeDragStop={(e, node, movedNodes) => movedNodes.forEach(node => updateNode(node.id, ['position'], node.position))}
         onEdgesChange={onEdgesChange}
         onNodesDelete={deletedNodes => deletedNodes.map(node => deleteNode(node.id))}
@@ -122,10 +124,10 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
       >
         <Background color="#aaa" gap={16} />
         <Controls />
-        <MiniMap nodeStrokeWidth={3} zoomable pannable />
-        <Panel position="top-right" className="bg-background/80 p-2 rounded-md shadow-sm backdrop-blur-sm">
+        {/* <MiniMap nodeStrokeWidth={3} zoomable pannable /> */}
+        {/* <Panel position="top-right" className="bg-background/80 p-2 rounded-md shadow-sm backdrop-blur-sm">
           <div className="flex items-center gap-2">
-            {/* <button
+            <button
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
                 toast({
@@ -137,7 +139,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
               }}
             >
               Clear Canvas
-            </button> */}
+            </button>
             <button
               className="h-8 px-3 text-sm border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
               onClick={() => {
@@ -151,7 +153,7 @@ const Canvas = forwardRef(({ canvasData, _selectedNode, setSelectedNode, _select
               Reset View
             </button>
           </div>
-        </Panel>
+        </Panel> */}
       </ReactFlow>
     </div >
   );

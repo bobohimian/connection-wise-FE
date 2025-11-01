@@ -1,0 +1,68 @@
+{
+  "100": {
+    "tests": [
+      {
+        "averageFPS": 70,
+        "frameCount": 242,
+        "duration": "3.44s"
+      },
+      {
+        "averageFPS": 145,
+        "frameCount": 197,
+        "duration": "1.36s"
+      },
+      {
+        "averageFPS": 73,
+        "frameCount": 246,
+        "duration": "3.39s"
+      },
+      {
+        "averageFPS": 145,
+        "frameCount": 194,
+        "duration": "1.34s"
+      },
+      {
+        "averageFPS": 144,
+        "frameCount": 185,
+        "duration": "1.28s"
+      }
+    ],
+    "average": {
+      "averageFPS": 115,
+      "duration": "2.16s"
+    }
+  },
+  "200": {
+    "tests": [
+      {
+        "averageFPS": 144,
+        "frameCount": 220,
+        "duration": "1.52s"
+      },
+      {
+        "averageFPS": 144,
+        "frameCount": 228,
+        "duration": "1.58s"
+      },
+      {
+        "averageFPS": 63,
+        "frameCount": 245,
+        "duration": "3.91s"
+      },
+      {
+        "averageFPS": 143,
+        "frameCount": 227,
+        "duration": "1.58s"
+      },
+      {
+        "averageFPS": 144,
+        "frameCount": 236,
+        "duration": "1.63s"
+      }
+    ],
+    "average": {
+      "averageFPS": 128,
+      "duration": "2.04s"
+    }
+  }
+}

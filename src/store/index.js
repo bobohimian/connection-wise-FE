@@ -18,4 +18,8 @@ const store = configureStore({
 
     }),
 });
+// 暴露到 window（仅开发/测试环境，生产环境移除）
+if (process.env.NODE_ENV !== 'production') {
+  window.store = store; // 关键！测试时通过 window 访问
+}
 export default store;
